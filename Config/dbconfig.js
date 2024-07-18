@@ -9,6 +9,6 @@ const mongoose = require("mongoose");
       console.log("db not connected");
     }
   } catch (error) {
-    throw new Error(error?.message);
+    throw new Error(error.message);
   }
 })();
