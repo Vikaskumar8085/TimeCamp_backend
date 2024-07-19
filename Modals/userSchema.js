@@ -23,6 +23,9 @@ const UserSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  Term: {
+    type: String,
+  },
   user_id: {
     type: Number,
     required: true,
@@ -32,13 +35,11 @@ const UserSchema = mongoose.Schema({
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("Password")) {
     return next();
-  }
-  
-  // Hash password
+  } // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(this.password, salt);
   this.password = hashedPassword;
   next();
 });
-const User = mongoose.modal("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 module.exports = User;

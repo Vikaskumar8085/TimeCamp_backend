@@ -9,10 +9,11 @@ const {
   globalErrorHanadler,
   NotFoundHandler,
 } = require("./Middleware/ErrorHandlers");
-// require("./Config/dbconfig");
+require("./Config/dbconfig");
 
 const app = express();
 const server = http.createServer(app);
+
 // middlewares
 app.use(morgan("dev"));
 app.use(
@@ -26,8 +27,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // api
 app.use("/api", router);
-
-
 // api
 
 // Not Found Handler

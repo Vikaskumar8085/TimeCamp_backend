@@ -1,20 +1,17 @@
 const AsyncHandler = require("express-async-handler");
-// const User = require("../Modals/userSchema");
+const User = require("../Modals/userSchema");
 
 // Register Ctr
 
 const RegisterCtr = AsyncHandler(async (req, res) => {
-  try {
-    const { FirstName, LastName, Email, Password } = req.body;
-    console.log(FirstName, LastName, Email, Password);
-
-    const isEmail = Email.split(" ").join("");
-    if (isEmail) {
-      console.log(isEmail,"<<<<isEmail");
-    }
-  } catch (error) {
-    res.status(500);
-    throw new Error(error.message);
+  console.log(req.body);
+  const response = await User(req.body);
+  console.log(response);
+  if (response) {
+    await response.save();
+    return res.status(201).json("Data Succesfully Created");
+  } else {
+    return res.status(400).json("data not  registered");
   }
 });
 
@@ -22,9 +19,13 @@ const RegisterCtr = AsyncHandler(async (req, res) => {
 const LoginCtr = AsyncHandler(async (req, res) => {
   try {
     const { Email, Password } = req.body;
+    const response = await User.findOne({ Email: Email, Password: Password });
+    if (response) {
+      console.log(response);
+      return res.status(200).json("login successfully");
+    }
   } catch (error) {
-    res.status(500);
-    throw new Error(error.message);
+    return res.status(500).json(error?.message);
   }
 });
 
@@ -46,7 +47,9 @@ const VerifyOtpCtr = AsyncHandler(async (req, res) => {
 
 const GetVerifyUserCtr = AsyncHandler(async (req, res) => {
   try {
-  } catch (error) {}
+  } catch (error) {
+    throw new Error(error?.message);
+  }
 });
 
 // ChangePassword
