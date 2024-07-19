@@ -3,6 +3,7 @@ const os = require("os").cpus();
 const express = require("express");
 const cluster = require("cluster");
 const cors = require("cors");
+const router = require("./Router/Index");
 const morgan = require("morgan");
 const {
   globalErrorHanadler,
@@ -23,13 +24,11 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 // middlewares
 
-app.get("/api", (req, res) => {
-  try {
-    throw new Error("this is the Message for error sss");
-  } catch (error) {
-    throw new Error(error.message);
-  }
-});
+// api
+app.use("/api", router);
+
+
+// api
 
 // Not Found Handler
 app.use(NotFoundHandler);

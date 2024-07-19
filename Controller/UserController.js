@@ -1,16 +1,31 @@
 const AsyncHandler = require("express-async-handler");
+// const User = require("../Modals/userSchema");
 
 // Register Ctr
 
 const RegisterCtr = AsyncHandler(async (req, res) => {
   try {
-  } catch (error) {}
+    const { FirstName, LastName, Email, Password } = req.body;
+    console.log(FirstName, LastName, Email, Password);
+
+    const isEmail = Email.split(" ").join("");
+    if (isEmail) {
+      console.log(isEmail,"<<<<isEmail");
+    }
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
+  }
 });
 
 // login Ctr
 const LoginCtr = AsyncHandler(async (req, res) => {
   try {
-  } catch (error) {}
+    const { Email, Password } = req.body;
+  } catch (error) {
+    res.status(500);
+    throw new Error(error.message);
+  }
 });
 
 // Logout Ctr
