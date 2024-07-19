@@ -7,6 +7,12 @@ const registerValidation = Joi.object({
   Password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
 });
 
+const loginValidation = Joi.object({
+  Email: Joi.string().min(4).max(30).required(),
+  Password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+});
+
 module.exports = {
   registerValidation,
+  loginValidation,
 };
