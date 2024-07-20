@@ -1,16 +1,14 @@
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 (async function () {
   try {
-    const dbconnect = await mongoose.connect(
-      "mongodb://localhost:27017/TimeCamp"
-    );
+    const dbconnect = await mongoose.connect(process.env.DBURL);
     if (dbconnect) {
       console.log("db connected");
     } else {
       console.log("db not connected");
     }
   } catch (error) {
-    throw new Error(error.message);
+    console.log(error.message);
   }
 })();

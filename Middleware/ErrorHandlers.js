@@ -1,15 +1,18 @@
 const globalErrorHanadler = (err, req, res, next) => {
-  const stack = err.stack;
-  const message = err.message;
-  const status = err.status;
   const statusCode = res.statusCode ? res.statusCode : 500;
-  res.status(statusCode).json(status, message, stack);
+
+  res.status(statusCode);
+
+  res.json({
+    message: err.message,
+    stack: err.stack,
+  });
 };
 
 const NotFoundHandler = (req, res, next) => {
   const err = new Error(`NO Router ${req.originalUrl} Found`);
   res.status(404);
-  next(err);
+  return res.send("This Router Is Not Exists ");
 };
 
 module.exports = { globalErrorHanadler, NotFoundHandler };
