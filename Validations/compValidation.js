@@ -1,9 +1,8 @@
-const Joi = require("Joi");
+const Joi = require("joi");
 
 const registercompanyvalidation = Joi.Object({
   Company_Name: Joi.string().min(3).max(30).required(),
   Company_Email: Joi.string().min(3).max(30).required(),
-  Address: Joi.string().min(3).max(30).required(),
   Postal_Code: Joi.string().min(3).max(30).required(),
   Phone: Joi.string().min(3).max(30).required(),
   Company_Logo: Joi.string().min(3).max(30).required(),
@@ -14,7 +13,6 @@ const registercompanyvalidation = Joi.Object({
   UserId: Joi.string().min(3).max(30).required(),
   UserObjectId: Joi.string().min(3).max(30).required(),
 });
-
 
 module.exports = {
   registercompanyvalidation,

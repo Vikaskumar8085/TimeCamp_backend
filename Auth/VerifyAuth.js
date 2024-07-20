@@ -5,8 +5,6 @@ dotenv.config();
 const verifyToken = async (req, res, next) => {
   try {
     const authtoken = await req.headers.authorization.replace(/^Bearer\s/, "");
-    console.log(authtoken);
-
     const decode = await jwt.verify(authtoken, process.env.SECRET);
     req.user = decode.id;
     next();

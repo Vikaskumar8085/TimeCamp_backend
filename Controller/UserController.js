@@ -102,7 +102,9 @@ const LoginCtr = AsyncHandler(async (req, res) => {
 
 const logoutCtr = AsyncHandler(async (req, res) => {
   try {
-  } catch (error) {}
+  } catch (error) {
+    throw new Error(error?.message);
+  }
 });
 
 // login status

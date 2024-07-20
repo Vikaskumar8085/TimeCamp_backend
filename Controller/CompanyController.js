@@ -7,7 +7,7 @@ const User = require("../Modals/userSchema");
 const GetAllCompany = AsyncHandler(async (req, res) => {
   try {
     // user
-    const user = await User.findById();
+    const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("Un Authorized User");
@@ -19,7 +19,10 @@ const GetAllCompany = AsyncHandler(async (req, res) => {
       throw new Error("Your Company has still not registred ");
     }
     const response = await Company.find();
-    if (response) {
+    if (!response) {
+      res.status(StatusCodes.NO_CONTENT);
+      throw new Error("No data Available");
+    } else {
       return res
         .status(StatusCodes.OK)
         .json({ status: StatusCodes.OK, message: response });

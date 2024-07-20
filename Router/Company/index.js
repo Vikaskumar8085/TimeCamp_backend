@@ -4,11 +4,12 @@ const {
   RegisterCompany,
   EditCompany,
 } = require("../../Controller/CompanyController");
+const verifyToken = require("../../Auth/VerifyAuth");
 const validator = require("express-joi-validation").createValidator({});
 const compRouter = express.Router();
 
-compRouter.get("/get-all-company", GetAllCompany);
-compRouter.post("/add-company", RegisterCompany);
-compRouter.post("/edit-company/:id", EditCompany);
+compRouter.get("/get-all-company", verifyToken, GetAllCompany);
+compRouter.post("/add-company", verifyToken, RegisterCompany);
+compRouter.post("/edit-company", verifyToken, EditCompany);
 
 module.exports = compRouter;
