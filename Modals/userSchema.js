@@ -31,10 +31,24 @@ const UserSchema = mongoose.Schema({
     required: [true, "Please add a photo"],
     default: "https://i.ibb.co/4pDNDk1/avatar.png",
   },
+  Role: {
+    type: String,
+    enum: ["Admin", "Manager", "Client", "Employee", "Contractor"],
+    default: "Admin",
+  },
+  Activity: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   Term: {
     type: Boolean,
     required: true,
     default: false,
+  },
+  otp: {
+    type: String,
+    required: true,
   },
   user_id: {
     type: String,
