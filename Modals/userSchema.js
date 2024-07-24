@@ -49,6 +49,7 @@ const UserSchema = mongoose.Schema({
   otp: {
     type: String,
     required: true,
+    default: false,
   },
   user_id: {
     type: String,
