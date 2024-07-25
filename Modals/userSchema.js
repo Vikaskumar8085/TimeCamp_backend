@@ -33,13 +33,18 @@ const UserSchema = mongoose.Schema({
   },
   Role: {
     type: String,
-    enum: ["Admin", "Manager", "Client", "Employee", "Contractor"],
+    enum: ["Admin", "Manager", "Employee", "Contractor"],
     default: "Admin",
   },
   Activity: {
     type: Boolean,
     required: true,
     default: false,
+  },
+  BlockStatus: {
+    type: String,
+    enum: ["Block", "Unblock"],
+    default: "Unblock",
   },
   Term: {
     type: Boolean,
@@ -53,7 +58,7 @@ const UserSchema = mongoose.Schema({
   },
   user_id: {
     type: String,
-    required: true,
+    // required: true,
   },
 });
 

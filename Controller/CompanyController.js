@@ -94,7 +94,61 @@ const EditCompany = AsyncHandler(async (req, res) => {
   }
 });
 
+// create co admins
+const CreateAdminCtr = AsyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user);
+    if (!user) {
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new Error("Un Authorized User");
+    }
+    // verify Company
+
+    // const verifycompany = await Company.findOne({ UserId: user?.user_id });
+    // if (!verifycompany) {
+    //   res.status(StatusCodes.BAD_REQUEST);
+    //   throw new Error("Your Company has still not registred ");
+    // }
+
+    const createAdmin = await User({
+      FirstName: req.body.FirstName,
+      LastName: req.body.LastName,
+      Email: req.body.Email,
+      Password: req.body.Password,
+      Role: "Admin",
+      user_id: "1",
+    });
+
+    if (!createAdmin) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("there is Some Error");
+    } else {
+      await createAdmin.save();
+      // Save Id to Company
+      console.log(createAdmin._id, createAdmin.user_id);
+
+      const addid = await Company({
+        UserId: createAdmin._id,
+        UserObjectId: createAdmin.user_id,
+      });
+
+      if (addid) {
+        await addid.save();
+
+        console.log("create company");
+      }
+    }
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ success: true, message: "successfully admin created" });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
 module.exports = {
+  CreateAdminCtr,
   GetAllCompany,
   EditCompany,
   RegisterCompany,

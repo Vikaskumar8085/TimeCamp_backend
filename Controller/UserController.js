@@ -71,6 +71,11 @@ const LoginCtr = AsyncHandler(async (req, res) => {
       .select("+Password")
       .exec();
 
+    if (user.BlockStatus === "Block") {
+      res.status(503);
+      throw new Error("Please Connect with Your Admin And super Admin");
+    }
+
     // check if user data exists,
     if (!user) {
       res.status(StatusCodes.BAD_REQUEST);
