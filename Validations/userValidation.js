@@ -12,7 +12,7 @@ const registerValidation = Joi.object({
     .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
   Photo: Joi.string().min(3).max(70),
   Term: Joi.boolean().required(),
-  user_id: Joi.string().required(),
+  // user_id: Joi.string().required(),
 });
 
 // login Validation

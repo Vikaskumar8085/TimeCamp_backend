@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const sendEmail = require("../Utils/SendEmail");
 const SendEmail = require("../Utils/SendEmail");
 const { jwtDecode } = require("jwt-decode");
+const generateUniqueId = require("generate-unique-id");
 require("../Config/dbconfig");
 require("dotenv").config();
 
@@ -21,36 +22,38 @@ const RegisterCtr = AsyncHandler(async (req, res) => {
     const genhash = await bcrypt.genSalt(12);
     const hashpassword = await bcrypt.hash(Password, genhash);
     // Check if user email already exists
-    const userExists = await User.findOne({ Email });
-    if (userExists) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("Email has already been registered");
-    } else {
-      const hashgen = crypto.randomBytes(32).toString("hex") + userExists._id;
-      const hash = crypto.createHash("sha256").update(hashgen).digest("hex");
-      const saveToken = await Token({
-        userId: userExists._id,
-        token: hash,
-        createdAt: Date.now(),
-        expireAt: Date.now() + 30 * 60 * 1000, // 30 min expire
-      });
-      await saveToken.save();
-      const send_to = userExists.Email;
-      const subject = "verify your mail ";
-      const message = `  here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a>`;
-      const mailsend = await SendEmail(send_to, subject, message);
-      if (mailsend) {
-        console.log("mail send");
-      }
-    }
+    // const userExists = await User.findOne({ Email });
+    // if (userExists) {
+    //   res.status(StatusCodes.BAD_REQUEST);
+    //   throw new Error("Email has already been registered");
+    // }
+    //  else {
+    //   const hashgen = crypto.randomBytes(32).toString("hex") + userExists._id;
+    //   const hash = crypto.createHash("sha256").update(hashgen).digest("hex");
+    //   const saveToken = await Token({
+    //     userId: userExists._id,
+    //     token: hash,
+    //     createdAt: Date.now(),
+    //     expireAt: Date.now() + 30 * 60 * 1000, // 30 min expire
+    //   });
+    //   await saveToken.save();
+    //   const send_to = userExists.Email;
+    //   const subject = "verify your mail ";
+    //   const message = `  here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a>`;
+    //   const mailsend = await SendEmail(send_to, subject, message);
+    //   if (mailsend) {
+    //     console.log("mail send");
+    //   }
+    // }
 
+    const uid = { $inc: 1};
+    console.log(uid, "uid");
     const resp = await User({
       FirstName,
       LastName,
       Email,
       Password: hashpassword,
       Term,
-      user_id,
     });
 
     if (resp) {

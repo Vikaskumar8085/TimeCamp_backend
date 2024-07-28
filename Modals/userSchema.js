@@ -56,7 +56,7 @@ const UserSchema = mongoose.Schema({
     default: false,
   },
   user_id: {
-    type: String,
+    type: Number,
     // required: true,
   },
 });
