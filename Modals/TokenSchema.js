@@ -17,7 +17,7 @@ const TokenSchema = new mongoose.Schema(
     },
     expireAt: {
       type: Date,
-      required: true,
+      // required: true,
     },
   },
   {

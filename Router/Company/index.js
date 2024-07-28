@@ -4,7 +4,7 @@ const {
   RegisterCompany,
   EditCompany,
   CreateAdminCtr,
-} = require("../../Controller/CompanyController");
+} = require("../../Controller/AdminController/CompanyController");
 const verifyToken = require("../../Auth/VerifyAuth");
 const validator = require("express-joi-validation").createValidator({});
 const compRouter = express.Router();

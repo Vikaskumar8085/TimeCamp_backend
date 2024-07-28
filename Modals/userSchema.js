@@ -12,7 +12,6 @@ const UserSchema = mongoose.Schema({
   },
   Email: {
     type: String,
-    // unique: true,
     trim: true,
     match: [
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -33,7 +32,7 @@ const UserSchema = mongoose.Schema({
   },
   Role: {
     type: String,
-    enum: ["Admin", "Manager", "Employee", "Contractor"],
+    enum: ["Admin", "Manager", "Employee", "Contractor", "SuperAdmin"],
     default: "Admin",
   },
   Activity: {
@@ -51,7 +50,7 @@ const UserSchema = mongoose.Schema({
     required: true,
     default: false,
   },
-  otp: {
+  isVerify: {
     type: String,
     required: true,
     default: false,

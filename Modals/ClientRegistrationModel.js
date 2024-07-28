@@ -31,14 +31,15 @@ const ClientRegistrationSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    Common_Id: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const ClientRegistration = mongoose.model(
-  "ClientRegistration",
-  ClientRegistrationSchema
-);
-module.exports = ClientRegistration;
+const Client = mongoose.model("Client", ClientRegistrationSchema);
+module.exports = Client;

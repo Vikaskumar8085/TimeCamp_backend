@@ -6,6 +6,9 @@ const {
   LoginStatus,
   ChangePassword,
   EditUsers,
+  forgetPassword,
+  ForgetPasswordCtr,
+  GoogleAuthCtr,
 } = require("../../Controller/UserController");
 const {
   registerValidation,
@@ -17,9 +20,11 @@ const UserRouter = express.Router();
 
 UserRouter.post("/register", validator.body(registerValidation), RegisterCtr);
 UserRouter.post("/login", validator.body(loginValidation), LoginCtr);
-UserRouter.post("/change-password", ChangePassword);
+UserRouter.post("/change-password", verifyToken, ChangePassword);
 UserRouter.get("/get-user", verifyToken, GetUser);
 UserRouter.get("/loginStatus", verifyToken, LoginStatus);
 UserRouter.post("/edit-user", verifyToken, EditUsers);
+UserRouter.post("/google-auth", GoogleAuthCtr);
+UserRouter.post("/forget", ForgetPasswordCtr);
 
 module.exports = UserRouter;

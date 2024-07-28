@@ -1,7 +1,7 @@
 const AsyncHandler = require("express-async-handler");
-const Company = require("../Modals/CompanySchema");
+const Company = require("../../Modals/CompanySchema");
 const { StatusCodes } = require("http-status-codes");
-const User = require("../Modals/userSchema");
+const User = require("../../Modals/userSchema");
 
 // GetAllCompany
 const GetAllCompany = AsyncHandler(async (req, res) => {
@@ -142,6 +142,13 @@ const CreateAdminCtr = AsyncHandler(async (req, res) => {
     return res
       .status(StatusCodes.OK)
       .json({ success: true, message: "successfully admin created" });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+const GetsingleCompanyController = AsyncHandler(async (req, res) => {
+  try {
   } catch (error) {
     throw new Error(error?.message);
   }

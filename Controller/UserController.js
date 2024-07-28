@@ -3,8 +3,13 @@ const { StatusCodes } = require("http-status-codes");
 const User = require("../Modals/userSchema");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
+const Token = require("../Modals/TokenSchema");
 const generateToken = require("../Auth/GenerateToken");
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
+const sendEmail = require("../Utils/SendEmail");
+const SendEmail = require("../Utils/SendEmail");
+const { jwtDecode } = require("jwt-decode");
 require("../Config/dbconfig");
 
 // Register Ctr
@@ -21,22 +26,22 @@ const RegisterCtr = AsyncHandler(async (req, res) => {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Email has already been registered");
     } else {
-      // const hashgen = crypto.randomBytes(32).toString("hex")+;
-      // const hash = crypto.createHash("sha256").update(hashgen).digest("hex");
-      // const saveToken = await Token({
-      //   userId: userregister._id,
-      //   token: hash,
-      //   createdAt: Date.now(),
-      //   expireAt: Date.now() + 30 * 60 * 1000, // 30 min expire
-      // });
-      // await saveToken.save();
-      // const send_to = userregister.email;
-      // const subject = "verify your mail ";
-      // const message = `  here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a>`;
-      // const mailsend = await mail(send_to, subject, message);
-      // if (mailsend) {
-      //   console.log("mail send");
-      // }
+      const hashgen = crypto.randomBytes(32).toString("hex") + userExists._id;
+      const hash = crypto.createHash("sha256").update(hashgen).digest("hex");
+      const saveToken = await Token({
+        userId: userExists._id,
+        token: hash,
+        createdAt: Date.now(),
+        expireAt: Date.now() + 30 * 60 * 1000, // 30 min expire
+      });
+      await saveToken.save();
+      const send_to = userExists.Email;
+      const subject = "verify your mail ";
+      const message = `  here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a>`;
+      const mailsend = await SendEmail(send_to, subject, message);
+      if (mailsend) {
+        console.log("mail send");
+      }
     }
 
     const resp = await User({
@@ -65,39 +70,79 @@ const RegisterCtr = AsyncHandler(async (req, res) => {
 // login Ctr
 const LoginCtr = AsyncHandler(async (req, res) => {
   try {
-    const user = await User.findOne({
-      Email: req.body.Email,
-    })
-      .select("+Password")
-      .exec();
+    if (req.body.googleAccessToken) {
+      // gogole-auth
+      const { googleAccessToken } = req.body;
 
-    if (user.BlockStatus === "Block") {
-      res.status(503);
-      throw new Error("Please Connect with Your Admin And super Admin");
+      axios
+        .get("https://www.googleapis.com/oauth2/v3/userinfo", {
+          headers: {
+            Authorization: `Bearer ${googleAccessToken}`,
+          },
+        })
+        .then(async (response) => {
+          const firstName = response.data.given_name;
+          const lastName = response.data.family_name;
+          const email = response.data.email;
+          const picture = response.data.picture;
+
+          const existingUser = await User.findOne({ email });
+
+          if (!existingUser)
+            return res.status(404).json({ message: "User don't exist!" });
+
+          const token = jwt.sign(
+            {
+              email: existingUser.email,
+              id: existingUser._id,
+            },
+            config.get("JWT_SECRET"),
+            { expiresIn: "1h" }
+          );
+
+          res.status(200).json({ result: existingUser, token });
+        })
+        .catch((err) => {
+          res.status(400).json({ message: "Invalid access token!" });
+        });
+    } else {
+      const user = await User.findOne({
+        Email: req.body.Email,
+      }).exec();
+
+      if (user.isVerify === true) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Please Verify Your Email  ");
+      }
+
+      if (user.BlockStatus === "Block") {
+        res.status(503);
+        throw new Error("Please Connect with Your Admin And super Admin");
+      }
+
+      // check if user data exists,
+      if (!user) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("User and Password Invalid !");
+      }
+
+      // User exists, check if password is correct
+      const passwordIsCorrect = await bcrypt.compare(
+        req.body.Password,
+        user.Password
+      );
+      if (!passwordIsCorrect) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("User and Password Invalid");
+      }
+
+      const token = await generateToken({ id: user._id });
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        message: "login successfully",
+        data: token,
+      });
     }
-
-    // check if user data exists,
-    if (!user) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("User and Password Invalid !");
-    }
-
-    // User exists, check if password is correct
-    const passwordIsCorrect = await bcrypt.compare(
-      req.body.Password,
-      user.Password
-    );
-    if (!passwordIsCorrect) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("User and Password Invalid");
-    }
-
-    const token = await generateToken({ id: user._id });
-    return res.status(StatusCodes.OK).json({
-      success: true,
-      message: "login successfully",
-      data: token,
-    });
   } catch (error) {
     throw new Error(error?.message);
   }
@@ -134,6 +179,23 @@ const LoginStatus = AsyncHandler(async (req, res) => {
   }
 });
 
+// google Auth
+
+const GoogleAuthCtr = AsyncHandler(async (req, res) => {
+  try {
+    if (req.body.credential) {
+      const token = await jwtDecode(req.body.credential);
+      console.log(token, "token");
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, message: "google auth successfully" });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
+
 // Get Verify User
 
 const GetUser = AsyncHandler(async (req, res) => {
@@ -155,35 +217,35 @@ const GetUser = AsyncHandler(async (req, res) => {
 
 // Verify Otp
 
-// const VerifyOtpCtr = AsyncHandler(async (req, res) => {
-//   try {
-//     const { token } = req.params;
-//     console.log(token);
+const VerifyOtpCtr = AsyncHandler(async (req, res) => {
+  try {
+    const { token } = req.params;
+    console.log(token);
 
-//     if (!token) {
-//       return res
-//         .status(StatusCodes.NOT_FOUND)
-//         .json({ message: "Token Not Found" });
-//     }
+    if (!token) {
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: "Token Not Found" });
+    }
 
-//     const checktoken = await Token.findOne({
-//       token: token,
-//       expireAt: { $gte: Date.now() },
-//     });
-//     if (!checktoken) {
-//       return res.status(400).json("token has been exprired");
-//     }
+    const checktoken = await Token.findOne({
+      token: token,
+      expireAt: { $gte: Date.now() },
+    });
+    if (!checktoken) {
+      return res.status(400).json("token has been exprired");
+    }
 
-//     const user = await User.findById({ _id: checktoken.userId });
-//     if (user) {
-//       await User.updateOne({ isVerify: true });
-//     }
+    const user = await User.findById({ _id: checktoken.userId });
+    if (user) {
+      await User.updateOne({ isVerify: true });
+    }
 
-//     return res.status(StatusCodes.OK).json("user Verified");
-//   } catch (error) {
-//     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
-//   }
-// });
+    return res.status(StatusCodes.OK).json("user Verified");
+  } catch (error) {
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+});
 
 // ChangePassword
 const ChangePassword = AsyncHandler(async (req, res) => {
@@ -215,97 +277,95 @@ const ChangePassword = AsyncHandler(async (req, res) => {
 
 // ForgetPassword Ctr
 
-// const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
-//   const { email } = req.body;
-//   const user = await User.findOne({ email });
+const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
+  const resp = await User.findOne({ Email: req.body.Email });
 
-//   if (!user) {
-//     res.status(404);
-//     throw new Error("User does not exist");
-//   }
+  if (!resp) {
+    res.status(404);
+    throw new Error("User does not exist");
+  }
 
-//   // Delete token if it exists in DB
-//   let token = await Token.findOne({ userId: user._id });
-//   if (token) {
-//     await token.deleteOne();
-//   }
+  // Delete token if it exists in DB
+  let token = await Token.findOne({ userId: resp._id });
+  if (token) {
+    await token.deleteOne();
+  }
 
-//   // Create Reste Token
-//   let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
-//   console.log(resetToken);
+  // Create Reste Token
+  let resetToken = crypto.randomBytes(32).toString("hex") + resp._id;
+  console.log(resetToken);
 
-//   // Hash token before saving to DB
-//   const hashedToken = crypto
-//     .createHash("sha256")
-//     .update(resetToken)
-//     .digest("hex");
+  // Hash token before saving to DB
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-//   // Save Token to DB
-//   await new Token({
-//     userId: user._id,
-//     token: hashedToken,
-//     createdAt: Date.now(),
-//     expiresAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
-//   }).save();
+  // Save Token to DB
+  await new Token({
+    userId: resp._id,
+    token: hashedToken,
+    createdAt: Date.now(),
+    expireAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
+  }).save();
 
-//   // Construct Reset Url
-//   const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+  // Construct Reset Url
+  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
-//   // Reset Email
-//   const message = `
-//       <h2>Hello ${user.name}</h2>
-//       <p>Please use the url below to reset your password</p>
-//       <p>This reset link is valid for only 30minutes.</p>
+  // Reset Email
+  const message = `
+      <h2>Hello ${resp.name}</h2>
+      <p>Please use the url below to reset your password</p>
+      <p>This reset link is valid for only 30minutes.</p>
 
-//       <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+      <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
 
-//       <p>Regards...</p>
-//       <p>Pinvent Team</p>
-//     `;
-//   const subject = "Password Reset Request";
-//   const send_to = user.email;
-//   const sent_from = process.env.EMAIL_USER;
+      <p>Regards...</p>
+      <p>Pinvent Team</p>
+    `;
+  const subject = "Password Reset Request";
+  const send_to = resp.EMAIL_USERmail;
+  const sent_from = process.env.EMAIL_USER;
 
-//   try {
-//     await sendEmail(subject, message, send_to, sent_from);
-//     res.status(200).json({ success: true, message: "Reset Email Sent" });
-//   } catch (error) {
-//     res.status(500);
-//     throw new Error("Email not sent, please try again");
-//   }
-// });
+  try {
+    await sendEmail(subject, message, send_to, sent_from);
+    res.status(200).json({ success: true, message: "Reset Email Sent" });
+  } catch (error) {
+    res.status(500);
+    throw new Error("Email not sent, please try again");
+  }
+});
 
 // Reset Token Ctr
 
-// const ResetPassword = AsyncHandler(async (req, res) => {
-//   const { password } = req.body;
-//   const { resetToken } = req.params;
+const ResetPassword = AsyncHandler(async (req, res) => {
+  const { password } = req.body;
+  const { resetToken } = req.params;
 
-//   // Hash token, then compare to Token in DB
-//   const hashedToken = crypto
-//     .createHash("sha256")
-//     .update(resetToken)
-//     .digest("hex");
+  // Hash token, then compare to Token in DB
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-//   // fIND tOKEN in DB
-//   const userToken = await Token.findOne({
-//     token: hashedToken,
-//     expiresAt: { $gt: Date.now() },
-//   });
+  // fIND tOKEN in DB
+  const userToken = await Token.findOne({
+    token: hashedToken,
+    expiresAt: { $gt: Date.now() },
+  });
 
-//   if (!userToken) {
-//     res.status(404);
-//     throw new Error("Invalid or Expired Token");
-//   }
-
-//   // Find user
-//   const user = await User.findOne({ _id: userToken.userId });
-//   user.password = password;
-//   await user.save();
-//   res.status(200).json({
-//     message: "Password Reset Successful, Please Login",
-//   });
-// });
+  if (!userToken) {
+    res.status(404);
+    throw new Error("Invalid or Expired Token");
+  }
+  // Find user
+  const user = await User.findOne({ _id: userToken.userId });
+  user.password = password;
+  await user.save();
+  res.status(200).json({
+    message: "Password Reset Successful, Please Login",
+  });
+});
 // Edit Users
 
 const EditUsers = AsyncHandler(async (req, res) => {
@@ -339,98 +399,28 @@ const EditUsers = AsyncHandler(async (req, res) => {
   }
 });
 
-// const ActiveUser = AsyncHandler(async (req, res) => {
-//   try {
-//   } catch (error) {}
-// });
+// block user
 
-// const DeActiveUser = AsyncHandler(async (req, res) => {
-//   try {
-//   } catch (error) {}
-// });
+const blockController = AsyncHandler(async (req, res) => {
+  try {
+    const checkuser = await User.findById(req.user);
+    if (!checkuser) {
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new Error("Invalid User Please Login");
+    }
 
-// const PassLogin =  AsyncHandler(async (req, res, next) => {
-//   passport.authenticate("local", (err, user, info) => {
-//     if (err) return next(err);
-//     //check if user not found
-//     if (!user) {
-//       return res.status(401).json({ message: info.message });
-//     }
-//     //generate token
-//     const token = jwt.sign({ id: user?._id }, process.env.JWT_SECRET);
-//     //set the token into cookie
-//     res.cookie("token", token, {
-//       httpOnly: true,
-//       secure: false,
-//       sameSite: "strict",
-//       maxAge: 24 * 60 * 60 * 1000, //1 day
-//     });
+    const user = await User.findByIdAndUpdate(req.user, req.body, {
+      new: true,
+      runValidatre: true,
+    });
 
-//     //send the response
-//     res.json({
-//       status: "success",
-//       message: "Login Success",
-//       username: user?.username,
-//       email: user?.email,
-//       _id: user?._id,
-//     });
-//   })(req, res, next);
-// }),
-
-// const googleAuth= passport.authenticate("google", { scope: ["profile"] }),
-// ! GoogleAuthCallback
-// const googleAuthCallback= AsyncHandler(async (req, res, next) => {
-//   passport.authenticate(
-//     "google",
-//     {
-//       failureRedirect: "/login",
-//       session: false,
-//     },
-//     (err, user, info) => {
-//       if (err) return next(err);
-//       if (!user) {
-//         return res.redirect("http://localhost:5173/google-login-error");
-//       }
-//       //generate the token
-
-//       const token = jwt.sign({ id: user?._id }, process.env.JWT_SECRET, {
-//         expiresIn: "3d",
-//       });
-//       //set the token into the cooke
-//       res.cookie("token", token, {
-//         httpOnly: true,
-//         secure: false,
-//         sameSite: "strict",
-//         maxAge: 24 * 60 * 60 * 1000, //1 day:
-//       });
-//       //redirect the user dashboard
-//       res.redirect("http://localhost:5173/dashboard");
-//     }
-//   )(req, res, next);
-// }),
-// ! check user authentication status
-// const checkAuthenticated=AsyncHandler(async (req, res) => {
-//   const token = req.cookies["token"];
-//   if (!token) {
-//     return res.status(401).json({ isAuthenticated: false });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     //find the user
-//     const user = await User.findById(decoded.id);
-//     if (!user) {
-//       return res.status(401).json({ isAuthenticated: false });
-//     } else {
-//       return res.status(200).json({
-//         isAuthenticated: true,
-//         _id: user?._id,
-//         username: user?.username,
-//         profilePicture: user?.profilePicture,
-//       });
-//     }
-//   } catch (error) {}
-//   return res.status(401).json({ isAuthenticated: false, error });
-// }),
+    if (user) {
+      return res.status(200).status({ message: "blocked user" });
+    }
+  } catch (error) {
+    throw new Error(error.message);
+  }
+});
 
 module.exports = {
   RegisterCtr,
@@ -438,8 +428,10 @@ module.exports = {
   logoutCtr,
   LoginStatus,
   GetUser,
-  // VerifyOtpCtr,
+  ForgetPasswordCtr,
+  VerifyOtpCtr,
   ChangePassword,
-  // ResetPassword,
+  GoogleAuthCtr,
+  ResetPassword,
   EditUsers,
 };

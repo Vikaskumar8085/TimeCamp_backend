@@ -1,9 +1,10 @@
 const express = require("express");
-const { RegisterCtr, LoginCtr } = require("../Controller/UserController");
 const UserRouter = require("./User");
 const compRouter = require("./Company");
+const adminRouter = require("./Admin");
 
 const router = express.Router();
+router.use("/v1", adminRouter);
 router.use("/company", compRouter);
 router.use("/user", UserRouter);
 
