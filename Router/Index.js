@@ -5,7 +5,7 @@ const adminRouter = require("./Admin");
 
 const router = express.Router();
 router.use("/v1", adminRouter);
-router.use("/company", compRouter);
+router.use("/v2", compRouter);
 router.use("/user", UserRouter);
 
 module.exports = router;

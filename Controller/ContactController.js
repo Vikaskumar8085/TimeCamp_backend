@@ -10,13 +10,8 @@ const AddContactCtr = AsyncHandler(async (req, res) => {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error(" ");
     }
-
     await addItem.save();
-const notification = await Notification({
-  
-})
-
-    
+    const notification = await Notification({});
   } catch (error) {
     throw new Error(error.message);
   }

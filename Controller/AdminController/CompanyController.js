@@ -95,7 +95,7 @@ const EditCompany = AsyncHandler(async (req, res) => {
 });
 
 // create co admins
-const CreateAdminCtr = AsyncHandler(async (req, res) => {
+const CreateCompany = AsyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.user);
     if (!user) {
@@ -155,7 +155,6 @@ const GetsingleCompanyController = AsyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  CreateAdminCtr,
   GetAllCompany,
   EditCompany,
   RegisterCompany,

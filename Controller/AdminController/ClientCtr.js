@@ -42,7 +42,7 @@ const GetAllClientCtr = AsyncHandler(async (req, res) => {
 });
 
 // get single CLient ctr
-const getSingleClientCtr = AsyncHandler(async (req, res) => {
+const GetSingleClientCtr = AsyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.user);
     if (!user) {
@@ -84,7 +84,7 @@ const EditClientCtr = AsyncHandler(async (req, res) => {
 
 module.exports = {
   createClientCtr,
-  getSingleClientCtr,
+  GetSingleClientCtr,
   EditClientCtr,
   GetAllClientCtr,
 };

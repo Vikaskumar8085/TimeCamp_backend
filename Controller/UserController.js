@@ -5,12 +5,12 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const Token = require("../Modals/TokenSchema");
 const generateToken = require("../Auth/GenerateToken");
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../Utils/SendEmail");
 const SendEmail = require("../Utils/SendEmail");
 const { jwtDecode } = require("jwt-decode");
 require("../Config/dbconfig");
+require("dotenv").config();
 
 // Register Ctr
 
@@ -70,79 +70,42 @@ const RegisterCtr = AsyncHandler(async (req, res) => {
 // login Ctr
 const LoginCtr = AsyncHandler(async (req, res) => {
   try {
-    if (req.body.googleAccessToken) {
-      // gogole-auth
-      const { googleAccessToken } = req.body;
+    const user = await User.findOne({
+      Email: req.body.Email,
+    }).exec();
 
-      axios
-        .get("https://www.googleapis.com/oauth2/v3/userinfo", {
-          headers: {
-            Authorization: `Bearer ${googleAccessToken}`,
-          },
-        })
-        .then(async (response) => {
-          const firstName = response.data.given_name;
-          const lastName = response.data.family_name;
-          const email = response.data.email;
-          const picture = response.data.picture;
-
-          const existingUser = await User.findOne({ email });
-
-          if (!existingUser)
-            return res.status(404).json({ message: "User don't exist!" });
-
-          const token = jwt.sign(
-            {
-              email: existingUser.email,
-              id: existingUser._id,
-            },
-            config.get("JWT_SECRET"),
-            { expiresIn: "1h" }
-          );
-
-          res.status(200).json({ result: existingUser, token });
-        })
-        .catch((err) => {
-          res.status(400).json({ message: "Invalid access token!" });
-        });
-    } else {
-      const user = await User.findOne({
-        Email: req.body.Email,
-      }).exec();
-
-      if (user.isVerify === true) {
-        res.status(StatusCodes.BAD_REQUEST);
-        throw new Error("Please Verify Your Email  ");
-      }
-
-      if (user.BlockStatus === "Block") {
-        res.status(503);
-        throw new Error("Please Connect with Your Admin And super Admin");
-      }
-
-      // check if user data exists,
-      if (!user) {
-        res.status(StatusCodes.BAD_REQUEST);
-        throw new Error("User and Password Invalid !");
-      }
-
-      // User exists, check if password is correct
-      const passwordIsCorrect = await bcrypt.compare(
-        req.body.Password,
-        user.Password
-      );
-      if (!passwordIsCorrect) {
-        res.status(StatusCodes.BAD_REQUEST);
-        throw new Error("User and Password Invalid");
-      }
-
-      const token = await generateToken({ id: user._id });
-      return res.status(StatusCodes.OK).json({
-        success: true,
-        message: "login successfully",
-        data: token,
-      });
+    if (user.isVerify === true) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("Please Verify Your Email  ");
     }
+
+    if (user.BlockStatus === "Block") {
+      res.status(503);
+      throw new Error("Please Connect with Your Admin And super Admin");
+    }
+
+    // check if user data exists,
+    if (!user) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("User and Password Invalid !");
+    }
+
+    // User exists, check if password is correct
+    const passwordIsCorrect = await bcrypt.compare(
+      req.body.Password,
+      user.Password
+    );
+    if (!passwordIsCorrect) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("User and Password Invalid");
+    }
+
+    const token = await generateToken({ id: user._id });
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "login successfully",
+      data: token,
+    });
   } catch (error) {
     throw new Error(error?.message);
   }

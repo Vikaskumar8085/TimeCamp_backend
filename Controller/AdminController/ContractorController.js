@@ -3,7 +3,7 @@ const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 
 // create admin
-const createContratorCtr = AsyncHandler(async (req, res) => {
+const CreateContratorCtr = AsyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.user);
     if (!user) {
@@ -104,7 +104,7 @@ const GetSingleContractor = AsyncHandler(async (req, res) => {
   }
 });
 module.exports = {
-  createContratorCtr,
+  CreateContratorCtr,
   GetallContractor,
   RemoveContractor,
   EditContractor,
