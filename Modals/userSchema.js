@@ -21,9 +21,7 @@ const UserSchema = mongoose.Schema({
   },
   Password: {
     type: String,
-    maxLength: 100,
-    minLength: 6,
-    required: [true, "Please enter your Password"],
+    default: "",
   },
   Photo: {
     type: String,
@@ -51,13 +49,15 @@ const UserSchema = mongoose.Schema({
     default: false,
   },
   isVerify: {
-    type: String,
+    type: Boolean,
     required: true,
     default: false,
   },
   user_id: {
-    type: Number,
-    // required: true,
+    type: String,
+    unique: true,
+    trim: true,
+    required: true,
   },
 });
 

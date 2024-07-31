@@ -6,6 +6,7 @@ const {
   LoginStatus,
   ChangePassword,
   EditUsers,
+  VerifyCtr,
   forgetPassword,
   ForgetPasswordCtr,
   GoogleAuthCtr,
@@ -26,5 +27,6 @@ UserRouter.get("/loginStatus", verifyToken, LoginStatus);
 UserRouter.post("/edit-user", verifyToken, EditUsers);
 UserRouter.post("/google-auth", GoogleAuthCtr);
 UserRouter.post("/forget", ForgetPasswordCtr);
+UserRouter.get("/verify/:token", VerifyCtr);
 
 module.exports = UserRouter;

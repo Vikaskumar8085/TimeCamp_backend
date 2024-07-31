@@ -6,10 +6,9 @@ const crypto = require("crypto");
 const Token = require("../Modals/TokenSchema");
 const generateToken = require("../Auth/GenerateToken");
 const jwt = require("jsonwebtoken");
-const sendEmail = require("../Utils/SendEmail");
 const SendEmail = require("../Utils/SendEmail");
-const { jwtDecode } = require("jwt-decode");
-const generateUniqueId = require("generate-unique-id");
+const { v4: uuidv4 } = require("uuid");
+const axios = require("axios");
 require("../Config/dbconfig");
 require("dotenv").config();
 
@@ -17,69 +16,137 @@ require("dotenv").config();
 
 const RegisterCtr = AsyncHandler(async (req, res) => {
   try {
-    const { FirstName, LastName, Email, Password, Term, user_id } = req.body;
-
+    const { FirstName, LastName, Email, Password, Term } = req.body;
     const genhash = await bcrypt.genSalt(12);
     const hashpassword = await bcrypt.hash(Password, genhash);
-    // Check if user email already exists
-    // const userExists = await User.findOne({ Email });
-    // if (userExists) {
-    //   res.status(StatusCodes.BAD_REQUEST);
-    //   throw new Error("Email has already been registered");
-    // }
-    //  else {
-    //   const hashgen = crypto.randomBytes(32).toString("hex") + userExists._id;
-    //   const hash = crypto.createHash("sha256").update(hashgen).digest("hex");
-    //   const saveToken = await Token({
-    //     userId: userExists._id,
-    //     token: hash,
-    //     createdAt: Date.now(),
-    //     expireAt: Date.now() + 30 * 60 * 1000, // 30 min expire
-    //   });
-    //   await saveToken.save();
-    //   const send_to = userExists.Email;
-    //   const subject = "verify your mail ";
-    //   const message = `  here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a>`;
-    //   const mailsend = await SendEmail(send_to, subject, message);
-    //   if (mailsend) {
-    //     console.log("mail send");
-    //   }
-    // }
-
-    const uid = { $inc: 1};
-    console.log(uid, "uid");
+    const userExists = await User.findOne({ Email: req.body.Email });
+    if (userExists) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("Email has already been registered");
+    }
     const resp = await User({
       FirstName,
       LastName,
       Email,
       Password: hashpassword,
       Term,
+      user_id: uuidv4(),
     });
 
     if (resp) {
       await resp.save();
+
+      const hashgen = crypto.randomBytes(32).toString("hex") + resp._id;
+      const hash = crypto.createHash("sha256").update(hashgen).digest("hex");
+      const saveToken = await Token({
+        userId: resp._id,
+        token: hash,
+        createdAt: Date.now(),
+        expireAt: Date.now() + 30 * 60 * 1000, // 30 min expire
+      });
+      await saveToken.save();
+      const send_to = resp.Email;
+      const subject = "verification mail from Timecamp team";
+      const message = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .header img {
+            max-width: 100px;
+            height: auto;
+        }
+        .content {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333333;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            font-size: 14px;
+            color: #666666;
+        }
+        .footer a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://example.com/logo.png" alt="Company Logo">
+        </div>
+        <div class="content">
+            <h1>Hello [Recipient's Name],</h1>
+            <p>We hope this email finds you well. here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a></p>
+            <p>Thank you for your attention!</p>
+            <p>Best regards,<br>Time Camp</p>
+        </div>
+        <div class="footer">
+            <p>If you no longer wish to receive these emails, you can .</p>
+            <p>1234 Street Address, City, State, ZIP</p>
+        </div>
+    </div>
+</body>
+</htm>`;
+      // const message = `here is your verify link  <a href="http://localhost:3000/verify/${hash}">http://localhost:3000/verify</a>`;
+      const mailsend = await SendEmail(send_to, subject, message);
+      if (mailsend) {
+        console.log("mail send");
+      }
+
       return res.status(StatusCodes.CREATED).json({
         success: true,
-        message: "registion complete",
+        message: "registration completed ! please check your mail",
       });
     } else {
-      return res.status(StatusCodes.BAD_REQUEST).json("not saved");
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        success: false,
+        message: "registration failed",
+      });
     }
   } catch (error) {
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error?.message);
+    throw new Error(error.message);
   }
 });
 
 // login Ctr
 const LoginCtr = AsyncHandler(async (req, res) => {
   try {
+    console.log(req.body);
     const user = await User.findOne({
       Email: req.body.Email,
-    }).exec();
+    }).select("+Password");
 
-    if (user.isVerify === true) {
+    if (!user) {
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new Error("User and Password Invalid !");
+    }
+    if (user.isVerify === false) {
       res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("Please Verify Your Email  ");
+      throw new Error("your email is not verified please verify your mail");
     }
 
     if (user.BlockStatus === "Block") {
@@ -88,10 +155,6 @@ const LoginCtr = AsyncHandler(async (req, res) => {
     }
 
     // check if user data exists,
-    if (!user) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("User and Password Invalid !");
-    }
 
     // User exists, check if password is correct
     const passwordIsCorrect = await bcrypt.compare(
@@ -149,9 +212,40 @@ const LoginStatus = AsyncHandler(async (req, res) => {
 
 const GoogleAuthCtr = AsyncHandler(async (req, res) => {
   try {
-    if (req.body.credential) {
-      const token = await jwtDecode(req.body.credential);
-      console.log(token, "token");
+    if (req.body.access_token) {
+      const response = await axios.get(
+        `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${req.body.access_token}`,
+        {
+          headers: {
+            Authorization: `Bearer ${req.body.access_token}`,
+          },
+        }
+      );
+
+      if (response) {
+        const checkUser = await User.findOne({ Email: response.data?.email });
+        if (!checkUser) {
+          await User({
+            FirstName: response?.data?.given_name,
+            LastName: response?.data?.family_name,
+            Email: response?.data?.email,
+            isVerify: response?.data?.verified_email,
+            Photo: response?.data?.picture,
+            Role: "Admin",
+            user_id: response?.data?.id,
+          }).save();
+        } else {
+          const user = await User.findOne({ Email: response.data?.email });
+          if (user) {
+            const token = await generateToken({ id: user._id });
+
+            res.status(200).json({
+              success: true,
+              message: token,
+            });
+          }
+        }
+      }
     }
 
     return res
@@ -183,10 +277,9 @@ const GetUser = AsyncHandler(async (req, res) => {
 
 // Verify Otp
 
-const VerifyOtpCtr = AsyncHandler(async (req, res) => {
+const VerifyCtr = AsyncHandler(async (req, res) => {
   try {
     const { token } = req.params;
-    console.log(token);
 
     if (!token) {
       return res
@@ -207,7 +300,10 @@ const VerifyOtpCtr = AsyncHandler(async (req, res) => {
       await User.updateOne({ isVerify: true });
     }
 
-    return res.status(StatusCodes.OK).json("user Verified");
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      message: "Email verified successfully",
+    });
   } catch (error) {
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(error.message);
   }
@@ -395,7 +491,7 @@ module.exports = {
   LoginStatus,
   GetUser,
   ForgetPasswordCtr,
-  VerifyOtpCtr,
+  VerifyCtr,
   ChangePassword,
   GoogleAuthCtr,
   ResetPassword,
