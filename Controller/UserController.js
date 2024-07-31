@@ -351,6 +351,12 @@ const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
   let token = await Token.findOne({ userId: resp._id });
   if (token) {
     await token.deleteOne();
+    await new Token({
+      userId: resp._id,
+      token: hashedToken,
+      createdAt: Date.now(),
+      expireAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
+    }).save();
   }
 
   // Create Reste Token
@@ -364,33 +370,29 @@ const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
     .digest("hex");
 
   // Save Token to DB
-  await new Token({
-    userId: resp._id,
-    token: hashedToken,
-    createdAt: Date.now(),
-    expireAt: Date.now() + 30 * (60 * 1000), // Thirty minutes
-  }).save();
 
   // Construct Reset Url
   const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
   // Reset Email
   const message = `
-      <h2>Hello ${resp.name}</h2>
+      <h2>Hello ${resp.FirstName}</h2>
       <p>Please use the url below to reset your password</p>
       <p>This reset link is valid for only 30minutes.</p>
 
       <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
 
       <p>Regards...</p>
-      <p>Pinvent Team</p>
+      <p>Ignitive Team</p>
     `;
   const subject = "Password Reset Request";
-  const send_to = resp.EMAIL_USERmail;
-  const sent_from = process.env.EMAIL_USER;
+  const send_to = resp.Email;
 
+  const mailsend = await SendEmail(subject, message, send_to);
+  if (mailsend) {
+    console.log("mailsend");
+  }
   try {
-    await sendEmail(subject, message, send_to, sent_from);
     res.status(200).json({ success: true, message: "Reset Email Sent" });
   } catch (error) {
     res.status(500);
