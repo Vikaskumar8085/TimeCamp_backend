@@ -59,6 +59,9 @@ const UserSchema = mongoose.Schema({
     trim: true,
     required: true,
   },
+  userRef_id: {
+    type: String,
+  },
 });
 
 const User = mongoose.model("User", UserSchema);
