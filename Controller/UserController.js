@@ -233,6 +233,7 @@ const GoogleAuthCtr = AsyncHandler(async (req, res) => {
             Photo: response?.data?.picture,
             Role: "Admin",
             user_id: response?.data?.id,
+            Term: true,
           }).save();
         } else {
           const user = await User.findOne({ Email: response.data?.email });

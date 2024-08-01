@@ -18,21 +18,27 @@ const ClientRegistrationSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    Client_POstal_Code: {
+    Client_Address: {
+      type: String,
+      required: true,
+    },
+    Client_Postal_Code: {
       type: Number,
       required: true,
     },
 
-    Tax_Number: {
+    GstNumber: {
       type: String,
       required: true,
     },
     Is_Active: {
       type: String,
       required: true,
+      default: false,
     },
     Common_Id: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },

@@ -37,13 +37,24 @@ const GetAllCompany = AsyncHandler(async (req, res) => {
 const RegisterCompany = AsyncHandler(async (req, res) => {
   try {
     // user verification
-    const user = await User.findById();
+    const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("Un Authorized User");
     }
-
-    const response = await Company(req.body);
+    const response = await Company({
+      Company_Name: req.body.Company_Name,
+      Company_Email: req.body.Company_Email,
+      Address: req.body.Address,
+      Postal_Code: req.body.Postal_Code,
+      Phone: req.body.Phone,
+      Company_Logo: req.body.Company_Logo,
+      Employee_No: req.body.Employee_No,
+      Established_date: req.body.Established_date,
+      CompanyWesite: req.body.CompanyWesite,
+      Tex_Number: req.body.Tex_Number,
+      UserId: user.user_id,
+    });
 
     if (!response) {
       res.status(StatusCodes.BAD_REQUEST);
@@ -95,64 +106,64 @@ const EditCompany = AsyncHandler(async (req, res) => {
 });
 
 // create co admins
-const CreateCompany = AsyncHandler(async (req, res) => {
-  try {
-    const user = await User.findById(req.user);
-    if (!user) {
-      res.status(StatusCodes.UNAUTHORIZED);
-      throw new Error("Un Authorized User");
-    }
-    // verify Company
+// const CreateCompany = AsyncHandler(async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user);
+//     if (!user) {
+//       res.status(StatusCodes.UNAUTHORIZED);
+//       throw new Error("Un Authorized User");
+//     }
+//     // verify Company
 
-    // const verifycompany = await Company.findOne({ UserId: user?.user_id });
-    // if (!verifycompany) {
-    //   res.status(StatusCodes.BAD_REQUEST);
-    //   throw new Error("Your Company has still not registred ");
-    // }
+//     // const verifycompany = await Company.findOne({ UserId: user?.user_id });
+//     // if (!verifycompany) {
+//     //   res.status(StatusCodes.BAD_REQUEST);
+//     //   throw new Error("Your Company has still not registred ");
+//     // }
 
-    const createAdmin = await User({
-      FirstName: req.body.FirstName,
-      LastName: req.body.LastName,
-      Email: req.body.Email,
-      Password: req.body.Password,
-      Role: "Admin",
-      user_id: "1",
-    });
+//     const createAdmin = await User({
+//       FirstName: req.body.FirstName,
+//       LastName: req.body.LastName,
+//       Email: req.body.Email,
+//       Password: req.body.Password,
+//       Role: "Admin",
+//       user_id: "1",
+//     });
 
-    if (!createAdmin) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("there is Some Error");
-    } else {
-      await createAdmin.save();
-      // Save Id to Company
-      console.log(createAdmin._id, createAdmin.user_id);
+//     if (!createAdmin) {
+//       res.status(StatusCodes.BAD_REQUEST);
+//       throw new Error("there is Some Error");
+//     } else {
+//       await createAdmin.save();
+//       // Save Id to Company
+//       console.log(createAdmin._id, createAdmin.user_id);
 
-      const addid = await Company({
-        UserId: createAdmin._id,
-        UserObjectId: createAdmin.user_id,
-      });
+//       const addid = await Company({
+//         UserId: createAdmin._id,
+//         UserObjectId: createAdmin.user_id,
+//       });
 
-      if (addid) {
-        await addid.save();
+//       if (addid) {
+//         await addid.save();
 
-        console.log("create company");
-      }
-    }
+//         console.log("create company");
+//       }
+//     }
 
-    return res
-      .status(StatusCodes.OK)
-      .json({ success: true, message: "successfully admin created" });
-  } catch (error) {
-    throw new Error(error?.message);
-  }
-});
+//     return res
+//       .status(StatusCodes.OK)
+//       .json({ success: true, message: "successfully admin created" });
+//   } catch (error) {
+//     throw new Error(error?.message);
+//   }
+// });
 
-const GetsingleCompanyController = AsyncHandler(async (req, res) => {
-  try {
-  } catch (error) {
-    throw new Error(error?.message);
-  }
-});
+// const GetsingleCompanyController = AsyncHandler(async (req, res) => {
+//   try {
+//   } catch (error) {
+//     throw new Error(error?.message);
+//   }
+// });
 
 module.exports = {
   GetAllCompany,

@@ -17,7 +17,7 @@ const CompanySchema = mongoose.Schema({
     required: true,
   },
   Phone: {
-    type: String,
+    type: Number,
     required: true,
   },
   Company_Logo: {
@@ -36,22 +36,20 @@ const CompanySchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  TextNumber: {
+  Tex_Number: {
     type: Number,
     required: true,
   },
-  UserId: [
-    {
-      type: String,
-      // required: true,
-    },
-  ],
-  UserObjectId: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
+  UserId: {
+    type: String,
+    required: true,
+  },
+  // UserObjectId: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: "User",
+  //   },
+  // ],
 });
 
 const Company = mongoose.model("Company", CompanySchema);
