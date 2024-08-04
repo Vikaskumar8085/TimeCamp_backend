@@ -44,12 +44,12 @@ const CompanySchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  // UserObjectId: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: "User",
-  //   },
-  // ],
+  UserObjectId: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const Company = mongoose.model("Company", CompanySchema);

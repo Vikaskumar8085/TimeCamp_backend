@@ -11,6 +11,7 @@ const {
   ForgetPasswordCtr,
   GoogleAuthCtr,
   ResetPassword,
+  getuserall,
 } = require("../../Controller/UserController");
 const {
   registerValidation,
@@ -30,5 +31,6 @@ UserRouter.post("/google-auth", GoogleAuthCtr);
 UserRouter.post("/forget", ForgetPasswordCtr);
 UserRouter.get("/verify/:token", VerifyCtr);
 UserRouter.put("/reset-password/:resetToken", ResetPassword);
+UserRouter.get("/get-all-user",getuserall);
 
 module.exports = UserRouter;

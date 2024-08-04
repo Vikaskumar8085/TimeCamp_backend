@@ -2,9 +2,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 (async function () {
   try {
-    const dbconnect = await mongoose.connect(
-      "mongodb://127.0.0.1:27017/testdb"
-    );
+    const dbconnect = await mongoose.connect(process.env.DB);
     if (dbconnect) {
       console.log("db connected");
     } else {

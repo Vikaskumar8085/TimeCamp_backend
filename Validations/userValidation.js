@@ -9,7 +9,11 @@ const registerValidation = Joi.object({
   Password: Joi.string()
     .min(4)
     .max(40)
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+    .pattern(
+      new RegExp(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+      )
+    ),
   Photo: Joi.string().min(3).max(70),
   Term: Joi.boolean().required(),
   // user_id: Joi.string().required(),
@@ -18,12 +22,14 @@ const registerValidation = Joi.object({
 // login Validation
 const loginValidation = Joi.object({
   Email: Joi.string().min(4).max(30).required(),
-  Password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+  Password: Joi.string().pattern(
+    new RegExp(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    )
+  ),
 });
 
 // get User Validation
-
-
 
 module.exports = {
   registerValidation,

@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const SendEmail = require("../Utils/SendEmail");
 const { v4: uuidv4 } = require("uuid");
 const axios = require("axios");
+const Company = require("../Modals/CompanySchema");
 require("../Config/dbconfig");
 require("dotenv").config();
 
@@ -212,6 +213,7 @@ const LoginStatus = AsyncHandler(async (req, res) => {
 
 const GoogleAuthCtr = AsyncHandler(async (req, res) => {
   try {
+    console.log(req.body.access_token, "access_token");
     if (req.body.access_token) {
       const response = await axios.get(
         `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${req.body.access_token}`,
@@ -235,23 +237,15 @@ const GoogleAuthCtr = AsyncHandler(async (req, res) => {
             user_id: response?.data?.id,
             Term: true,
           }).save();
-        } else {
-          const user = await User.findOne({ Email: response.data?.email });
-          if (user) {
-            const token = await generateToken({ id: user._id });
-
-            res.status(200).json({
-              success: true,
-              message: token,
-            });
-          }
         }
       }
-    }
 
-    return res
-      .status(200)
-      .json({ success: true, message: "google auth successfully" });
+      const user = await User.findOne({ Email: response.data?.email });
+      if (user) {
+        const TOKEN = await generateToken({ id: user._id });
+        return res.status(200).json({ success: true, message: TOKEN });
+      }
+    }
   } catch (error) {
     throw new Error(error.message);
   }
@@ -466,22 +460,38 @@ const EditUsers = AsyncHandler(async (req, res) => {
 
 // block user
 
-const blockController = AsyncHandler(async (req, res) => {
+const getuserall = AsyncHandler(async (req, res) => {
   try {
-    const checkuser = await User.findById(req.user);
-    if (!checkuser) {
-      res.status(StatusCodes.UNAUTHORIZED);
-      throw new Error("Invalid User Please Login");
-    }
+    // const checkuser = await User.findById(req.user);
+    // if (!checkuser) {
+    //   res.status(StatusCodes.UNAUTHORIZED);
+    //   throw new Error("Invalid User Please Login");
+    // }
+    User.aggregate([
+      {
+        $lookup: {
+          from: "users", // The collection to join with
+          localField: "UserId", // Field from the Company collection
+          foreignField: "user_id", // Field from the User collection
+          as: "userDetails", // Output array field for joined data
+        },
+      },
+    ])
+      .then((results) => {
+        console.log(results);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
 
-    const user = await User.findByIdAndUpdate(req.user, req.body, {
-      new: true,
-      runValidatre: true,
-    });
+    // const user = await User.findByIdAndUpdate(req.user, req.body, {
+    //   new: true,
+    //   runValidatre: true,
+    // });
 
-    if (user) {
-      return res.status(200).status({ message: "blocked user" });
-    }
+    // if (user) {
+    //   return res.status(200).status({ message: "blocked user" });
+    // }
   } catch (error) {
     throw new Error(error.message);
   }
@@ -499,4 +509,5 @@ module.exports = {
   GoogleAuthCtr,
   ResetPassword,
   EditUsers,
+  getuserall,
 };
