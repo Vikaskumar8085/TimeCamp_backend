@@ -44,7 +44,7 @@ const GetallContractor = AsyncHandler(async (req, res) => {
 const RemoveContractor = AsyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
-    const user = await User.findById(req.body);
+    const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("User Not found ! Please sign in");

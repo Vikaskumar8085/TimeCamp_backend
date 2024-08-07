@@ -160,6 +160,7 @@ const EditCompany = AsyncHandler(async (req, res) => {
 
 // const GetsingleCompanyController = AsyncHandler(async (req, res) => {
 //   try {
+
 //   } catch (error) {
 //     throw new Error(error?.message);
 //   }

@@ -8,5 +8,4 @@ const router = express.Router();
 router.use("/v1", adminRouter);
 router.use("/user", UserRouter);
 
-
 module.exports = router;

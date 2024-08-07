@@ -28,6 +28,20 @@ const {
   EditCompany,
   CreateAdminCtr,
 } = require("../../Controller/AdminController/CompanyController");
+const {
+  AddDesignation,
+  GetSignleDesignation,
+  RemoveDesignation,
+  EditDesignation,
+  GetAllDesignation,
+} = require("../../Controller/AdminController/DesignationCtr");
+const {
+  AddDepartment,
+  GetAllDepartment,
+  GetSingleDepartment,
+  EditDepartment,
+  RemoveDepartment,
+} = require("../../Controller/AdminController/DepartmentCtr");
 
 const adminRouter = express.Router();
 
@@ -53,4 +67,21 @@ adminRouter.get("/get-all-company", verifyToken, GetAllCompany);
 adminRouter.post("/add-company", verifyToken, RegisterCompany);
 adminRouter.post("/edit-company", verifyToken, EditCompany);
 //company
+
+// Designation
+adminRouter.get("/get-all-designation", GetAllDesignation);
+adminRouter.post("/add-designation", AddDesignation);
+adminRouter.get("/get-single-designation/:id", GetSignleDesignation);
+adminRouter.delete("/remove-designation/:id", RemoveDesignation);
+adminRouter.put("/edit-designation/:id", EditDesignation);
+// Designation
+
+// Department
+adminRouter.get("/get-all-department", GetAllDepartment);
+adminRouter.get("/get-single-department/:id", GetSingleDepartment);
+adminRouter.post("/add-department", AddDepartment);
+adminRouter.put("/edit-department/:id", EditDepartment);
+adminRouter.delete("/remove-department/:id", RemoveDepartment);
+// Department
+
 module.exports = adminRouter;
