@@ -1,6 +1,7 @@
 const AsyncHandler = require("express-async-handler");
 const EmployeeRegistration = require("../../Modals/EmployeeRegistrationModel");
 const { StatusCodes } = require("http-status-codes");
+const moment = require("moment");
 
 // Get All Employee
 const GetAllEmployee = AsyncHandler(async (req, res) => {
@@ -34,7 +35,17 @@ const GetSingleEmployee = AsyncHandler(async (req, res) => {
 // Add Employee
 const AddEmployee = AsyncHandler(async (req, res) => {
   try {
-    const addItem = await EmployeeRegistration(req.body);
+    const addItem = await EmployeeRegistration({
+      Employee_FirstName: req.body.Employee_FirstName,
+      Employee_LastName: req?.body?.Employee_LastName,
+      Employee_Email: req?.body?.Employee_Email,
+      Employee_Phone: req?.body?.Employee_Phone,
+      Employee_JoiningDate: moment(req?.body?.Employee_JoiningDate).format(
+        "DD/MM/YYYY"
+      ),
+      Employee_Designation: req?.body?.Employee_Designation,
+      Employee_Address: req?.body?.Employee_Address,
+    });
     if (addItem) {
       await addItem.save();
 

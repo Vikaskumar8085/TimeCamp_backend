@@ -32,12 +32,14 @@ const ContractorRegisterationSchema = mongoose.Schema(
       required: true,
     },
     Created_Date: {
-      type: String,
+      type: Date,
       default: moment().format("DD/MM/YYYY"),
     },
     Created_Time: {
       type: String,
-      default: moment().format("HH:mm"),
+      default: function () {
+        return moment().format("HH:mm");
+      },
     },
   },
   {
