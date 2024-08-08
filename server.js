@@ -47,3 +47,22 @@ if (cluster.isMaster) {
     console.log("server started on Port", Port);
   });
 }
+
+// const now = new Date();
+// const formatter = new Intl.DateTimeFormat("en-US", {
+//   hour: "2-digit",
+//   minute: "2-digit",
+//   hour12: false, // Use 24-hour time
+// });
+// const time = formatter.format(now);
+
+// console.log(time); // e.g., "14:05" for 2:05 PM or "08:30" for 8:30 AM
+
+// const moment = require("moment");
+
+// // Get current time
+
+// // Format time as HH:mm (24-hour format)
+// const formattedTime = moment().format("HH:mm");
+
+// console.log(formattedTime);

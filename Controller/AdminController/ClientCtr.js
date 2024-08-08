@@ -4,7 +4,6 @@ const { StatusCodes } = require("http-status-codes");
 const Client = require("../../Modals/ClientRegistrationModel");
 
 // createClient
-
 const createClientCtr = AsyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.user);
@@ -70,6 +69,8 @@ const GetSingleClientCtr = AsyncHandler(async (req, res) => {
   }
 });
 
+// EditClient Ctr
+
 const EditClientCtr = AsyncHandler(async (req, res) => {
   try {
     const user = await User.findById(req.user);
@@ -91,9 +92,25 @@ const EditClientCtr = AsyncHandler(async (req, res) => {
   }
 });
 
+const RemoveClient = AsyncHandler(async (req, res) => {
+  try {
+    const user = await User.findById(req.user);
+    if (!user) {
+      res.status(StatusCodes.UNAUTHORIZED);
+      throw new Error("UnAuthrized User Please Signup ");
+    }
+
+    const RemoveItems = await Client.findByIdAndDelete({ _id: req.params.id });
+    if (RemoveItems) {
+      return res.status(200).json({ success: true, message: "data deleted Successfully" });
+    }
+  } catch (error) {}
+});
+
 module.exports = {
   createClientCtr,
   GetSingleClientCtr,
   EditClientCtr,
   GetAllClientCtr,
+  RemoveClient,
 };

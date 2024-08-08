@@ -62,8 +62,6 @@ const EmployeeRegistrationSchema = mongoose.Schema(
   }
 );
 
-// EmployeeRegistrationSchema.plugin(AutoIncrement, { inc_field: "Employee_Id" });
-
 EmployeeRegistrationSchema.plugin(AutoIncrement, {
   inc_field: "Employee_Id",
   start_seq: 1,

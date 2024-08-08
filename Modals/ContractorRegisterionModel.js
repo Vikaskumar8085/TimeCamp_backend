@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
+const moment = require("moment");
+const now = new Date();
+const formatter = new Intl.DateTimeFormat("en-US", {
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false, // Use 24-hour time
+});
 const ContractorRegisterationSchema = mongoose.Schema(
   {
     Contractor_Id: {
@@ -25,8 +32,12 @@ const ContractorRegisterationSchema = mongoose.Schema(
       required: true,
     },
     Created_Date: {
-      type: Date,
-      required: true,
+      type: String,
+      default: moment().format("DD/MM/YYYY"),
+    },
+    Created_Time: {
+      type: String,
+      default: moment().format("HH:mm"),
     },
   },
   {

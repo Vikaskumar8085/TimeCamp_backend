@@ -11,11 +11,13 @@ const {
   GetAllClientCtr,
   EditClientCtr,
   GetSingleClientCtr,
+  RemoveClient,
 } = require("../../Controller/AdminController/ClientCtr");
 const {
   CreateContratorCtr,
   EditContractor,
   RemoveContractor,
+  GetallContractor,
 } = require("../../Controller/AdminController/ContractorController");
 const {
   GetallContactCtr,
@@ -43,10 +45,9 @@ const {
   RemoveDepartment,
 } = require("../../Controller/AdminController/DepartmentCtr");
 const {
+  ReomveEmployee,
   GetAllEmployee,
   AddEmployee,
-  GetSingleEmployee,
-  ReomveEmployee,
   EditEmployee,
 } = require("../../Controller/AdminController/EmployeeCotroller");
 
@@ -62,9 +63,10 @@ adminRouter.post("/create-client", verifyToken, createClientCtr);
 adminRouter.get("/get-all-client", verifyToken, GetAllClientCtr);
 adminRouter.put("/edit-client/:id", verifyToken, EditClientCtr);
 adminRouter.get("/get-single-client/:id", verifyToken, GetSingleClientCtr);
-// employee
-adminRouter.post("/create-contractor", CreateContratorCtr);
-adminRouter.get("/get-all-contractor", GetallContactCtr);
+adminRouter.delete("/remove-client/:id", verifyToken, RemoveClient);
+// contractor
+adminRouter.post("/add-contractor", CreateContratorCtr);
+adminRouter.get("/get-all-contractor", GetallContractor);
 adminRouter.put("/edit-contractor/:id", EditContractor);
 adminRouter.delete("/remove-contractor/:id", RemoveContractor);
 adminRouter.get("/get-single-contractor/:id", GetSingleContactCtr);
@@ -91,13 +93,13 @@ adminRouter.put("/edit-department/:id", EditDepartment);
 adminRouter.delete("/remove-department/:id", RemoveDepartment);
 // Department
 
-// Employee
+// Employee  router
 
 adminRouter.get("/get-all-employee", GetAllEmployee);
 adminRouter.post("/add-employee", AddEmployee);
-adminRouter.get("/get-single-employee/:id", GetSingleEmployee);
-adminRouter.delete("/delete-employee/:id", ReomveEmployee);
-adminRouter.put("/edit-employee/:id", EditEmployee);
-// Employee
+adminRouter.delete("/reomve-employee/:id", ReomveEmployee);
+adminRouter.put("/edit-Employee/:id", EditEmployee);
+
+// Employee router
 
 module.exports = adminRouter;

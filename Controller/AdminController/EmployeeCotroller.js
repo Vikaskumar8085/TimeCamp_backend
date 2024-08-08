@@ -5,7 +5,7 @@ const { StatusCodes } = require("http-status-codes");
 // Get All Employee
 const GetAllEmployee = AsyncHandler(async (req, res) => {
   try {
-    const GetEmployee = await EmployeeRegistration.find().lean().exec();
+    const GetEmployee = await EmployeeRegistration.find();
 
     if (!GetEmployee) {
       res.status(StatusCodes.BAD_REQUEST);
