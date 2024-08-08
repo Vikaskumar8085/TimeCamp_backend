@@ -54,10 +54,11 @@ const RemoveDesignation = AsyncHandler(async (req, res) => {
 
 const EditDesignation = AsyncHandler(async (req, res) => {
   try {
+    console.log(req.params.id,"id")
     const EditItems = await Designation.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidatore: true }
     );
     if (!EditItems) {
       return res.status(404).json({ error: "Designation not found" });

@@ -42,6 +42,13 @@ const {
   EditDepartment,
   RemoveDepartment,
 } = require("../../Controller/AdminController/DepartmentCtr");
+const {
+  GetAllEmployee,
+  AddEmployee,
+  GetSingleEmployee,
+  ReomveEmployee,
+  EditEmployee,
+} = require("../../Controller/AdminController/EmployeeCotroller");
 
 const adminRouter = express.Router();
 
@@ -83,5 +90,14 @@ adminRouter.post("/add-department", AddDepartment);
 adminRouter.put("/edit-department/:id", EditDepartment);
 adminRouter.delete("/remove-department/:id", RemoveDepartment);
 // Department
+
+// Employee
+
+adminRouter.get("/get-all-employee", GetAllEmployee);
+adminRouter.post("/add-employee", AddEmployee);
+adminRouter.get("/get-single-employee/:id", GetSingleEmployee);
+adminRouter.delete("/delete-employee/:id", ReomveEmployee);
+adminRouter.put("/edit-employee/:id", EditEmployee);
+// Employee
 
 module.exports = adminRouter;

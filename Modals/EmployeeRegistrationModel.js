@@ -1,6 +1,12 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
+
 const EmployeeRegistrationSchema = mongoose.Schema(
   {
+    Employee_Id: {
+      type: Number,
+      unique: true,
+    },
     Employee_FirstName: {
       type: String,
       required: true,
@@ -56,6 +62,12 @@ const EmployeeRegistrationSchema = mongoose.Schema(
   }
 );
 
+// EmployeeRegistrationSchema.plugin(AutoIncrement, { inc_field: "Employee_Id" });
+
+EmployeeRegistrationSchema.plugin(AutoIncrement, {
+  inc_field: "Employee_Id",
+  start_seq: 1,
+});
 const EmployeeRegistration = mongoose.model(
   "EmployeeRegistration",
   EmployeeRegistrationSchema
