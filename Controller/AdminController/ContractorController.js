@@ -18,7 +18,7 @@ const CreateContratorCtr = AsyncHandler(async (req, res) => {
       Contractor_Number: req.body.Contractor_Number,
       Person_Name: req.body.Person_Name,
       Remark: req.body.Remark,
-      Created_Date: req.body.Created_Date,
+      Created_Date: moment(req.body.Created_Date).format("DD/MM/YYYY"),
       Created_Time: req.body.Created_Time,
     });
 
@@ -40,11 +40,11 @@ const CreateContratorCtr = AsyncHandler(async (req, res) => {
 const GetallContractor = AsyncHandler(async (req, res) => {
   try {
     console.log("contractor");
-    // const user = await User.findById(req.user);
-    // if (!user) {
-    //   res.status(StatusCodes.BAD_REQUEST);
-    //   throw new Error("User Not found please sign in");
-    // }
+    const user = await User.findById(req.user);
+    if (!user) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("User Not found please sign in");
+    }
     const response = await Contractor.find();
     return res.status(StatusCodes.OK).json(response);
   } catch (error) {

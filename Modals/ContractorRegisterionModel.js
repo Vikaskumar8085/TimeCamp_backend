@@ -32,7 +32,7 @@ const ContractorRegisterationSchema = mongoose.Schema(
       required: true,
     },
     Created_Date: {
-      type: Date,
+      type: String,
       default: moment().format("DD/MM/YYYY"),
     },
     Created_Time: {

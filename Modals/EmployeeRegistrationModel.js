@@ -27,7 +27,7 @@ const EmployeeRegistrationSchema = mongoose.Schema(
       required: true,
     },
     Employee_JoiningDate: {
-      type: Date,
+      type: String,
       required:true
     },
     Employee_Designation: {
