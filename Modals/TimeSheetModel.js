@@ -1,12 +1,33 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const TimesheetSchema = mongoose.Schema(
   {
+    Task_id: {
+      type: Number,
+      trim: true,
+    },
+    TS_code: {
+      type: String,
+      required: true,
+    },
     ProjectName: {
       type: String,
       trim: true,
       required: [true, "Please enter your ProjectName"],
     },
+    Company: {
+      type: String,
+      required: true,
+    },
+    Task_Description: {
+      type: String,
+      required: true,
+    },
+    Description: {
+      type: String,
+      required: true
+    }, 
     Hours: {
       type: String,
       trim: true,
@@ -24,8 +45,8 @@ const TimesheetSchema = mongoose.Schema(
       type: Date,
       required: true,
     },
-    Employee: {
-      type: Number,
+    Resource: {
+      type: String,
       required: true,
     },
     Approvel: {
@@ -53,6 +74,8 @@ const TimesheetSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+TimesheetSchema.plugin(AutoIncrement, { inc_field: 'Task_id' });
 
 const TimeSheet = mongoose.model("TimeSheet", TimesheetSchema);
 
