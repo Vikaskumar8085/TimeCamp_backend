@@ -53,7 +53,6 @@ const {
 const {
   GetAllTimesheetCtr,
   AddTimeSheetCtr,
-  AddTimeSheetCtr,
   RemoveTimeSheetCtr,
   UpdateTimesheetCtr,
 } = require("../../Controller/AdminController/TimeSheetCtr");
@@ -110,10 +109,5 @@ adminRouter.put("/edit-Employee/:id", EditEmployee);
 // Employee router
 
 // TimeSheet
-
-adminRouter.get("/get-all-timesheet", GetAllTimesheetCtr);
-adminRouter.post("/add-timesheet", AddTimeSheetCtr);
-adminRouter.delete("/del-timesheet/:id", RemoveTimeSheetCtr);
-adminRouter.put("/update-timesheet/:id", UpdateTimesheetCtr);
 
 module.exports = adminRouter;
