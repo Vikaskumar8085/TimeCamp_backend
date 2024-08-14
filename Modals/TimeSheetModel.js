@@ -9,7 +9,6 @@ const TimesheetSchema = mongoose.Schema(
     },
     TS_code: {
       type: String,
-      required: true,
     },
     ProjectName: {
       type: String,
@@ -26,8 +25,8 @@ const TimesheetSchema = mongoose.Schema(
     },
     Description: {
       type: String,
-      required: true
-    }, 
+      required: true,
+    },
     Hours: {
       type: String,
       trim: true,
@@ -55,7 +54,7 @@ const TimesheetSchema = mongoose.Schema(
     },
     Status: {
       type: String,
-      required: true,
+      // required: true,
     },
     Bill_Status: {
       type: String,
@@ -63,7 +62,7 @@ const TimesheetSchema = mongoose.Schema(
     },
     Approved_By: {
       type: String,
-      required: true,
+      // required: true,
     },
     Approvel_Date: {
       type: String,
@@ -75,7 +74,7 @@ const TimesheetSchema = mongoose.Schema(
   }
 );
 
-TimesheetSchema.plugin(AutoIncrement, { inc_field: 'Task_id' });
+TimesheetSchema.plugin(AutoIncrement, { inc_field: "Task_id" });
 
 const TimeSheet = mongoose.model("TimeSheet", TimesheetSchema);
 

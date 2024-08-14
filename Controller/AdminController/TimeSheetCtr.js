@@ -6,7 +6,10 @@ const TimeSheet = require("../../Modals/TimeSheetModel");
 const GetAllTimesheetCtr = AsyncHandler(async (req, res) => {
   try {
     const timesheets = await TimeSheet.find();
-    res.status(200).json(timesheets);
+    res.status(200).json({
+      success: true,
+      message: timesheets,
+    });
   } catch (error) {
     throw new Error(error?.message);
   }

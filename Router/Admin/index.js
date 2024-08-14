@@ -110,4 +110,9 @@ adminRouter.put("/edit-Employee/:id", EditEmployee);
 
 // TimeSheet
 
+adminRouter.get("/get-all-timesheet", GetAllTimesheetCtr);
+adminRouter.post("/add-timesheet", AddTimeSheetCtr);
+adminRouter.delete("/remove-timesheet/:id", RemoveTimeSheetCtr);
+adminRouter.put("/edit-timesheet/:id", UpdateTimesheetCtr);
+
 module.exports = adminRouter;
