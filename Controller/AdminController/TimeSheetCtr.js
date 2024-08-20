@@ -44,13 +44,13 @@ const UpdateTimesheetCtr = AsyncHandler(async (req, res) => {
   try {
     const timesheet = await TimeSheet.findByIdAndUpdate(
       { _id: req.params.id },
-      red.body,
-      { new: true, runValidatore: true }
+      req.body,
+      { new: true }
     );
     if (!timesheet) {
       return res.status(404).json("timesheet not found");
     }
-    return res.status(200).json(timesheet);
+    return res.status(200).json("updated timeSheet");
   } catch (error) {
     throw new Error(error?.message);
   }

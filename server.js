@@ -8,6 +8,8 @@ const mongoSanitize = require("express-mongo-sanitize");
 const helmet = require("helmet");
 const hpp = require("hpp");
 const router = require("./Router/Index");
+const NodeCache = require("node-cache");
+const nodecache = new NodeCache({})
 const {
   NotFoundHandler,
   globalErrorHanadler,
