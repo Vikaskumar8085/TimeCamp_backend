@@ -56,6 +56,12 @@ const {
   RemoveTimeSheetCtr,
   UpdateTimesheetCtr,
 } = require("../../Controller/AdminController/TimeSheetCtr");
+const {
+  CreateProjectCtr,
+  GetallProjectCtr,
+  UpdateProjectCtr,
+  RemoveProjectsCtr
+} = require("../../Controller/AdminController/ProjectController");
 
 const adminRouter = express.Router();
 
@@ -114,5 +120,12 @@ adminRouter.get("/get-all-timesheet", GetAllTimesheetCtr);
 adminRouter.post("/add-timesheet", AddTimeSheetCtr);
 adminRouter.delete("/remove-timesheet/:id", RemoveTimeSheetCtr);
 adminRouter.put("/edit-timesheet/:id", UpdateTimesheetCtr);
+
+// Project router
+
+adminRouter.post("/add-project", CreateProjectCtr);
+adminRouter.get("/get-all-project", GetallProjectCtr);
+adminRouter.put("/edit-project/:id", UpdateProjectCtr);
+adminRouter.delete("/remove-project/:id",RemoveProjectsCtr);
 
 module.exports = adminRouter;
