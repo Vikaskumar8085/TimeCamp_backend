@@ -5,7 +5,7 @@ const {
   createAdmin,
   EditAdmin,
   RemoveAdmin,
-} = require("../../Controller/AdminController/admincontroller");
+} = require("../../Controller/AdminController/Admincontroller");
 const {
   createClientCtr,
   GetAllClientCtr,
@@ -63,6 +63,14 @@ const {
   RemoveProjectsCtr
 } = require("../../Controller/AdminController/ProjectController");
 
+const validator = require("express-joi-validation").createValidator({});
+const ClientRegistrationValidation = require("../../Validations/AdminValidations/ClientRegistrationValidate");
+const ContractorValidation = require("../../Validations/AdminValidations/ContractorValidate");
+const DepartmentValidation = require("../../Validations/AdminValidations/DepartmentValidate");
+const DesignationValidation = require("../../Validations/AdminValidations/DesignationValidate");
+const EmployeeRegisterValidation = require("../../Validations/AdminValidations/EmployeeRegisterValidate");
+const ProjectValidation = require("../../Validations/AdminValidations/ProjectValidate");
+
 const adminRouter = express.Router();
 
 // Admin
@@ -71,15 +79,15 @@ adminRouter.get("/get-all-admin", verifyToken, Getalladmin);
 adminRouter.put("/update-admin", EditAdmin);
 adminRouter.delete("/remove-admin", RemoveAdmin);
 // client
-adminRouter.post("/create-client", verifyToken, createClientCtr);
-adminRouter.get("/get-all-client", verifyToken, GetAllClientCtr);
-adminRouter.put("/edit-client/:id", verifyToken, EditClientCtr);
+adminRouter.post("/create-client", verifyToken, validator.body(ClientRegistrationValidation),  createClientCtr);
+adminRouter.get("/get-all-client", verifyToken,  GetAllClientCtr);
+adminRouter.put("/edit-client/:id",verifyToken,validator.body(ClientRegistrationValidation), EditClientCtr);
 adminRouter.get("/get-single-client/:id", verifyToken, GetSingleClientCtr);
 adminRouter.delete("/remove-client/:id", verifyToken, RemoveClient);
 // contractor
-adminRouter.post("/add-contractor", CreateContratorCtr);
-adminRouter.get("/get-all-contractor", GetallContractor);
-adminRouter.put("/edit-contractor/:id", EditContractor);
+adminRouter.post("/add-contractor",verifyToken,validator.body(ContractorValidation), CreateContratorCtr);
+adminRouter.get("/get-all-contractor",verifyToken, GetallContractor);
+adminRouter.put("/edit-contractor/:id",verifyToken,validator.body(ContractorValidation), EditContractor);
 adminRouter.delete("/remove-contractor/:id", RemoveContractor);
 adminRouter.get("/get-single-contractor/:id", GetSingleContactCtr);
 
@@ -91,26 +99,26 @@ adminRouter.post("/edit-company", verifyToken, EditCompany);
 
 // Designation
 adminRouter.get("/get-all-designation", GetAllDesignation);
-adminRouter.post("/add-designation", AddDesignation);
+adminRouter.post("/add-designation",validator.body(DesignationValidation), AddDesignation);
 adminRouter.get("/get-single-designation/:id", GetSignleDesignation);
 adminRouter.delete("/remove-designation/:id", RemoveDesignation);
-adminRouter.put("/edit-designation/:id", EditDesignation);
+adminRouter.put("/edit-designation/:id",validator.body(DesignationValidation), EditDesignation);
 // Designation
 
 // Department
 adminRouter.get("/get-all-department", GetAllDepartment);
 adminRouter.get("/get-single-department/:id", GetSingleDepartment);
-adminRouter.post("/add-department", AddDepartment);
-adminRouter.put("/edit-department/:id", EditDepartment);
+adminRouter.post("/add-department",validator.body(DepartmentValidation), AddDepartment);
+adminRouter.put("/edit-department/:id",validator.body(DepartmentValidation), EditDepartment);
 adminRouter.delete("/remove-department/:id", RemoveDepartment);
 // Department
 
 // Employee  router
 
 adminRouter.get("/get-all-employee", GetAllEmployee);
-adminRouter.post("/add-employee", AddEmployee);
+adminRouter.post("/add-employee",validator.body(EmployeeRegisterValidation), AddEmployee);
 adminRouter.delete("/reomve-employee/:id", ReomveEmployee);
-adminRouter.put("/edit-Employee/:id", EditEmployee);
+adminRouter.put("/edit-Employee/:id",validator.body(EmployeeRegisterValidation), EditEmployee);
 
 // Employee router
 
@@ -123,9 +131,9 @@ adminRouter.put("/edit-timesheet/:id", UpdateTimesheetCtr);
 
 // Project router
 
-adminRouter.post("/add-project", CreateProjectCtr);
+adminRouter.post("/add-project",validator.body(ProjectValidation), CreateProjectCtr);
 adminRouter.get("/get-all-project", GetallProjectCtr);
-adminRouter.put("/edit-project/:id", UpdateProjectCtr);
+adminRouter.put("/edit-project/:id",validator.body(ProjectValidation), UpdateProjectCtr);
 adminRouter.delete("/remove-project/:id",RemoveProjectsCtr);
 
 module.exports = adminRouter;

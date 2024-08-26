@@ -2,6 +2,7 @@ const AsyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 const Contractor = require("../../Modals/ContractorRegisterionModel");
+const paginate = require("../../Utils/pagination");
 const moment = require("moment");
 
 // create admin
@@ -43,14 +44,32 @@ const GetallContractor = AsyncHandler(async (req, res) => {
     const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("User Not found please sign in");
+      throw new Error("User Not found, please sign in");
     }
-    const response = await Contractor.find();
-    return res.status(StatusCodes.OK).json(response);
+
+    // Get pagination parameters from the query string
+    const { page } = req.query;
+
+    // Use the pagination module to get the query and pagination details
+    const { query, pagination } = await paginate(Contractor, page, 10);
+
+    // Execute the paginated query
+    const response = await query.lean().exec();
+
+    // Return the response with pagination details
+    return res.status(StatusCodes.OK).json({
+      success: true,
+      data: response,
+      pagination,
+    });
   } catch (error) {
-    throw new Error(error?.message);
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      success: false,
+      message: error?.message,
+    });
   }
 });
+
 
 // remove admin
 const RemoveContractor = AsyncHandler(async (req, res) => {

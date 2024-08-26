@@ -2,11 +2,13 @@ const AsyncHandler = require("express-async-handler");
 const EmployeeRegistration = require("../../Modals/EmployeeRegistrationModel");
 const { StatusCodes } = require("http-status-codes");
 const moment = require("moment");
-
+const paginate = require("../../Utils/pagination");
 // Get All Employee
 const GetAllEmployee = AsyncHandler(async (req, res) => {
   try {
-    const GetEmployee = await EmployeeRegistration.find();
+    const { page } = req.query;
+    const { query, pagination } = paginate(EmployeeRegistration, page, 10);
+    const GetEmployee = await query.lean().exec();
 
     if (!GetEmployee) {
       res.status(StatusCodes.BAD_REQUEST);
