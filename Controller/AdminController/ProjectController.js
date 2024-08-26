@@ -1,7 +1,7 @@
 const AsyncHandler = require("express-async-handler");
 const Project = require("../../Modals/ProjectModel");
 const moment = require("moment");
-
+const paginate = require("../../Utils/pagination");
 // Add Project Controller
 
 const CreateProjectCtr = AsyncHandler(async (req, res) => {
@@ -104,7 +104,9 @@ const UpdateProjectCtr = AsyncHandler(async (req, res) => {
 
 const GetallProjectCtr = AsyncHandler(async (req, res) => {
   try {
-    const projects = await Project.find().lean();
+    const { page } = req.query;
+    const { query, pagination } = paginate(Project, page, 10);
+    const projects = await query.lean().exec();
     res.status(200).json(projects);
   } catch (error) {
     console.error("Error retrieving projects:", error);

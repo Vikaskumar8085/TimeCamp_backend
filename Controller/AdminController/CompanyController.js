@@ -2,7 +2,7 @@ const AsyncHandler = require("express-async-handler");
 const Company = require("../../Modals/CompanySchema");
 const { StatusCodes } = require("http-status-codes");
 const User = require("../../Modals/userSchema");
-
+const paginate = require("../../Utils/pagination");
 // GetAllCompany
 const GetAllCompany = AsyncHandler(async (req, res) => {
   try {
@@ -12,20 +12,22 @@ const GetAllCompany = AsyncHandler(async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("Un Authorized User");
     }
+    const { page } = req.query;
+    const { query, pagination } = paginate(Company, page, 10);
     // verified
     const verifycompany = await Company.findOne({ UserId: user?.user_id });
     if (!verifycompany) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Your Company has still not registred ");
     }
-    const response = await Company.find();
+    const response = await query.lean().exec();
     if (!response) {
       res.status(StatusCodes.NO_CONTENT);
       throw new Error("No data Available");
     } else {
       return res
         .status(StatusCodes.OK)
-        .json({ status: StatusCodes.OK, message: response });
+        .json({ status: StatusCodes.OK, message: response, pagination });
     }
   } catch (error) {
     throw new Error(error?.message);

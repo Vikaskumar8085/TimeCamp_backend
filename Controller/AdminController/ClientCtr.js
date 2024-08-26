@@ -2,6 +2,7 @@ const AsyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 const Client = require("../../Modals/ClientRegistrationModel");
+const paginate = require("../../Utils/pagination");
 
 // createClient
 const createClientCtr = AsyncHandler(async (req, res) => {
@@ -39,12 +40,22 @@ const GetAllClientCtr = AsyncHandler(async (req, res) => {
     const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.UNAUTHORIZED);
-      throw new Error("UnAuthrized User Please Signup ");
+      throw new Error("Unauthorized User. Please Signup.");
     }
-    const getItem = await Client.find().lean().exec();
+
+    const { page } = req.query; // Get pagination params from query string
+
+    // Use the pagination module to get the query and pagination details
+    const { query, pagination } = paginate(Client, page, 10);
+
+    const getItem = await query.lean().exec();
 
     if (getItem) {
-      return res.status(200).json({ success: true, message: getItem });
+      return res.status(200).json({
+        success: true,
+        message: getItem,
+        pagination, // Include pagination details in the response
+      });
     }
   } catch (error) {
     throw new Error(error.message);
@@ -59,6 +70,7 @@ const GetSingleClientCtr = AsyncHandler(async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("UnAuthorized User Please Signup ");
     }
+    
     const getItem = await Client.findById({ _id: req.params.id }).lean().exec();
 
     if (getItem) {

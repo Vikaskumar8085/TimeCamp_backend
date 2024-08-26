@@ -1,14 +1,17 @@
 const AsyncHandler = require("express-async-handler");
 const TimeSheet = require("../../Modals/TimeSheetModel");
-
+const paginate = require("../../Utils/pagination");
 // get all timesheet ctr
 
 const GetAllTimesheetCtr = AsyncHandler(async (req, res) => {
   try {
-    const timesheets = await TimeSheet.find();
+    const { page } = req.query;
+    const { query, pagination } = paginate(TimeSheet, page, 10);
+    const timesheets = await query.lean().exec();
     res.status(200).json({
       success: true,
       message: timesheets,
+      pagination,
     });
   } catch (error) {
     throw new Error(error?.message);
