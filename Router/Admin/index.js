@@ -131,9 +131,9 @@ adminRouter.put("/edit-timesheet/:id", UpdateTimesheetCtr);
 
 // Project router
 
-adminRouter.post("/add-project",validator.body(ProjectValidation), CreateProjectCtr);
-adminRouter.get("/get-all-project", GetallProjectCtr);
-adminRouter.put("/edit-project/:id",validator.body(ProjectValidation), UpdateProjectCtr);
-adminRouter.delete("/remove-project/:id",RemoveProjectsCtr);
+adminRouter.post("/add-project",verifyToken,validator.body(ProjectValidation), CreateProjectCtr);
+adminRouter.get("/get-all-project", verifyToken, GetallProjectCtr);
+adminRouter.put("/edit-project/:id",verifyToken,validator.body(ProjectValidation), UpdateProjectCtr);
+adminRouter.delete("/remove-project/:id",verifyToken,RemoveProjectsCtr);
 
 module.exports = adminRouter;

@@ -8,6 +8,9 @@ const ProjectValidation = joi.object({
     End_Date: joi.date().required(),
     Project_Type: joi.string().min(3).max(30).required(),
     Project_Managers: joi.string().min(3).max(30).required(),
+    Role: joi.string().min(3).max(30).required(),
+    Employee: joi.string().min(3).max(30).required(),
+
 });
 
 
