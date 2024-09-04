@@ -41,11 +41,11 @@ const CreateContratorCtr = AsyncHandler(async (req, res) => {
 const GetallContractor = AsyncHandler(async (req, res) => {
   try {
     console.log("contractor");
-    const user = await User.findById(req.user);
-    if (!user) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("User Not found, please sign in");
-    }
+    // const user = await User.findById(req.user);
+    // if (!user) {
+    //   res.status(StatusCodes.BAD_REQUEST);
+    //   throw new Error("User Not found, please sign in");
+    // }
 
     // Get pagination parameters from the query string
     const { page } = req.query;
