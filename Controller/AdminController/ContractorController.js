@@ -30,7 +30,7 @@ const CreateContratorCtr = AsyncHandler(async (req, res) => {
         message: "Contractor added successfully",
         data: response,
       });
-    }
+    } 
   } catch (error) {
     throw new Error(error.message);
   }
