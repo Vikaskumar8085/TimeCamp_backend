@@ -148,7 +148,7 @@ adminRouter.delete("/remove-department/:id", RemoveDepartment);
 adminRouter.get("/get-all-employee", GetAllEmployee);
 adminRouter.post(
   "/add-employee",
-  validator.body(EmployeeRegisterValidation),
+  
   AddEmployee
 );
 adminRouter.delete("/reomve-employee/:id", ReomveEmployee);

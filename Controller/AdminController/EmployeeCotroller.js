@@ -1,5 +1,6 @@
 const AsyncHandler = require("express-async-handler");
 const EmployeeRegistration = require("../../Modals/EmployeeRegistrationModel");
+const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 const moment = require("moment");
 const paginate = require("../../Utils/pagination");
@@ -48,10 +49,23 @@ const AddEmployee = AsyncHandler(async (req, res) => {
       Employee_Designation: req?.body?.Employee_Designation,
       Employee_Address: req?.body?.Employee_Address,
     });
+    const addUser = await User({
+      user_id: "EMP100",
+      FirstName: req.body.Employee_FirstName,
+      LastName: req?.body?.Employee_LastName,
+      Email: req?.body?.Employee_Email,
+      Role: req.body.Role,
+      Activity: false,
+      BlockStatus: "Unblock",
+      Term: true,
+      isVerify: false,
+    })
 
-    if (addItem) {
+    if (addItem && addUser) {
+      await addUser.save();
       await addItem.save();
-
+      
+      console.log(addItem,"addItem");
       return res.status(StatusCodes.CREATED).json(addItem);
     }
   } catch (error) {
