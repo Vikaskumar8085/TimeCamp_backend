@@ -48,6 +48,7 @@ const AddEmployee = AsyncHandler(async (req, res) => {
       Employee_Designation: req?.body?.Employee_Designation,
       Employee_Address: req?.body?.Employee_Address,
     });
+
     if (addItem) {
       await addItem.save();
 

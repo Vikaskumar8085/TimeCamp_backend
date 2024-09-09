@@ -22,7 +22,7 @@ const {
 const {
   GetallContactCtr,
   GetSingleContactCtr,
-} = require("../../Controller/ContactController");
+} = require("../../Controller/CommonController/ContactController");
 
 const {
   GetAllCompany,
