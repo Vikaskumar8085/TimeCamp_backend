@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 const CompanySchema = mongoose.Schema({
+  Company_Id: {
+    type: Number,
+    required: true,
+  },
   Company_Name: {
     type: String,
     required: true,

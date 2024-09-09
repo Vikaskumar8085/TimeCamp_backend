@@ -1,6 +1,6 @@
 const AsyncHandler = require("express-async-handler");
-const Contact = require("../Modals/ContactModel");
-const User = require("../Modals/userSchema");
+const Contact = require("../../Modals/CommonModels/ContactModel");
+const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 
 const AddContactCtr = AsyncHandler(async (req, res) => {

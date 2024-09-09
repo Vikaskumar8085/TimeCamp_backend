@@ -8,11 +8,17 @@ const moment = require("moment");
 // create admin
 const CreateContratorCtr = AsyncHandler(async (req, res) => {
   try {
-    // const user = await User.findById(req.user);
-    // if (!user) {
-    //   res.status(StatusCodes.BAD_REQUEST);
-    //   throw new Error("User Not found please sign in");
-    // }
+    const user = await User.findById(req.user);
+    if (!user) {
+      res.status(StatusCodes.BAD_REQUEST);
+      throw new Error("User Not found please sign in");
+    }
+
+    const company = await Company.findOne({ UserId: user?.user_id });
+    if (!company) {
+      res.status(400);
+      throw new Error("Compnay does not exists");
+    }
 
     const response = await Contractor({
       Contractor_Name: req.body.Contractor_Name,
@@ -30,7 +36,7 @@ const CreateContratorCtr = AsyncHandler(async (req, res) => {
         message: "Contractor added successfully",
         data: response,
       });
-    } 
+    }
   } catch (error) {
     throw new Error(error.message);
   }
@@ -69,7 +75,6 @@ const GetallContractor = AsyncHandler(async (req, res) => {
     });
   }
 });
-
 
 // remove admin
 const RemoveContractor = AsyncHandler(async (req, res) => {

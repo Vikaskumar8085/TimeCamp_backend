@@ -3,6 +3,7 @@ const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 const Client = require("../../Modals/ClientRegistrationModel");
 const paginate = require("../../Utils/pagination");
+const Company = require("../../Modals/CompanySchema");
 
 // createClient
 const createClientCtr = AsyncHandler(async (req, res) => {
@@ -11,6 +12,12 @@ const createClientCtr = AsyncHandler(async (req, res) => {
     if (!user) {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("UnAuthrized User Please Signup ");
+    }
+
+    const company = await Company.findOne({ UserId: user?.user_id });
+    if (!company) {
+      res.status(400);
+      throw new Error("Compnay does not exists");
     }
     const addItem = await Client({
       Company_Name: req.body.Company_Name,
@@ -21,6 +28,7 @@ const createClientCtr = AsyncHandler(async (req, res) => {
       Client_Address: req.body.Client_Address,
       GstNumber: req.body.GstNumber,
       Common_Id: user._id,
+      Company_Id: company?.Company_Id,
     });
     if (addItem) {
       await addItem.save();
@@ -70,7 +78,7 @@ const GetSingleClientCtr = AsyncHandler(async (req, res) => {
       res.status(StatusCodes.UNAUTHORIZED);
       throw new Error("UnAuthorized User Please Signup ");
     }
-    
+
     const getItem = await Client.findById({ _id: req.params.id }).lean().exec();
 
     if (getItem) {
@@ -114,7 +122,9 @@ const RemoveClient = AsyncHandler(async (req, res) => {
 
     const RemoveItems = await Client.findByIdAndDelete({ _id: req.params.id });
     if (RemoveItems) {
-      return res.status(200).json({ success: true, message: "data deleted Successfully" });
+      return res
+        .status(200)
+        .json({ success: true, message: "data deleted Successfully" });
     }
   } catch (error) {}
 });

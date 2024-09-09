@@ -45,6 +45,10 @@ const ContractorRegisterationSchema = mongoose.Schema(
         return moment().format("HH:mm");
       },
     },
+    Company_Id: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,
