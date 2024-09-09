@@ -59,13 +59,13 @@ const AddEmployee = AsyncHandler(async (req, res) => {
       BlockStatus: "Unblock",
       Term: true,
       isVerify: false,
-    })
+    });
 
     if (addItem && addUser) {
       await addUser.save();
       await addItem.save();
-      
-      console.log(addItem,"addItem");
+
+      console.log(addItem, "addItem");
       return res.status(StatusCodes.CREATED).json(addItem);
     }
   } catch (error) {
@@ -80,7 +80,7 @@ const EditEmployee = AsyncHandler(async (req, res) => {
     const EditItems = await EmployeeRegistration.findByIdAndUpdate(
       req.params.id,
       req.body,
-      { new: true }
+      { new: true, runValidatore: true }
     );
 
     if (EditItems) {
