@@ -1,5 +1,6 @@
 const AsyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
+const EmployeeRegistration = require("../../Modals/EmployeeRegistrationModel");
 const { StatusCodes } = require("http-status-codes");
 const Contractor = require("../../Modals/ContractorRegisterionModel");
 const paginate = require("../../Utils/pagination");
@@ -20,21 +21,36 @@ const CreateContratorCtr = AsyncHandler(async (req, res) => {
       throw new Error("Compnay does not exists");
     }
 
-    const response = await Contractor({
-      Contractor_Name: req.body.Contractor_Name,
-      Contractor_Number: req.body.Contractor_Number,
-      Person_Name: req.body.Person_Name,
-      Remark: req.body.Remark,
-      Created_Date: moment(req.body.Created_Date).format("DD/MM/YYYY"),
-      Created_Time: req.body.Created_Time,
+    const addItem = await EmployeeRegistration({
+      Employee_FirstName: req.body.Employee_FirstName,
+      Employee_LastName: req?.body?.Employee_LastName,
+      Employee_Email: req?.body?.Employee_Email,
+      Employee_Phone: req?.body?.Employee_Phone,
+      Employee_JoiningDate: moment(req?.body?.Employee_JoiningDate).format(
+        "DD/MM/YYYY"
+      ),
+      Employee_Designation: req?.body?.Employee_Designation,
+      Employee_Address: req?.body?.Employee_Address,
     });
+    const addUser = await User({
+      user_id: "EMP100",
+      FirstName: req.body.Employee_FirstName,
+      LastName: req?.body?.Employee_LastName,
+      Email: req?.body?.Employee_Email,
+      Role: req.body.Role,
+      Activity: false,
+      BlockStatus: "Unblock",
+      Term: true,
+      isVerify: false,
+    })
 
-    if (response) {
-      await response.save();
+    if (addItem && addUser) {
+      await addItem.save();
+      await addUser.save();
       return res.status(201).json({
         success: true,
         message: "Contractor added successfully",
-        data: response,
+        data: addItem,
       });
     }
   } catch (error) {

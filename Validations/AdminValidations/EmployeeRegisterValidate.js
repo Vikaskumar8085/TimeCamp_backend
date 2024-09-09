@@ -7,7 +7,8 @@ const EmployeeRegisterValidation = joi.object({
     Employee_Phone: joi.string().min(3).max(30).required(),
     Employee_JoiningDate: joi.date().required(),
     Employee_Designation: joi.string().min(3).max(30).required(),
-    Employee_Address: joi.string().min(3).max(30).required()
+    Employee_Address: joi.string().min(3).max(30).required(),
+    Role: joi.string().min(3).max(30).required(),
 });
 
 module.exports = EmployeeRegisterValidation;
