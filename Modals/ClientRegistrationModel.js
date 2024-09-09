@@ -41,6 +41,10 @@ const ClientRegistrationSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    Company_Id: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,

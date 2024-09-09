@@ -35,6 +35,10 @@ const ContractorRegisterationSchema = mongoose.Schema(
       type: String,
       default: moment().format("DD/MM/YYYY"),
     },
+    Company_Id: {
+      type: Number,
+      required: true,
+    },
     Created_Time: {
       type: String,
       default: function () {

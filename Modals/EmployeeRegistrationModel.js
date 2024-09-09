@@ -6,7 +6,6 @@ const EmployeeRegistrationSchema = mongoose.Schema(
     Employee_Id: {
       type: Number,
       unique: true,
-
     },
     Employee_FirstName: {
       type: String,
@@ -28,7 +27,7 @@ const EmployeeRegistrationSchema = mongoose.Schema(
     },
     Employee_JoiningDate: {
       type: String,
-      required:true
+      required: true,
     },
     Employee_Designation: {
       type: String,

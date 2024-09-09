@@ -1,0 +1,10 @@
+{
+  "lcp": { "value": 81.5, "rating": "good" },
+  "cls": { "value": 0.0036893519270482867, "rating": "good" },
+  "fid": { "value": 0.5999999642372131, "rating": "good" },
+  "inp": { "value": 32, "rating": "good" },
+  "fcp": { "value": 81.5, "rating": "good" },
+  "ttfb": { "value": 0, "rating": "good" },
+  "navigationStart": 1725865286030,
+  "timestamp": "2024-09-09T07:01:29.139Z"
+}

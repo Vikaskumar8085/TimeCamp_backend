@@ -6,6 +6,7 @@ const TimesheetSchema = mongoose.Schema(
     Task_id: {
       type: Number,
       trim: true,
+      unique: true,
     },
     TS_code: {
       type: String,
@@ -65,6 +66,18 @@ const TimesheetSchema = mongoose.Schema(
       // required: true,
     },
     Approvel_Date: {
+      type: String,
+      required: true,
+    },
+    Company_Id: {
+      type: Number,
+      required: true,
+    },
+    Project_Id: {
+      type: Number,
+      required: true,
+    },
+    Employee_Id: {
       type: String,
       required: true,
     },
