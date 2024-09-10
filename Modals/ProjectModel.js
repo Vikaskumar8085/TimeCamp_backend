@@ -45,6 +45,11 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Project_Status: {
+    type: String,
+    enum: ["Active", "InActive"],
+    default: "InActive",
+  },
 });
 
 ProjectSchema.plugin(AutoIncrement, {

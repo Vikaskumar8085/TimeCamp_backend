@@ -41,6 +41,11 @@ const ClientRegistrationSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    Client_Status: {
+      type: String,
+      enum: ["Active", "InActive", "Dead"],
+      default: "InActive",
+    },
     Company_Id: {
       type: Number,
       required: true,

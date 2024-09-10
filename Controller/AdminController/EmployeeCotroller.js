@@ -105,10 +105,74 @@ const ReomveEmployee = AsyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
+
+// Get All Active Employee
+
+const GetAllActiveEmployeeCtr = AsyncHandler(async (req, res) => {
+  try {
+    const { search, filterByDepartment, filterByStatus, sortBy, sortOrder } =
+      req.query;
+
+    // Build query object
+    const query = {};
+    if (search) {
+      query.name = { $regex: search, $options: "i" }; // Case-insensitive search
+    }
+    if (filterByDepartment) {
+      query.department = filterByDepartment;
+    }
+    if (filterByStatus) {
+      query.status = filterByStatus;
+    }
+
+    const response = await EmployeeRegistration.find(query).lean().exec();
+    if (!response) {
+      res.status(400);
+      throw new Error("Bad Request");
+    }
+    return res.status(200).json({ message: response, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+// Get All In Active Employee Ctr
+
+const GetAllInActiveEmployeeCtr = AsyncHandler(async (req, res) => {
+  try {
+    const response = await EmployeeRegistration.find().lean().exec();
+    if (!response) {
+      res.status(400);
+
+      throw new Error("Bad Request");
+    }
+    return res.status(200).json({ message: response, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+// update Employee status
+
+const updateEmployeeStatusCtr = AsyncHandler(async (req, res) => {
+  try {
+    const response = await EmployeeRegistration.findByIdAndUpdate();
+    if (!response) {
+      res.status(400);
+      throw new Error("Bad Request");
+    }
+    return res.status(200).json({ message: response, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
 module.exports = {
   AddEmployee,
   GetAllEmployee,
   GetSingleEmployee,
   EditEmployee,
   ReomveEmployee,
+  GetAllActiveEmployeeCtr,
+  GetAllInActiveEmployeeCtr,
+  updateEmployeeStatusCtr,
 };

@@ -128,6 +128,50 @@ const RemoveClient = AsyncHandler(async (req, res) => {
     }
   } catch (error) {}
 });
+// get all active client ctr
+
+const GetAllActiveClientCtr = AsyncHandler(async (req, res) => {
+  try {
+    const response = await Client.find({}).lean().exec();
+    if (!response) {
+      res.status(400);
+      throw new Error("Bad request");
+    }
+    return res.status(200).json({ message: response, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+// get all In Active client ctr
+
+const getallInActiveClientCtr = AsyncHandler(async (req, res) => {
+  try {
+    const response = await Client.find({}).lean().exec();
+    if (!response) {
+      res.status(400);
+      throw new Error("Bad request");
+    }
+    return res.status(200).json({ message: response, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+// get all dead Clients ctr
+
+const getallDeadClientCtr = AsyncHandler(async (req, res) => {
+  try {
+    const response = await Client.find({}).lean().exec();
+    if (!response) {
+      res.status(400);
+      throw new Error("Bad request");
+    }
+    return res.status(200).json({ message: response, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
 
 module.exports = {
   createClientCtr,
@@ -135,4 +179,8 @@ module.exports = {
   EditClientCtr,
   GetAllClientCtr,
   RemoveClient,
+  GetAllActiveClientCtr,
+  getallInActiveClientCtr,
+  getallDeadClientCtr,
+  getallDeadClientCtr,
 };

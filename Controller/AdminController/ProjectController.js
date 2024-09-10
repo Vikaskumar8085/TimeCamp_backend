@@ -133,9 +133,72 @@ const RemoveProjectsCtr = AsyncHandler(async (req, res) => {
   }
 });
 
+// Active Project
+
+const ActiveProjectsCtr = AsyncHandler(async (req, res) => {
+  try {
+    const GetActiveProject = await Project.findOne({ Project_Status: "Active" })
+      .lean()
+      .exec();
+
+    if (!GetActiveProject) {
+      res.status(400);
+      throw new Error("Bad request");
+    }
+    return res.status(200).json({ message: GetActiveProject, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+const InActiveProjectsCtr = AsyncHandler(async (req, res) => {
+  try {
+    const getInActiveProject = await Project.findOne({
+      Project_Status: "InActive",
+    })
+      .lean()
+      .exec();
+
+    if (!getInActiveProject) {
+      res.status(400);
+      throw new Error("Bad request");
+    }
+    return res.status(200).json({ message: getInActiveProject, success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
+// change Project status
+
+const updateProjectStatusCtr = AsyncHandler(async (req, res) => {
+  try {
+    const updateprojectstatus = await Project.findByIdAndUpdate(
+      { _id: req.parmas.id },
+      req.body,
+      {
+        new: true,
+        runValidator: true,
+      }
+    );
+    if (!updateprojectstatus) {
+      res.status(400);
+      throw new Error("Bad request");
+    }
+    return res
+      .status(200)
+      .json({ message: "project status updated succesfully", success: true });
+  } catch (error) {
+    throw new Error(error?.message);
+  }
+});
+
 module.exports = {
   CreateProjectCtr,
   UpdateProjectCtr,
   GetallProjectCtr,
   RemoveProjectsCtr,
+  InActiveProjectsCtr,
+  ActiveProjectsCtr,
+  updateProjectStatusCtr,
 };
