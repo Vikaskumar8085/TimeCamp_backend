@@ -1,5 +1,6 @@
 const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
+require("dotenv").config();
 
 //! Configure cloudinary
 cloudinary.config({
@@ -12,7 +13,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   allowedFormats: ["jpg", "png", "jpeg"],
   params: {
-    folder: "masyntech-mern-blog",
+    folder: "timecamp_images",
     format: "jpg",
     transformation: [{ width: 500, height: 500, crop: "limit" }],
   },

@@ -70,6 +70,10 @@ const DepartmentValidation = require("../../Validations/AdminValidations/Departm
 const DesignationValidation = require("../../Validations/AdminValidations/DesignationValidate");
 const EmployeeRegisterValidation = require("../../Validations/AdminValidations/EmployeeRegisterValidate");
 const ProjectValidation = require("../../Validations/AdminValidations/ProjectValidate");
+const multer = require("multer");
+const storage = require("../../Utils/CloudnaryFileupload");
+
+const upload = multer({ storage: storage });
 
 const adminRouter = express.Router();
 
@@ -127,6 +131,9 @@ adminRouter.put(
 );
 // Designation
 
+adminRouter.post("/upload-image", upload.single("image"), async (req, res) => {
+  console.log(req.file);
+});
 // Department
 adminRouter.get("/get-all-department", GetAllDepartment);
 adminRouter.get("/get-single-department/:id", GetSingleDepartment);
@@ -148,7 +155,7 @@ adminRouter.delete("/remove-department/:id", RemoveDepartment);
 adminRouter.get("/get-all-employee", GetAllEmployee);
 adminRouter.post(
   "/add-employee",
-  
+
   AddEmployee
 );
 adminRouter.delete("/reomve-employee/:id", ReomveEmployee);
