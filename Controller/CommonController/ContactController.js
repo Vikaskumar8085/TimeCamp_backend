@@ -11,7 +11,7 @@ const AddContactCtr = AsyncHandler(async (req, res) => {
       throw new Error(" ");
     }
     await addItem.save();
-    const notification = await Notification({});
+    // const notification = await Notification({});
   } catch (error) {
     throw new Error(error.message);
   }
@@ -19,10 +19,36 @@ const AddContactCtr = AsyncHandler(async (req, res) => {
 
 const GetallContactCtr = AsyncHandler(async (req, res) => {
   try {
-    const contact = await Contact.findById({ _id: req.body.Id });
-    console.log(contact);
+    const { stud_name, sort, search } = req.query;
+    var page = req.query.page * 1 || 1;
+    var limit = req.query.limit * 1 || 5;
+    var skip = (page - 1) * limit;
+
+    var totalcount = await Curd.estimatedDocumentCount();
+    var queryObj = {};
+    if (sort) {
+      var sortfix = sort.replace(",", " ");
+      console.log(sortfix);
+    }
+    if (stud_name) {
+      queryObj.stud_name = stud_name;
+    }
+
+    if (search) {
+      queryObj.stud_name = { $regex: search, $options: "i" };
+    }
+    const contact = await Contact.find(queryObj).skip(skip).limit(limit);
+
+    if (!contact) {
+      res.status(400);
+      throw new Error("Bad Request");
+    }
+
+    const contactobj = { contact, totalcount };
+
+    return res.status(200).json({ message: contactobj, success: true });
   } catch (error) {
-    throw new error.message();
+    throw new Error(error?.message);
   }
 });
 

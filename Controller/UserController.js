@@ -511,3 +511,15 @@ module.exports = {
   EditUsers,
   getuserall,
 };
+
+// //    if (sort) {
+//   var sortfix = sort.replace(",", " ");
+//   console.log(sortfix);
+// }
+// if (stud_name) {
+//   queryObj.stud_name = stud_name;
+// }
+
+// if (search) {
+//   queryObj.stud_name = { $regex: search, $options: "i" };
+// }

@@ -40,7 +40,24 @@ const createAdmin = AsyncHandler(async (req, res) => {
 
 const Getalladmin = AsyncHandler(async (req, res) => {
   try {
-    const queryObj = {};
+    const { stud_name, sort, search } = req.query;
+    var page = req.query.page * 1 || 1;
+    var limit = req.query.limit * 1 || 5;
+    var skip = (page - 1) * limit;
+
+    var totalcount = await Curd.estimatedDocumentCount();
+    var queryObj = {};
+    if (sort) {
+      var sortfix = sort.replace(",", " ");
+      console.log(sortfix);
+    }
+    if (stud_name) {
+      queryObj.stud_name = stud_name;
+    }
+
+    if (search) {
+      queryObj.stud_name = { $regex: search, $options: "i" };
+    }
     const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.BAD_REQUEST);
