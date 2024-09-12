@@ -1,17 +1,31 @@
 const AsyncHandler = require("express-async-handler");
 
-const GetallNotificationCtr = AsyncHandler(async (req, res) => {});
+const notificationctr = {
+  fetchnotification: AsyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+  // get single notification
+  fetchsinglenotification: AsyncHandler(async (req, res) => {
+    try {
+    } catch (error) {}
+  }),
+  // add notification
+  addnotification: AsyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
 
-// add Submit
-const CreateAmin = AsyncHandler(async (req, res) => {
-  try {
-  } catch (error) {}
-});
+  removenotification: AsyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+};
 
-const DeleteNotification = AsyncHandler(async (req, res) => {
-  try {
-  } catch (error) {}
-});
-
-
-
+module.exports = notificationctr;

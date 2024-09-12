@@ -45,6 +45,14 @@ const createClientCtr = AsyncHandler(async (req, res) => {
 
 const GetAllClientCtr = AsyncHandler(async (req, res) => {
   try {
+    const { search, sort } = req.query;
+
+    var queryObj = {};
+
+    // if(search){
+    // queryObj?.FirstName ={$regex:search,option:i};
+    // }
+
     const user = await User.findById(req.user);
     if (!user) {
       res.status(StatusCodes.UNAUTHORIZED);

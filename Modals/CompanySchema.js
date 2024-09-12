@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 const CompanySchema = mongoose.Schema({
   Company_Id: {
     type: Number,
@@ -45,7 +46,7 @@ const CompanySchema = mongoose.Schema({
     required: true,
   },
   UserId: {
-    type: String,
+    type: Array,
     required: true,
   },
   UserObjectId: [
@@ -54,6 +55,11 @@ const CompanySchema = mongoose.Schema({
       ref: "User",
     },
   ],
+});
+
+CompanySchema.plugin(AutoIncrement, {
+  inc_field: "Company_Id",
+  start_seq: 1,
 });
 
 const Company = mongoose.model("Company", CompanySchema);
