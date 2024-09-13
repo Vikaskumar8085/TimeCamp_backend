@@ -11,7 +11,10 @@ const {
   GetAllClientCtr,
   EditClientCtr,
   GetSingleClientCtr,
+  GetAllActiveClientCtr,
   RemoveClient,
+  getallInActiveClientCtr,
+  getallDeadClientCtr,
 } = require("../../Controller/AdminController/ClientCtr");
 const {
   CreateContratorCtr,
@@ -30,20 +33,20 @@ const {
   EditCompany,
   CreateAdminCtr,
 } = require("../../Controller/AdminController/CompanyController");
-const {
-  AddDesignation,
-  GetSignleDesignation,
-  RemoveDesignation,
-  EditDesignation,
-  GetAllDesignation,
-} = require("../../Controller/AdminController/DesignationCtr");
-const {
-  AddDepartment,
-  GetAllDepartment,
-  GetSingleDepartment,
-  EditDepartment,
-  RemoveDepartment,
-} = require("../../Controller/AdminController/DepartmentCtr");
+// const {
+//   AddDesignation,
+//   GetSignleDesignation,
+//   RemoveDesignation,
+//   EditDesignation,
+//   GetAllDesignation,
+// } = require("../../Controller/AdminController/DesignationCtr");
+// const {
+//   AddDepartment,
+//   GetAllDepartment,
+//   GetSingleDepartment,
+//   EditDepartment,
+//   RemoveDepartment,
+// } = require("../../Controller/AdminController/DepartmentCtr");
 const {
   ReomveEmployee,
   GetAllEmployee,
@@ -83,13 +86,11 @@ adminRouter.get("/get-all-admin", verifyToken, Getalladmin);
 adminRouter.put("/update-admin", EditAdmin);
 adminRouter.delete("/remove-admin", RemoveAdmin);
 // client
-adminRouter.post(
-  "/create-client",
-  verifyToken,
-  validator.body(ClientRegistrationValidation),
-  createClientCtr
-);
+adminRouter.post("/create-client", verifyToken, createClientCtr);
 adminRouter.get("/get-all-client", verifyToken, GetAllClientCtr);
+adminRouter.get("/get-active-client", GetAllActiveClientCtr);
+adminRouter.get("/get-Inactive-client", getallInActiveClientCtr);
+adminRouter.get("/get-dead-client", getallDeadClientCtr);
 adminRouter.put(
   "/edit-client/:id",
   verifyToken,
@@ -116,48 +117,44 @@ adminRouter.post("/edit-company", verifyToken, EditCompany);
 //company
 
 // Designation
-adminRouter.get("/get-all-designation", GetAllDesignation);
-adminRouter.post(
-  "/add-designation",
-  validator.body(DesignationValidation),
-  AddDesignation
-);
-adminRouter.get("/get-single-designation/:id", GetSignleDesignation);
-adminRouter.delete("/remove-designation/:id", RemoveDesignation);
-adminRouter.put(
-  "/edit-designation/:id",
-  validator.body(DesignationValidation),
-  EditDesignation
-);
+// adminRouter.get("/get-all-designation", GetAllDesignation);
+// adminRouter.post(
+//   "/add-designation",
+//   validator.body(DesignationValidation),
+//   AddDesignation
+// );
+// adminRouter.get("/get-single-designation/:id", GetSignleDesignation);
+// adminRouter.delete("/remove-designation/:id", RemoveDesignation);
+// adminRouter.put(
+//   "/edit-designation/:id",
+//   validator.body(DesignationValidation),
+//   EditDesignation
+// );
 // Designation
 
-adminRouter.post("/upload-image", upload.single("image"), async (req, res) => {
-  console.log(req.file);
-});
+// adminRouter.post("/upload-image", upload.single("image"), async (req, res) => {
+//   console.log(req.file);
+// });
 // Department
-adminRouter.get("/get-all-department", GetAllDepartment);
-adminRouter.get("/get-single-department/:id", GetSingleDepartment);
-adminRouter.post(
-  "/add-department",
-  validator.body(DepartmentValidation),
-  AddDepartment
-);
-adminRouter.put(
-  "/edit-department/:id",
-  validator.body(DepartmentValidation),
-  EditDepartment
-);
-adminRouter.delete("/remove-department/:id", RemoveDepartment);
+// adminRouter.get("/get-all-department", GetAllDepartment);
+// adminRouter.get("/get-single-department/:id", GetSingleDepartment);
+// adminRouter.post(
+//   "/add-department",
+//   validator.body(DepartmentValidation),
+//   AddDepartment
+// );
+// adminRouter.put(
+//   "/edit-department/:id",
+//   validator.body(DepartmentValidation),
+//   EditDepartment
+// );
+// adminRouter.delete("/remove-department/:id", RemoveDepartment);
 // Department
 
 // Employee  router
 
 adminRouter.get("/get-all-employee", GetAllEmployee);
-adminRouter.post(
-  "/add-employee",
-
-  AddEmployee
-);
+adminRouter.post("/add-employee", AddEmployee);
 adminRouter.delete("/reomve-employee/:id", ReomveEmployee);
 adminRouter.put(
   "/edit-Employee/:id",

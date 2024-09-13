@@ -39,6 +39,11 @@ const ContractorRegisterationSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
+    Contractor_Type:{
+      type:String,
+      enum:["Contractor","Manager"],
+      default:"Contractor"
+    },
     Created_Time: {
       type: String,
       default: function () {

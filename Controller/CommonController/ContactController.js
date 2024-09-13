@@ -12,6 +12,9 @@ const AddContactCtr = AsyncHandler(async (req, res) => {
     }
     await addItem.save();
     // const notification = await Notification({});
+    return res
+      .status(StatusCodes.CREATED)
+      .json({ message: "message sent successfully", success: true });
   } catch (error) {
     throw new Error(error.message);
   }

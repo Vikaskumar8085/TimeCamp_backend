@@ -5,6 +5,43 @@ const Client = require("../../Modals/ClientRegistrationModel");
 const paginate = require("../../Utils/pagination");
 const Company = require("../../Modals/CompanySchema");
 
+const clientctr = {
+  addclient: AsyncHandler(async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Unautorized User Please Singup");
+      }
+      const company = await Company.findOne({ UserId: user?.user_id });
+      if (!company) {
+        res.status(400);
+        throw new Error("Compnay does not exists");
+      }
+
+      const addItem = await Client({
+        Company_Name: req.body.Company_Name,
+        Client_Name: req.body.Client_Name,
+        Client_Email: req.body.Client_Email,
+        Client_Phone: req.body.Client_Phone,
+        Client_Postal_Code: req.body.Client_Postal_Code,
+        Client_Address: req.body.Client_Address,
+        GstNumber: req.body.GstNumber,
+        Common_Id: user._id,
+        Company_Id: company?.Company_Id,
+      });
+      if (addItem) {
+        await addItem.save();
+        return res
+          .status(200)
+          .json({ success: true, message: "successfully client added" });
+      }
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+};
+
 // createClient
 const createClientCtr = AsyncHandler(async (req, res) => {
   try {
@@ -14,11 +51,11 @@ const createClientCtr = AsyncHandler(async (req, res) => {
       throw new Error("UnAuthrized User Please Signup ");
     }
 
-    const company = await Company.findOne({ UserId: user?.user_id });
-    if (!company) {
-      res.status(400);
-      throw new Error("Compnay does not exists");
-    }
+    // const company = await Company.findOne({ UserId: user?.user_id });
+    // if (!company) {
+    //   res.status(400);
+    //   throw new Error("Compnay does not exists");
+    // }
     const addItem = await Client({
       Company_Name: req.body.Company_Name,
       Client_Name: req.body.Client_Name,
@@ -28,7 +65,7 @@ const createClientCtr = AsyncHandler(async (req, res) => {
       Client_Address: req.body.Client_Address,
       GstNumber: req.body.GstNumber,
       Common_Id: user._id,
-      Company_Id: company?.Company_Id,
+      Company_Id: "1",
     });
     if (addItem) {
       await addItem.save();
@@ -45,9 +82,9 @@ const createClientCtr = AsyncHandler(async (req, res) => {
 
 const GetAllClientCtr = AsyncHandler(async (req, res) => {
   try {
-    const { search, sort } = req.query;
+    // const { search, sort } = req.query;
 
-    var queryObj = {};
+    // var queryObj = {};
 
     // if(search){
     // queryObj?.FirstName ={$regex:search,option:i};
@@ -59,18 +96,18 @@ const GetAllClientCtr = AsyncHandler(async (req, res) => {
       throw new Error("Unauthorized User. Please Signup.");
     }
 
-    const { page } = req.query; // Get pagination params from query string
+    // const { page } = req.query; // Get pagination params from query string
 
-    // Use the pagination module to get the query and pagination details
-    const { query, pagination } = paginate(Client, page, 10);
+    // // Use the pagination module to get the query and pagination details
+    // const { query, pagination } = paginate(Client, page, 10);
 
-    const getItem = await query.lean().exec();
+    const getItem = await Client.find().lean().exec();
 
     if (getItem) {
       return res.status(200).json({
         success: true,
         message: getItem,
-        pagination, // Include pagination details in the response
+        // Include pagination details in the response
       });
     }
   } catch (error) {
@@ -140,7 +177,9 @@ const RemoveClient = AsyncHandler(async (req, res) => {
 
 const GetAllActiveClientCtr = AsyncHandler(async (req, res) => {
   try {
-    const response = await Client.find({}).lean().exec();
+    const response = await Client.find({ Client_Status: "Active" })
+      .lean()
+      .exec();
     if (!response) {
       res.status(400);
       throw new Error("Bad request");
@@ -155,7 +194,9 @@ const GetAllActiveClientCtr = AsyncHandler(async (req, res) => {
 
 const getallInActiveClientCtr = AsyncHandler(async (req, res) => {
   try {
-    const response = await Client.find({}).lean().exec();
+    const response = await Client.find({ Client_Status: "InActive" })
+      .lean()
+      .exec();
     if (!response) {
       res.status(400);
       throw new Error("Bad request");
@@ -170,7 +211,7 @@ const getallInActiveClientCtr = AsyncHandler(async (req, res) => {
 
 const getallDeadClientCtr = AsyncHandler(async (req, res) => {
   try {
-    const response = await Client.find({}).lean().exec();
+    const response = await Client.find({ Client_Status: "Dead" }).lean().exec();
     if (!response) {
       res.status(400);
       throw new Error("Bad request");
@@ -189,6 +230,5 @@ module.exports = {
   RemoveClient,
   GetAllActiveClientCtr,
   getallInActiveClientCtr,
-  getallDeadClientCtr,
   getallDeadClientCtr,
 };

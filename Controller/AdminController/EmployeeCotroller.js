@@ -7,9 +7,9 @@ const paginate = require("../../Utils/pagination");
 // Get All Employee
 const GetAllEmployee = AsyncHandler(async (req, res) => {
   try {
-    const { page } = req.query;
-    const { query, pagination } = paginate(EmployeeRegistration, page, 10);
-    const GetEmployee = await query.lean().exec();
+    // const { page } = req.query;
+    // const { query, pagination } = paginate(EmployeeRegistration, page, 10);
+    const GetEmployee = await EmployeeRegistration.find().lean().exec();
 
     if (!GetEmployee) {
       res.status(StatusCodes.BAD_REQUEST);

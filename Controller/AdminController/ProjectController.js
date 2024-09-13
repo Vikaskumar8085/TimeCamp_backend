@@ -45,8 +45,15 @@ const CreateProjectCtr = AsyncHandler(async (req, res) => {
       Role,
       Employee,
     });
+    await RoleResource({
+      RoleType: req.body.RoleType,
+      Employee_Id: req.body.EmployeeId,
+    }).save();
 
     const savedProject = await newProject.save();
+    const roleProject = new RoleResource({});
+    if (!savedProject) {
+    }
     res.status(201).json({ message: "Project Added successfully" });
   } catch (error) {
     throw new Error(error?.message);

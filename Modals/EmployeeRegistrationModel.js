@@ -41,17 +41,22 @@ const EmployeeRegistrationSchema = mongoose.Schema(
     Employee_Status: {
       type: String,
       enum: ["Active", "inActive"],
-      default: "inActive",
+      default: "",
     },
-    // Employee_Permission: {
-    //   type: Number,
-    //   required: true,
-    //   default: 1,
-    // },
-    // Employee_Entry_days: {
-    //   type: [String],
-    //   required: true,
-    // },
+    Employee_Permission: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    Employee_Type: {
+      type: String,
+      enum: ["Employee", "Manager"],
+      default: "Employee",
+    },
+    Employee_Entry_days: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
