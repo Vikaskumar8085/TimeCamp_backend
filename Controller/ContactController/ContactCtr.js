@@ -29,13 +29,13 @@ const contactctr = {
         throw new Error("Un Authorized User");
       }
 
-      const { sort, search } = req.query;
-      const queryObj = {};
+      // const { sort, search } = req.query;
+      // const queryObj = {};
 
-      if (sort) {
-        var sortfix = sort.replace(",", " ");
-        console.log(sortfix);
-      }
+      // if (sort) {
+      //   var sortfix = sort.replace(",", " ");
+      //   console.log(sortfix);
+      // }
       //   filter
       //   if (stud_name) {
       //     queryObj.stud_name = stud_name;

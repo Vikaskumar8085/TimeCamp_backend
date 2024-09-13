@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const cluster = require("cluster");
 const os = require("os").cpus();
 const http = require("http");
@@ -9,7 +10,7 @@ const helmet = require("helmet");
 const hpp = require("hpp");
 const router = require("./Router/Index");
 const NodeCache = require("node-cache");
-const nodecache = new NodeCache({})
+const nodecache = new NodeCache({});
 const {
   NotFoundHandler,
   globalErrorHanadler,
@@ -34,6 +35,7 @@ app.use(hpp());
 app.use("/api", router);
 app.use(globalErrorHanadler);
 app.use(NotFoundHandler);
+app.use(express.static(path.join(__dirname, "uploads")));
 
 // server started
 const server = http.createServer(app);

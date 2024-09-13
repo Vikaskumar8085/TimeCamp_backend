@@ -9,44 +9,44 @@ const moment = require("moment");
 // create admin
 const CreateContratorCtr = AsyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.user);
-    if (!user) {
-      res.status(StatusCodes.BAD_REQUEST);
-      throw new Error("User Not found please sign in");
-    }
+    // const user = await User.findById(req.user);
+    // if (!user) {
+    //   res.status(StatusCodes.BAD_REQUEST);
+    //   throw new Error("User Not found please sign in");
+    // }
 
-    const company = await Company.findOne({ UserId: user?.user_id });
-    if (!company) {
-      res.status(400);
-      throw new Error("Compnay does not exists");
-    }
+    // const company = await Company.findOne({ UserId: user?.user_id });
+    // if (!company) {
+    //   res.status(400);
+    //   throw new Error("Compnay does not exists");
+    // }
 
-    const addItem = await EmployeeRegistration({
-      Employee_FirstName: req.body.Employee_FirstName,
-      Employee_LastName: req?.body?.Employee_LastName,
-      Employee_Email: req?.body?.Employee_Email,
-      Employee_Phone: req?.body?.Employee_Phone,
+    const addItem = await Contractor({
+      Contractor_Name: req.body.Contractor_Name,
+      Contractor_Number: req?.body?.Contractor_Number,
+      Person_Name: req?.body?.Person_Name,
+      Remark: req?.body?.Remark,
       Employee_JoiningDate: moment(req?.body?.Employee_JoiningDate).format(
         "DD/MM/YYYY"
       ),
       Employee_Designation: req?.body?.Employee_Designation,
       Employee_Address: req?.body?.Employee_Address,
     });
-    const addUser = await User({
-      user_id: "EMP100",
-      FirstName: req.body.Employee_FirstName,
-      LastName: req?.body?.Employee_LastName,
-      Email: req?.body?.Employee_Email,
-      Role: req.body.Role,
-      Activity: false,
-      BlockStatus: "Unblock",
-      Term: true,
-      isVerify: false,
-    })
+    // const addUser = await User({
+    //   user_id: "EMP100",
+    //   FirstName: req.body.Employee_FirstName,
+    //   LastName: req?.body?.Employee_LastName,
+    //   Email: req?.body?.Employee_Email,
+    //   Role: req.body.Role,
+    //   Activity: false,
+    //   BlockStatus: "Unblock",
+    //   Term: true,
+    //   isVerify: false,
+    // });
 
-    if (addItem && addUser) {
+    if (addItem ) {
       await addItem.save();
-      await addUser.save();
+      // await addUser.save();
       return res.status(201).json({
         success: true,
         message: "Contractor added successfully",

@@ -15,7 +15,11 @@ const ContractorRegisterationSchema = mongoose.Schema(
       trim: true,
     },
 
-    Contractor_Name: {
+    Contractor_FirstName: {
+      type: String,
+      required: true,
+    },
+    Contaractor_LastName: {
       type: String,
       required: true,
     },
@@ -39,10 +43,11 @@ const ContractorRegisterationSchema = mongoose.Schema(
       type: Number,
       required: true,
     },
-    Contractor_Type:{
-      type:String,
-      enum:["Contractor","Manager"],
-      default:"Contractor"
+    
+    Contractor_Type: {
+      type: String,
+      enum: ["Contractor", "Manager"],
+      default: "Contractor",
     },
     Created_Time: {
       type: String,
@@ -52,7 +57,7 @@ const ContractorRegisterationSchema = mongoose.Schema(
     },
     Company_Id: {
       type: Number,
-      required: true,
+      // required: true,
     },
   },
   {

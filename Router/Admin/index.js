@@ -100,7 +100,7 @@ adminRouter.put(
 adminRouter.get("/get-single-client/:id", verifyToken, GetSingleClientCtr);
 adminRouter.delete("/remove-client/:id", verifyToken, RemoveClient);
 // contractor
-adminRouter.post("/add-contractor", verifyToken, CreateContratorCtr);
+adminRouter.post("/add-contractor", CreateContratorCtr);
 adminRouter.get("/get-all-contractor", GetallContractor);
 adminRouter.put(
   "/edit-contractor/:id",
