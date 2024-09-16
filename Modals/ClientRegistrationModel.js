@@ -1,7 +1,13 @@
 const mongoose = require("mongoose");
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const ClientRegistrationSchema = mongoose.Schema(
   {
+    Client_Id: {
+      type: Number,
+      unique: true,
+      trim: true,
+    },
     Company_Name: {
       type: String,
       required: true,
@@ -31,14 +37,9 @@ const ClientRegistrationSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    Is_Active: {
-      type: String,
-      required: true,
-      default: false,
-    },
+
     Common_Id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: Number,
       required: true,
     },
     Client_Status: {
@@ -46,15 +47,16 @@ const ClientRegistrationSchema = mongoose.Schema(
       enum: ["Active", "InActive", "Dead"],
       default: "InActive",
     },
-    Company_Id: {
-      type: Number,
-      required: true,
-    },
   },
   {
     timestamps: true,
   }
 );
+
+ClientRegistrationSchema.plugin(AutoIncrement, {
+  inc_field: "Client_Id",
+  start_seq: 1,
+});
 
 const Client = mongoose.model("Client", ClientRegistrationSchema);
 module.exports = Client;

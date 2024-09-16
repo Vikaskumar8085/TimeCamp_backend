@@ -50,6 +50,10 @@ const ProjectSchema = new mongoose.Schema({
     enum: ["Active", "InActive"],
     default: "InActive",
   },
+  Company_Id: {
+    type: Number,
+    required: true,
+  },
 });
 
 ProjectSchema.plugin(AutoIncrement, {

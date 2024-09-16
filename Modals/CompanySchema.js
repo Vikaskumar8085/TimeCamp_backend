@@ -3,7 +3,8 @@ const AutoIncrement = require("mongoose-sequence")(mongoose);
 const CompanySchema = mongoose.Schema({
   Company_Id: {
     type: Number,
-    required: true,
+    trim: true,
+    unique: true,
   },
   Company_Name: {
     type: String,
@@ -32,27 +33,24 @@ const CompanySchema = mongoose.Schema({
   Employee_No: {
     type: Number,
     required: true,
+    default: "",
   },
   Established_date: {
-    type: Date,
-    required: true,
+    type: String,
+    // required: true,
   },
   CompanyWesite: {
     type: String,
     required: true,
   },
   Tex_Number: {
-    type: Number,
+    type: String,
     required: true,
   },
-  UserId: {
-    type: Array,
-    required: true,
-  },
-  UserObjectId: [
+  UserId: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: Number,
+      required: true,
     },
   ],
 });

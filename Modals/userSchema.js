@@ -59,9 +59,6 @@ const UserSchema = mongoose.Schema({
     unique: true,
     trim: true,
   },
-  userRef_id: {
-    type: String,
-  },
 });
 UserSchema.plugin(AutoIncrement, {
   inc_field: "user_id",

@@ -48,13 +48,19 @@ const EmployeeRegistrationSchema = mongoose.Schema(
       required: true,
       default: false,
     },
-    Employee_Type: {
-      type: String,
-      enum: ["Employee", "Manager"],
-      default: "Employee",
-    },
+    Employee_Type: [
+      {
+        type: String,
+        enum: ["Employee", "Manager"],
+        default: "Employee",
+      },
+    ],
     Employee_Entry_days: {
       type: String,
+      required: true,
+    },
+    Company_Id: {
+      type: Number,
       required: true,
     },
   },
