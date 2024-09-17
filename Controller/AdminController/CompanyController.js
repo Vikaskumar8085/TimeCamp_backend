@@ -240,11 +240,42 @@ const companyCtr = {
         throw new Error("bad request");
       }
 
+      const total = getcompany.length
       return res.status(200).json({
         message: "fetch data successfully",
-        companydata: getcompany,
+        companydata:total ,
         success: true,
       });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  GetVerifyCompany: asyncHandler(async (req, res) => {
+    try {
+      const user = await User.findById(req.user).lean().exec();
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized User please signup  ");
+      }
+
+      const verifycompany = await Company.findOne({ UserId: user?.user_id });
+      if (!verifycompany) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error(
+          "Your Company has still not registred please register now"
+        );
+      }
+
+      const getcompany = await Company.find().lean().exec();
+      if (!getcompany) {
+        res.status(400);
+        throw new Error("bad request");
+      }
+
+      const totalcompany = getcompany?.countDocuments();
+      console.log(totalcompany);
+      return res.status(StatusCodes.OK).json({ message: "get verify company" });
     } catch (error) {
       throw new Error(error?.message);
     }

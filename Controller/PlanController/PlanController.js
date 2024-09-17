@@ -31,7 +31,7 @@ const planController = {
 
   //!list all plans
   lists: asyncHandler(async (req, res) => {
-    const plans = await Plan.find();
+    const plans = await Plan.find().lean().exec();
     res.json({
       status: "success",
       message: "Plans fetched successfully",
@@ -51,7 +51,7 @@ const planController = {
     });
   }),
   //! delete
-  delete: asyncHandler(async (req, res) => {
+  deletePlan: asyncHandler(async (req, res) => {
     //get the plan id from params
     const planId = req.params.planId;
     //find the plan
@@ -62,7 +62,7 @@ const planController = {
     });
   }),
   //! update plan
-  update: asyncHandler(async (req, res) => {
+  updatePlan: asyncHandler(async (req, res) => {
     //get the category id from params
     const planId = req.params.planId;
     //find the category
