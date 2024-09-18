@@ -50,6 +50,22 @@ const ProjectSchema = new mongoose.Schema({
     enum: ["Active", "InActive"],
     default: "InActive",
   },
+
+  Project_Manager: {
+    PId: {
+      type: Number,
+      required: true,
+    },
+    ProjectManagerName: {
+      type: String,
+      required: true,
+    },
+    types: {
+      type: String,
+      required: true,
+      default: "ProjectManager",
+    },
+  },
   Company_Id: {
     type: Number,
     required: true,
