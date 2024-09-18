@@ -1,17 +1,16 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-
+const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 
 // Define the Billing Status constants
 const BILLING_STATUS = ["NOT_BILLED", "BILLED", "PARTIALLY_BILLED"]; // Adjust as needed
 
 const TimesheetSchema = new Schema({
-  task_id: {
-    type: Schema.Types.UUID, // Use UUID if you have a UUID package; otherwise, you can use String
-    default: () => new mongoose.Types.UUID(),
-    required: true,
+  TaskId: {
+    type: Number, // Use UUID if you have a UUID package; otherwise, you can use String
+    required: false,
     unique: true,
   },
   ts_code: {
@@ -107,6 +106,10 @@ const TimesheetSchema = new Schema({
 });
 
 // Create the model from the schema
+TimesheetSchema.plugin(AutoIncrement, {
+  inc_field: "TaskId",
+  start_seq: 1,
+})
 const TimeSheet = mongoose.model("TimeSheet", TimesheetSchema);
 
 module.exports = TimeSheet;

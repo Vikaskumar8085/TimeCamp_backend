@@ -176,31 +176,26 @@
 //   GetAllInActiveEmployeeCtr,
 //   updateEmployeeStatusCtr,
 // };
-
 const asyncHandler = require("express-async-handler");
+const Employee = require("../../Modals/EmployeeRegistrationModel");
 const User = require("../../Modals/userSchema");
 
 const employeeController = {
   // create
   createemployee: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.user);
-      if (!user) {
-        res.status(StatusCodes?.UN_Authrized);
-        throw new Error("You are UnAuthorized person please Sign in ");
-      }
-      // verify Company
-
-      const verifycompany = await Company.findOne({ UserId: user?.user_id });
-
-      if (!verifycompany) {
-        res.status(StatusCodes?.BAD_REQUEST);
-        throw new Error("company does not exists");
-      }
-
-      // const addEmployee = await Employee
+      const newEmployee = new Employee(req.body);
+      await newEmployee.save();
+      res
+        .status(201)
+        .json({
+          message: "Employee created successfully",
+          employee: newEmployee,
+        });
     } catch (error) {
-      throw new Error(error?.message);
+      res
+        .status(400)
+        .json({ message: "Error creating employee", error: error.message });
     }
   }),
   // get employee
@@ -221,12 +216,12 @@ const employeeController = {
   }),
   editemployee: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+    } catch (error) { }
   }),
 
   sigleemployee: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+    } catch (error) { }
   }),
 };
 
