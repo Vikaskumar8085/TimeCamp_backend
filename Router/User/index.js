@@ -21,7 +21,7 @@ const verifyToken = require("../../Auth/VerifyAuth");
 const validator = require("express-joi-validation").createValidator({});
 const UserRouter = express.Router();
 
-UserRouter.post("/register", validator.body(registerValidation), RegisterCtr);
+UserRouter.post("/register",  RegisterCtr);
 UserRouter.post("/login", validator.body(loginValidation), LoginCtr);
 UserRouter.post("/change-password", verifyToken, ChangePassword);
 UserRouter.get("/get-user", verifyToken, GetUser);

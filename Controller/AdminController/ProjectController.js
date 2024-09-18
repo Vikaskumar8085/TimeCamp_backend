@@ -210,12 +210,34 @@
 //   updateProjectStatusCtr,
 // };
 const asyncHandler = require("express-async-handler");
-
+const { StatusCodes } = require("http-status-codes");
+const Company = require("../../Modals/CompanySchema");
+const Project = require("../../Modals/ProjectModel");
+const User = require("../../Modals/userSchema");
 const projectController = {
   // create
   createproject: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+      // const user = await User.findById(req.uesr);
+      // if (!user) {
+      //   res.status(StatusCodes.UNAUTHORIZED);
+      //   throw new Error("Un authorized user Please Signup");
+      // }
+
+      // const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      // if (!checkcompany) {
+      //   res.status(StatusCodes.NOT_FOUND);
+      //   throw new Error("company does not exists please create your company");
+      // }
+
+      const addProject = await Project(req.body);
+      if (addProject) {
+        await addProject.save();
+        return res.status(200).json(addProject);
+      }
+    } catch (error) {
+      throw new Error(error?.message);
+    }
   }),
   // get project
   fetchproject: asyncHandler(async (req, res) => {

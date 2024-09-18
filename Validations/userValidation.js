@@ -16,6 +16,7 @@ const registerValidation = Joi.object({
     ),
   Photo: Joi.string().min(3).max(70),
   Term: Joi.boolean().required(),
+  user_id: Joi.number(),
   // user_id: Joi.string().required(),
 });
 

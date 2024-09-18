@@ -2,6 +2,23 @@ const moment = require("moment");
 const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
+// sub document of role resource
+const roleRoesourceschema = new mongoose.Schema({
+  RRId: {
+    type: Number,
+    unique: true,
+    required: true,
+  },
+  RRName: {
+    type: String,
+    required: true,
+  },
+  RRemployee: {
+    type: String,
+    required: true,
+  },
+});
+
 const ProjectSchema = new mongoose.Schema({
   Project_Id: {
     type: Number,
@@ -15,9 +32,15 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Client_Name: {
-    type: String,
-    required: true,
+  Client: {
+    clientId: {
+      type: Number,
+      required: true,
+    },
+    clientName: {
+      type: String,
+      required: true,
+    },
   },
   Start_Date: {
     type: String,
@@ -37,14 +60,7 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Role: {
-    type: String,
-    required: true,
-  },
-  Employee: {
-    type: String,
-    required: true,
-  },
+
   Project_Status: {
     type: String,
     enum: ["Active", "InActive"],
@@ -66,6 +82,8 @@ const ProjectSchema = new mongoose.Schema({
       default: "ProjectManager",
     },
   },
+  roleRoesource: [roleRoesourceschema],
+
   Company_Id: {
     type: Number,
     required: true,

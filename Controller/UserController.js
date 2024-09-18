@@ -31,7 +31,6 @@ const RegisterCtr = AsyncHandler(async (req, res) => {
       Email,
       Password: hashpassword,
       Term,
-      user_id: uuidv4(),
     });
 
     if (resp) {

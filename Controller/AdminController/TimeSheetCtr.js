@@ -67,12 +67,21 @@
 // };
 
 const asyncHandler = require("express-async-handler");
-
+const TimeSheet = require("../../Modals/TimeSheetModel")
 const timesheetController = {
   // create
   createtimesheet: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+      const newTask = await TimeSheet(req.body);
+      await newTask.save();
+      res
+        .status(201)
+        .json({ message: "Task created successfully", task: newTask });
+    } catch (error) {
+      res
+        .status(400)
+        .json({ message: "Error creating task", error: error.message });
+    }
   }),
   // get timesheet
   fetchtimesheet: asyncHandler(async (req, res) => {
