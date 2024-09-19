@@ -23,6 +23,21 @@ adminRouter.post("/add-company", verifyToken, companyCtr.createCompany);
 adminRouter.get("/get-client", verifyToken, clientController?.fetchallclient);
 adminRouter.post("/add-client", verifyToken, clientController?.createClient);
 adminRouter.get("/remove-client", verifyToken, clientController?.removeclient);
+adminRouter.get(
+  "/get-inactive-client",
+  verifyToken,
+  clientController?.getinactiveclient
+);
+adminRouter.get(
+  "/get-active-client",
+  verifyToken,
+  clientController?.getactiveClient
+);
+adminRouter.get(
+  "/get-dead-client",
+  verifyToken,
+  clientController?.getdeadclient
+);
 // client ctr
 // project ctr
 adminRouter.post("/add-project", projectController.createproject);
@@ -35,15 +50,47 @@ adminRouter.post("/add-timesheet", timesheetController.createtimesheet);
 // adminRouter.get("/get-employee", verifyToken);
 // employee ctr
 
-adminRouter.get("/get-project-charts", verifyToken, chartscontroller?.ProjectCharts);
-adminRouter.get("/get-employee-time-hours", verifyToken, chartscontroller?.EmployeeTimeHours);
-adminRouter.get("/get-productivity-chart", verifyToken, ProductivityChart?.ProductivityChart);
+adminRouter.get(
+  "/get-project-charts",
+  verifyToken,
+  chartscontroller?.ProjectCharts
+);
+adminRouter.get(
+  "/get-employee-time-hours",
+  verifyToken,
+  chartscontroller?.EmployeeTimeHours
+);
+adminRouter.get(
+  "/get-productivity-chart",
+  verifyToken,
+  ProductivityChart?.ProductivityChart
+);
 
-adminRouter.get("/get-total-hours-by-resource", verifyToken, TimeSummary?.TotalHoursByResource);
-adminRouter.get("/get-hours-by-project", verifyToken, TimeSummary?.HoursByProject);
-adminRouter.get("/get-hours-by-company", verifyToken, TimeSummary?.HoursByCompany);
-adminRouter.get("/get-project-time-utilization", verifyToken, TimeSummary?.ProjectTimeUtilization);
+adminRouter.get(
+  "/get-total-hours-by-resource",
+  verifyToken,
+  TimeSummary?.TotalHoursByResource
+);
+adminRouter.get(
+  "/get-hours-by-project",
+  verifyToken,
+  TimeSummary?.HoursByProject
+);
+adminRouter.get(
+  "/get-hours-by-company",
+  verifyToken,
+  TimeSummary?.HoursByCompany
+);
+adminRouter.get(
+  "/get-project-time-utilization",
+  verifyToken,
+  TimeSummary?.ProjectTimeUtilization
+);
 
-adminRouter.post("/add-employee", verifyToken, employeeController?.createemployee);
+adminRouter.post(
+  "/add-employee",
+  verifyToken,
+  employeeController?.createemployee
+);
 
 module.exports = adminRouter;

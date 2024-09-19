@@ -14,9 +14,8 @@ const adminCtr = {
       }
       const getAdminuser = await Company.findOne({ UserId: user?.user_id });
       if (!getAdminuser) {
-        
       }
-      const userWithCompany = await User.aggregate([
+      const result = await User.aggregate([
         // Stage 2: Lookup to join with the Company collection
         {
           $lookup: {
@@ -34,9 +33,22 @@ const adminCtr = {
             preserveNullAndEmptyArrays: false,
           },
         },
+        {
+          $project: {
+            FirstName: 1,
+            LastName: 1,
+            Email: 1,
+            Photo: 1,
+            Role: 1,
+          },
+        },
       ]);
 
-      return res.status(200).json(userWithCompany);
+      return res.status(200).json({
+        success: true,
+        message: "successfully fetch adimn data",
+        result: result,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }

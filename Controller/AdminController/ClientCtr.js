@@ -210,9 +210,7 @@ const clientController = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-      console.log(user?.user_id, "userid");
       const company = await Company.findOne({ UserId: user?.user_id });
-      console.log(company, "company");
       if (!company) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -247,12 +245,15 @@ const clientController = {
         throw new Error("Unautorized User Please Singup");
       }
 
-      const clientlist = await Client?.find().lean().exec();
-
-      if (!clientlist) {
-        res.status(400);
-        throw new Error("Bad request");
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
       }
+      const clientlist = await Client.find({
+        Common_Id: checkcompany?.Company_Id,
+      });
+
       return res.status(200).json({
         message: "fetch data successfully",
         success: true,
@@ -265,13 +266,17 @@ const clientController = {
   // remove clients
   removeclient: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(error?.message);
+    }
   }),
 
   // edit clients
   editclients: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+    } catch (error) {
+      throw new Error(error?.message);
+    }
   }),
   // get single clients
   singleclients: asyncHandler(async (req, res) => {
@@ -283,6 +288,26 @@ const clientController = {
   //get active client
   getactiveClient: asyncHandler(async (req, res) => {
     try {
+      const user = await User?.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Unautorized User Please Singup");
+      }
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
+      }
+      const clientlist = await Client.find({
+        Common_Id: checkcompany?.Company_Id,
+        Client_Status: "Active",
+      }).lean();
+
+      return res.status(200).json({
+        success: true,
+        message: "successfully fetch active client",
+        result: clientlist,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -290,6 +315,54 @@ const clientController = {
   // get inactive client
   getinactiveclient: asyncHandler(async (req, res) => {
     try {
+      const user = await User?.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Unautorized User Please Singup");
+      }
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
+      }
+
+      const result = await Client.find({
+        Common_Id: checkcompany?.Company_Id,
+        Client_Status: "InActive",
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: " successfully fetch Inactive client",
+        result: result,
+      });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+  getdeadclient: asyncHandler(async (req, res) => {
+    try {
+      const user = await User?.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Unautorized User Please Singup");
+      }
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
+      }
+
+      const result = await Client.find({
+        Common_Id: checkcompany?.Company_Id,
+        Client_Status: "Dead",
+      });
+
+      return res.status(200).json({
+        success: true,
+        message: "successfully fetch dead client",
+        result: result,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }
