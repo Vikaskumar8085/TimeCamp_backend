@@ -218,17 +218,17 @@ const projectController = {
   // create
   createproject: asyncHandler(async (req, res) => {
     try {
-      // const user = await User.findById(req.uesr);
-      // if (!user) {
-      //   res.status(StatusCodes.UNAUTHORIZED);
-      //   throw new Error("Un authorized user Please Signup");
-      // }
+      const user = await User.findById(req.uesr);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
 
-      // const checkcompany = await Company.findOne({ UserId: user?.user_id });
-      // if (!checkcompany) {
-      //   res.status(StatusCodes.NOT_FOUND);
-      //   throw new Error("company does not exists please create your company");
-      // }
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
 
       const addProject = await Project(req.body);
       if (addProject) {

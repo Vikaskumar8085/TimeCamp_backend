@@ -9,12 +9,15 @@ const chartscontroller = require("../../Controller/AdminController/ChartsControl
 const employeeController = require("../../Controller/AdminController/EmployeeCotroller");
 const ProductivityChart = require("../../Controller/AdminController/Productivity_LeaderBoard/Productivity_Leaderboard");
 const TimeSummary = require("../../Controller/AdminController/TimeSummary/TimeSummary");
+const Projectctr = require("../../Controller/AdminController/Projectctr");
 const adminRouter = express.Router();
 
 // admin ctr
 adminRouter.get("/get-all-admin", verifyToken, adminCtr?.getalladmin);
 // admin ctr
 // company router
+
+adminRouter.get("/fetch-company", verifyToken, companyCtr.getcompany);
 adminRouter.get("/get-company", verifyToken, companyCtr.fetchCompany);
 adminRouter.post("/add-company", verifyToken, companyCtr.createCompany);
 // company router
@@ -49,6 +52,8 @@ adminRouter.post("/add-timesheet", timesheetController.createtimesheet);
 // employee ctr
 // adminRouter.get("/get-employee", verifyToken);
 // employee ctr
+
+// charts
 
 adminRouter.get(
   "/get-project-charts",
@@ -92,5 +97,6 @@ adminRouter.post(
   verifyToken,
   employeeController?.createemployee
 );
-
+adminRouter.get("/get-projects",  Projectctr.fetchProject);
+adminRouter.post("/add-api-project", Projectctr.createproject);
 module.exports = adminRouter;

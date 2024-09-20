@@ -3,7 +3,6 @@ const { Schema } = mongoose;
 
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-
 // Define the Billing Status constants
 const BILLING_STATUS = ["NOT_BILLED", "BILLED", "PARTIALLY_BILLED"]; // Adjust as needed
 

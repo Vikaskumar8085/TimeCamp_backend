@@ -179,19 +179,56 @@
 const asyncHandler = require("express-async-handler");
 const Employee = require("../../Modals/EmployeeRegistrationModel");
 const User = require("../../Modals/userSchema");
+const Company = require("../../Modals/CompanySchema");
+const { StatusCodes } = require("http-status-codes");
 
 const employeeController = {
   // create
   createemployee: asyncHandler(async (req, res) => {
+    // console.log(req.body);
     try {
-      const newEmployee = new Employee(req.body);
+      // check user
+      console.log(req.user);
+      const user = await User.findById(req.user);
+
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // console.log(user);
+      // check company
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      console.log(checkcompany);
+
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+      const resp = await User({
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Email: req.body.Email,
+        Password: `${req.body.FirstName}@123`,
+        Term: true,
+        isVerify: true,
+        Role: "Employee",
+      });
+
+      await resp.save();
+
+      const newEmployee = new Employee({
+        CompanyId: checkcompany?.Company_Id,
+        UserId: resp?.user_id,
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Email: req.body.Email,
+        Password: `${req.body.FirstName}@123`,
+      });
       await newEmployee.save();
-      res
-        .status(201)
-        .json({
-          message: "Employee created successfully",
-          employee: newEmployee,
-        });
+      res.status(201).json({
+        message: "Employee created successfully",
+        employee: resp,
+      });
     } catch (error) {
       res
         .status(400)
@@ -201,7 +238,17 @@ const employeeController = {
   // get employee
   fetchemployee: asyncHandler(async (req, res) => {
     try {
-      const user = await User?.findById(req.user).lean().exec();
+      const user = await User.findById(req.uesr);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // check company
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -216,12 +263,12 @@ const employeeController = {
   }),
   editemployee: asyncHandler(async (req, res) => {
     try {
-    } catch (error) { }
+    } catch (error) {}
   }),
 
   sigleemployee: asyncHandler(async (req, res) => {
     try {
-    } catch (error) { }
+    } catch (error) {}
   }),
 };
 

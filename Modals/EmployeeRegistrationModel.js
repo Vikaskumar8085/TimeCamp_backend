@@ -1,125 +1,55 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
-
-// Define role choices as constants
-const ROLES = ['Employee', 'Manager', 'Contractor'];
-
-const EmployeeSchema = new Schema({
-  id: {
-    type: Number,
-    required: false,
-    unique: true
+const EmployeeSchema = new mongoose.Schema(
+  {
+    EmployeeId: {
+      type: Number,
+      trim: true,
+      unique: true,
+    },
+    CompanyId: {
+      type: Number,
+      required: true,
+    },
+    UserId: {
+      type: Number,
+      required: true,
+      unique: true,
+    },
+    FirstName: {
+      type: String,
+      required: true,
+    },
+    LastName: {
+      type: String,
+      required: true,
+    },
+    Email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: /.+\@.+\..+/,
+    },
+    Role: [{ type: String, default: "Employee" }],
+    Phone: {
+      type: String,
+      // required: true,
+    },
+    Photos: [
+      {
+        type: String, // You could also use a more complex structure to handle image uploads
+      },
+    ],
   },
-  first_name: {
-    type: String,
-    required: true,
-    maxlength: 40
-  },
-  email: {
-    type: String,
-    required: true,
-    maxlength: 255,
-    unique: true // If unique constraint is desired
-  },
-  phone_number: {
-    type: String,
-    required: true,
-    maxlength: 20
-  },
-  last_name: {
-    type: String,
-    required: true,
-    maxlength: 40
-  },
-  start_date: {
-    type: Date,
-    required: true
-  },
-  is_active: {
-    type: Boolean,
-    default: true,
-    required: true
-  },
-  designation: {
-    type: String,
-    default: null,
-    maxlength: 255
-  },
-  employee_img: {
-    type: String, // Store path to image, adjust as per your storage solution
-    default: 'blank-profile-picture.png'
-  },
-  company_name: {
-    type: Number,
-    ref: 'Company',
-    required: true
-  },
-  role: {
-    type: String,
-    enum: ROLES,
-    default: 'Employee'
-  },
-  created_by: {
-    type: String,
-    default: null,
-    maxlength: 255
-  },
-  manager: {
-    type: Number,
-    ref: 'Employee',
-    default: null,
-    required: false
-  },
-  address: {
-    type: String,
-    default: null
-  },
-  last_password_reset: {
-    type: Date,
-    default: null
-  },
-  project_creation: {
-    type: Boolean,
-    default: false
-  },
-  skype_id: {
-    type: String,
-    default: null,
-    maxlength: 255
-  },
-  user_for: {
-    type: Schema.Types.ObjectId,
-    ref: 'UserFor',
-    default: null
-  },
-  backlog_entry_days: {
-    type: Number,
-    default: 1,
-    min: 0 // Optional: to ensure non-negative values
-  },
-  contractor_company: {
-    type: String,
-    default: null,
-    maxlength: 255
-  },
-  hourly_rate: {
-    type: Number,
-    default: null
-  },
-  supervisor: {
-    type: String,
-    default: null,
-    maxlength: 255
-  }
-});
+  { timestamps: true }
+); // Automatically add createdAt and updatedAt fields
 
 EmployeeSchema.plugin(AutoIncrement, {
-  inc_field: "id",
+  inc_field: "EmployeeId",
   start_seq: 1,
-})
-// Create the model from the schema
-const Employee = mongoose.model('Employee', EmployeeSchema);
+});
+const Employee = mongoose.model("Employee", EmployeeSchema);
 
 module.exports = Employee;

@@ -67,7 +67,7 @@
 // };
 
 const asyncHandler = require("express-async-handler");
-const TimeSheet = require("../../Modals/TimeSheetModel")
+const TimeSheet = require("../../Modals/TimeSheetModel");
 const timesheetController = {
   // create
   createtimesheet: asyncHandler(async (req, res) => {
@@ -86,7 +86,23 @@ const timesheetController = {
   // get timesheet
   fetchtimesheet: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un Authorized User");
+      }
+      // verify company
+
+      const verifycompany = await Company.findOne({ UserId: user?.user_id });
+      if (!verifycompany) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error(
+          "Your Company has still not registred please register now"
+        );
+      }
+    } catch (error) {
+      throw new Error(error?.message);
+    }
   }),
   // remove timesheet
 

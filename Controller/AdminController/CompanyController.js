@@ -176,17 +176,17 @@ const companyCtr = {
         throw new Error("Un Authorized User");
       }
       // create company
-      // const verifycompany = await Company.findOne({ UserId: user?.user_id });
-      // if (!verifycompany) {
-      //   res.status(StatusCodes.BAD_REQUEST);
-      //   throw new Error(
-      //     "Your Company has still not registred please register now"
-      //   );
-      // }
-      // if (verifycompany.length >= 2) {
-      //   res.status(400);
-      //   throw new Error("you can not registered 2 company");
-      // }
+      const verifycompany = await Company.findOne({ UserId: user?.user_id });
+      if (!verifycompany) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error(
+          "Your Company has still not registred please register now"
+        );
+      }
+      if (verifycompany.length >= 2) {
+        res.status(400);
+        throw new Error("you can not registered 2 company");
+      }
 
       const response = await Company({
         Company_Name: req.body.Company_Name,
@@ -240,10 +240,10 @@ const companyCtr = {
         throw new Error("bad request");
       }
 
-      const total = getcompany.length
+      const total = getcompany.length;
       return res.status(200).json({
         message: "fetch data successfully",
-        companydata:total ,
+        companydata: total,
         success: true,
       });
     } catch (error) {
@@ -276,6 +276,31 @@ const companyCtr = {
       const totalcompany = getcompany?.countDocuments();
       console.log(totalcompany);
       return res.status(StatusCodes.OK).json({ message: "get verify company" });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  getcompany: asyncHandler(async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un Authorized User");
+      }
+      // verify company
+
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error(
+          "Your Company has still not registred please register now"
+        );
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({ success: true, companydata: checkcompany });
     } catch (error) {
       throw new Error(error?.message);
     }
