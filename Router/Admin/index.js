@@ -97,6 +97,6 @@ adminRouter.post(
   verifyToken,
   employeeController?.createemployee
 );
-adminRouter.get("/get-projects",  Projectctr.fetchProject);
 adminRouter.post("/add-api-project", Projectctr.createproject);
+adminRouter.get("/get-projects",  Projectctr.fetchProject);
 module.exports = adminRouter;
