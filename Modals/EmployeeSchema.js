@@ -32,10 +32,34 @@ const EmployeeSchema = new mongoose.Schema(
       unique: true,
       match: /.+\@.+\..+/,
     },
+    Phone: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    Address: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+    Employee_Joining_Date: {
+      type: String,
+      required: true,
+      trim: true,
+      required: true,
+    },
+
+    Designation: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
     Password: {
       type: String,
       required: true,
     },
+    
     Role: [{ type: String, default: "Employee" }],
     Phone: {
       type: String,

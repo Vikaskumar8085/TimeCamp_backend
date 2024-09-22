@@ -23,7 +23,7 @@ const ContractorSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    Contractor_Number: {
+    Contractor_Phone: {
       type: Number,
       required: true,
     },
@@ -31,7 +31,20 @@ const ContractorSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    Designation: {
+      type: String,
+      required: true,
+    },
+    Password: {
+      type: String,
+      required: false,
+      default: "",
+    },
     Remark: {
+      type: String,
+      required: true,
+    },
+    Contractor_Hourly_Rate: {
       type: String,
       required: true,
     },
