@@ -18,12 +18,17 @@ const TimesheetSchema = new Schema({
     unique: true,
     sparse: true, // Allows blank entries but maintains uniqueness
   },
-  resource: {
+  ContractorId: {
+    type: Number,
+    ref: "Contractor",
+    required: true,
+  },
+  EmployeeId: {
     type: Number,
     ref: "Employee",
     required: true,
   },
-  company: {
+  CompanId: {
     type: Number,
     ref: "Company",
     default: null,
@@ -108,7 +113,7 @@ const TimesheetSchema = new Schema({
 TimesheetSchema.plugin(AutoIncrement, {
   inc_field: "TaskId",
   start_seq: 1,
-})
+});
 const TimeSheet = mongoose.model("TimeSheet", TimesheetSchema);
 
 module.exports = TimeSheet;
