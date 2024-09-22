@@ -212,7 +212,7 @@
 const asyncHandler = require("express-async-handler");
 const { StatusCodes } = require("http-status-codes");
 const Company = require("../../Modals/CompanySchema");
-const Project = require("../../Modals/ProjectModel");
+const Project = require("../../Modals/ProjectSchema");
 const User = require("../../Modals/userSchema");
 const projectController = {
   // create

@@ -1,11 +1,11 @@
 const asyncHandler = require("express-async-handler");
-const Project = require("../../Modals/ProjectModel");
+const Project = require("../../Modals/ProjectSchema");
 const Company = require("../../Modals/CompanySchema");
 const User = require("../../Modals/userSchema");
 const TimeSheet = require("../../Modals/TimeSheetModel");
 
 const { StatusCodes } = require("http-status-codes");
-const Employee = require("../../Modals/EmployeeRegistrationModel");
+const Employee = require("../../Modals/EmployeeSchema");
 
 const chartscontroller = {
   ProjectCharts: asyncHandler(async (req, res) => {
@@ -49,9 +49,9 @@ const chartscontroller = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-    //   console.log(user?.user_id, "userid");
+      //   console.log(user?.user_id, "userid");
       const company = await Company.findOne({ UserId: user?.user_id });
-    //   console.log(company, "company");
+      //   console.log(company, "company");
       if (!company) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");

@@ -1,10 +1,10 @@
 const asyncHandler = require("express-async-handler");
-const Project = require("../../../Modals/ProjectModel");
+const Project = require("../../../Modals/ProjectSchema");
 const Company = require("../../../Modals/CompanySchema");
 const User = require("../../../Modals/userSchema");
 const TimeSheet = require("../../../Modals/TimeSheetModel");
 const { StatusCodes } = require("http-status-codes");
-const Employee = require("../../../Modals/EmployeeRegistrationModel");
+const Employee = require("../../../Modals/EmployeeSchema");
 
 const TimeSummary = {
     TotalHoursByResource: asyncHandler(async (req, res) => {

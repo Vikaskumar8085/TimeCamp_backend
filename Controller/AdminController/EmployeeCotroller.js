@@ -177,7 +177,7 @@
 //   updateEmployeeStatusCtr,
 // };
 const asyncHandler = require("express-async-handler");
-const Employee = require("../../Modals/EmployeeRegistrationModel");
+const Employee = require("../../Modals/EmployeeSchema");
 const bcrypt = require("bcryptjs");
 const User = require("../../Modals/userSchema");
 const Company = require("../../Modals/CompanySchema");
