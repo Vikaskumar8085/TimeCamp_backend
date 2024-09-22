@@ -5,7 +5,10 @@ const employeechartscontroller = require("../../Controller/EmployeeController/em
 
 const employeeRouter = express.Router();
 
+// employee charts
 employeeRouter.get("get-total-employee-hours",verifyToken,employeechartscontroller.totalemployeehourcharts);
 employeeRouter.get("get-employee-projects",verifyToken,employeechartscontroller.totalprojectsCharts);
+
+// employee rotuer
 
 module.exports = employeeRouter;
