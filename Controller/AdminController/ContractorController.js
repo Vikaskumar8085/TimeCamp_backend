@@ -8,54 +8,7 @@
 
 // // create admin
 // const CreateContratorCtr = AsyncHandler(async (req, res) => {
-//   try {
-//     // const user = await User.findById(req.user);
-//     // if (!user) {
-//     //   res.status(StatusCodes.BAD_REQUEST);
-//     //   throw new Error("User Not found please sign in");
-//     // }
-
-//     // const company = await Company.findOne({ UserId: user?.user_id });
-//     // if (!company) {
-//     //   res.status(400);
-//     //   throw new Error("Compnay does not exists");
-//     // }
-
-//     const addItem = await Contractor({
-//       Contractor_Name: req.body.Contractor_Name,
-//       Contractor_Number: req?.body?.Contractor_Number,
-//       Person_Name: req?.body?.Person_Name,
-//       Remark: req?.body?.Remark,
-//       Employee_JoiningDate: moment(req?.body?.Employee_JoiningDate).format(
-//         "DD/MM/YYYY"
-//       ),
-//       Employee_Designation: req?.body?.Employee_Designation,
-//       Employee_Address: req?.body?.Employee_Address,
-//     });
-//     // const addUser = await User({
-//     //   user_id: "EMP100",
-//     //   FirstName: req.body.Employee_FirstName,
-//     //   LastName: req?.body?.Employee_LastName,
-//     //   Email: req?.body?.Employee_Email,
-//     //   Role: req.body.Role,
-//     //   Activity: false,
-//     //   BlockStatus: "Unblock",
-//     //   Term: true,
-//     //   isVerify: false,
-//     // });
-
-//     if (addItem ) {
-//       await addItem.save();
-//       // await addUser.save();
-//       return res.status(201).json({
-//         success: true,
-//         message: "Contractor added successfully",
-//         data: addItem,
-//       });
-//     }
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
+//
 // });
 
 // // getall admins
@@ -167,6 +120,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
 const { StatusCodes } = require("http-status-codes");
 const Company = require("../../Modals/CompanySchema");
+const Contractor = require("../../Modals/ContractorSchema");
 
 const contractorController = {
   // create
@@ -189,7 +143,14 @@ const contractorController = {
 
       // create contractor
 
-      const addItem = await Contractor(req.body);
+      const addItem = await Contractor({
+        Contractor_FirstName: req.body.Contractor_FirstName,
+        Contaractor_LastName: req.body.Contaractor_LastName,
+        Contractor_Number: req.body.Contractor_Number,
+        Person_Name: req.body.Person_Name,
+        Remark: req.body.Remark,
+        Company_Id: checkcompany?.Company_Id,
+      });
       if (!addItem) {
         res.status(StatusCodes?.NOT_FOUND);
         throw new Error("contractor not found");

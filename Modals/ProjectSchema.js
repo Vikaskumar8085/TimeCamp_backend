@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const ProjectSchema = mongoose.Schema({
+  CompanyId: {
+    type: Number,
+    ref: "Company",
+    required: true,
+  },
   ProjectId: {
     type: Number,
     unique: true,

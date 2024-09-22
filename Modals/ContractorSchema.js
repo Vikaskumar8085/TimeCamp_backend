@@ -7,7 +7,7 @@ const formatter = new Intl.DateTimeFormat("en-US", {
   minute: "2-digit",
   hour12: false, // Use 24-hour time
 });
-const ContractorRegisterationSchema = mongoose.Schema(
+const ContractorSchema = mongoose.Schema(
   {
     Contractor_Id: {
       type: Number,
@@ -41,15 +41,15 @@ const ContractorRegisterationSchema = mongoose.Schema(
     },
     Company_Id: {
       type: Number,
+      ref: "Company",
       required: true,
     },
 
-    Contractor_Type: [
-      {
-        type: String,
-        default: "Contractor",
-      },
-    ],
+    Contractor_Type: {
+      type: String,
+      default: "Contractor",
+    },
+
     Created_Time: {
       type: String,
       default: function () {
@@ -66,13 +66,10 @@ const ContractorRegisterationSchema = mongoose.Schema(
   }
 );
 
-ContractorRegisterationSchema.plugin(AutoIncrement, {
+ContractorSchema.plugin(AutoIncrement, {
   inc_field: "Contractor_Id",
   start_seq: 1,
 });
-const ContractorRegistration = mongoose.model(
-  "ContractorRegistration",
-  ContractorRegisterationSchema
-);
+const Contractor = mongoose.model("Contractor", ContractorSchema);
 
-module.exports = ContractorRegistration;
+module.exports = Contractor;

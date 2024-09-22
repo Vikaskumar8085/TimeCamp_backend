@@ -178,6 +178,7 @@
 // };
 const asyncHandler = require("express-async-handler");
 const Employee = require("../../Modals/EmployeeRegistrationModel");
+const bcrypt = require("bcryptjs");
 const User = require("../../Modals/userSchema");
 const Company = require("../../Modals/CompanySchema");
 const { StatusCodes } = require("http-status-codes");
@@ -188,7 +189,6 @@ const employeeController = {
     // console.log(req.body);
     try {
       // check user
-      console.log(req.user);
       const user = await User.findById(req.user);
 
       if (!user) {
@@ -198,17 +198,22 @@ const employeeController = {
       // console.log(user);
       // check company
       const checkcompany = await Company.findOne({ UserId: user?.user_id });
-      console.log(checkcompany);
 
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
+
+      const genhash = await bcrypt.genSalt(12);
+      const hashpassword = await bcrypt.hash(
+        `${req.body.FirstName}@123`,
+        genhash
+      );
       const resp = await User({
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
         Email: req.body.Email,
-        Password: `${req.body.FirstName}@123`,
+        Password: hashpassword,
         Term: true,
         isVerify: true,
         Role: "Employee",
@@ -224,10 +229,15 @@ const employeeController = {
         Email: req.body.Email,
         Password: `${req.body.FirstName}@123`,
       });
+
+      if (!newEmployee) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("bad Request");
+      }
       await newEmployee.save();
       res.status(201).json({
         message: "Employee created successfully",
-        employee: resp,
+        employee: newEmployee,
       });
     } catch (error) {
       res

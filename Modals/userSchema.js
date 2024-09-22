@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 const UserSchema = mongoose.Schema({
   FirstName: {
@@ -60,9 +61,13 @@ const UserSchema = mongoose.Schema({
     trim: true,
   },
 });
+
+
+
 UserSchema.plugin(AutoIncrement, {
   inc_field: "user_id",
   start_seq: 1,
 });
+
 const User = mongoose.model("User", UserSchema);
 module.exports = User;
