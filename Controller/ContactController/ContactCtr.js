@@ -62,3 +62,10 @@ const contactctr = {
 };
 
 module.exports = contactctr;
+
+// {
+//   "name": "John Doe",
+//   "email": "johndoe@example.com",
+//   "phone": "+1234567890",
+//   "message": "Hello, this is a test message."
+// }
