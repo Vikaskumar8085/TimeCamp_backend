@@ -1,17 +1,10 @@
 const express = require("express");
-const contactctr = require("../../Controller/ContactController/ContactCtr");
-const { contactvalid } = require("../../Validations/contactValidation/ContactValid");
-const validator = require("express-joi-validation").createValidator({});
-
+const contactcontroller = require("../../Controller/CommonController/ContactController");
 const superadminRouter = express.Router();
 
 // contact us
-superadminRouter.post(
-  "/add-contact",
-  validator.body(contactvalid),
-  contactctr?.createContact
-);
-superadminRouter.get("/get-all-contact", contactctr?.fetchContact);
+superadminRouter.post("/add-contact", contactcontroller.createcontact);
+// superadminRouter.get("/get-all-contact", contactctr?.fetchContact);
 // contact us
 
 module.exports = superadminRouter;
