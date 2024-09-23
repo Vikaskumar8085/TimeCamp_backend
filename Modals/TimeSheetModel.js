@@ -21,17 +21,18 @@ const TimesheetSchema = new Schema({
   ContractorId: {
     type: Number,
     ref: "Contractor",
-    required: true,
+    required: false,
   },
   EmployeeId: {
     type: Number,
     ref: "Employee",
-    required: true,
+    required: false,
   },
   CompanId: {
     type: Number,
     ref: "Company",
     default: null,
+    required: false,
   },
   hours: {
     type: Number,

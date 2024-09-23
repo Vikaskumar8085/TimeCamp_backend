@@ -15,6 +15,12 @@ const ContractorSchema = mongoose.Schema(
       trim: true,
     },
 
+    UserId: {
+      type: Number,
+      ref: "User",
+      unique: true,
+      trim: true,
+    },
     Contractor_FirstName: {
       type: String,
       required: true,

@@ -6,18 +6,49 @@ const contractorCtr = require("../../Controller/ContractorController/contractorC
 const corporateRouter = express.Router();
 
 // charts
-corporateRouter.get("/contractor-time-hour-chart",verifyToken,contractorchartsCtr.contractorTimeHoursCharts);
-corporateRouter.get("/contractor-total-projects-chart",verifyToken,contractorchartsCtr.contractorTotalprojectsCharts);
+corporateRouter.get(
+  "/contractor-time-hour-chart",
+  verifyToken,
+  contractorchartsCtr.contractorTimeHoursCharts
+);
+corporateRouter.get(
+  "/contractor-total-projects-chart",
+  verifyToken,
+  contractorchartsCtr.contractorTotalprojectsCharts
+);
 
+//
+corporateRouter.post(
+  "/fill-time-sheets",
+  verifyToken,
+  contractorCtr.fillcontractortimesheets
+);
+corporateRouter.get(
+  "/contractor-active-projects",
+  verifyToken,
+  contractorCtr.fetchactiveprojects
+);
+corporateRouter.get(
+  "/contractor-inactive-projects",
+  verifyToken,
+  contractorCtr.fetchinactiveprojects
+);
+corporateRouter.get(
+  "/contractor-all-projects",
+  verifyToken,
+  contractorCtr.fetchcontractorprojects
+);
+corporateRouter.get(
+  "/fetch-single-contrator-projects/:id",
+  verifyToken,
+  contractorCtr.fetchsingleContractorProjects
+);
+corporateRouter.post(
+  "fetch-contractor-timesheets",
+  verifyToken,
+  contractorCtr.fillcontractortimesheets
+);
 
-// 
-corporateRouter.post("/fill-time-sheets",verifyToken,contractorCtr.fillcontractortimesheets);
-corporateRouter.get("/contractor-active-projects",verifyToken,contractorCtr.fetchactiveprojects);
-corporateRouter.get("/contractor-inactive-projects",verifyToken,contractorCtr.fetchinactiveprojects);
-corporateRouter.get("/contractor-all-projects",verifyToken,contractorCtr.fetchcontractorprojects);
-corporateRouter.get("/fetch-single-contrator-projects/:id",verifyToken,contractorCtr.fetchsingleContractorProjects);
-corporateRouter.get("fetch-contractor-timesheets",verifyToken);
-
-// 
+//
 
 module.exports = corporateRouter;

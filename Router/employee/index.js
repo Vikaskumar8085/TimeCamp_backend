@@ -6,9 +6,12 @@ const employeechartscontroller = require("../../Controller/EmployeeController/em
 const employeeRouter = express.Router();
 
 // employee charts
-employeeRouter.get("get-total-employee-hours",verifyToken,employeechartscontroller.totalemployeehourcharts);
-employeeRouter.get("get-employee-projects",verifyToken,employeechartscontroller.totalprojectsCharts);
+employeeRouter.get("/get-total-employee-hours",verifyToken,employeechartscontroller.totalemployeehourcharts);
+employeeRouter.get("/get-employee-projects",verifyToken,employeechartscontroller.totalprojectsCharts);
 
 // employee rotuer
+
+
+employeeRouter.get("/fetch-employee-projects",verifyToken,employeeProjectCtr.fetchemployeeproject);
 
 module.exports = employeeRouter;

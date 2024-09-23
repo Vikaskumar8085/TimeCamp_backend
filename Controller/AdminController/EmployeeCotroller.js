@@ -186,11 +186,10 @@ const { StatusCodes } = require("http-status-codes");
 const employeeController = {
   // create
   createemployee: asyncHandler(async (req, res) => {
-    // console.log(req.body);
+    // // check user
     try {
-      // check user
+      console.log(req.user);
       const user = await User.findById(req.user);
-
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Un authorized user Please Signup");
@@ -198,12 +197,12 @@ const employeeController = {
       // console.log(user);
       // check company
       const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      console.log(checkcompany);
 
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
-
       const genhash = await bcrypt.genSalt(12);
       const hashpassword = await bcrypt.hash(
         `${req.body.FirstName}@123`,
@@ -229,10 +228,9 @@ const employeeController = {
         Email: req.body.Email,
         Password: `${req.body.FirstName}@123`,
       });
-
       if (!newEmployee) {
         res.status(StatusCodes.BAD_REQUEST);
-        throw new Error("bad Request");
+        throw new Error("bad Requests");
       }
       await newEmployee.save();
       res.status(201).json({
@@ -248,17 +246,36 @@ const employeeController = {
   // get employee
   fetchemployee: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.uesr);
+      console.log(req.user);
+      const user = await User.findById(req.user);
+
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Un authorized user Please Signup");
       }
+      // console.log(user);
       // check company
       const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      console.log(checkcompany);
+
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
+
+      const fetchallemployee = await Employee.find({
+        CompanyId: checkcompany.Company_Id,
+      });
+
+      if (!fetchallemployee) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Employe Not found");
+      }
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        message: "fetch employee data successfully",
+        result: fetchallemployee,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }

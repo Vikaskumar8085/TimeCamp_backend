@@ -9,11 +9,30 @@ const Projectctr = {
   createproject: asyncHandler(async (req, res) => {
     console.log("project");
     try {
-      const response = await Project(req.body);
-      if (response) {
-        await response.save();
+      console.log(req.user);
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
       }
-      return res.status(200).json(response);
+      // check company
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+      const addprojects = await Project(req.body);
+
+      if (!addprojects) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Bad Request");
+      }
+      await addprojects.save();
+      return res.status(StatusCodes.CREATED).json({
+        success: true,
+        message: "add item successfully",
+        result: addprojects,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }
