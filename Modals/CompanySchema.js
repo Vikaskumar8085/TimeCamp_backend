@@ -62,3 +62,18 @@ CompanySchema.plugin(AutoIncrement, {
 
 const Company = mongoose.model("Company", CompanySchema);
 module.exports = Company;
+
+
+// {
+//   "Company_Name": "Acme Corporation",
+//   "Company_Email": "info@acmecorp.com",
+//   "Address": "456 Corporate Ave",
+//   "Postal_Code": "12345",
+//   "Phone": 1234567890,
+//   "Company_Logo": "https://example.com/logo.png",
+//   "Employee_No": 50,
+//   "Established_date": "2023",
+//   "CompanyWesite": "https://acmecorp.com",
+//   "Tex_Number": "TX123456",
+//   "UserId": [1, 2, 3]
+// }

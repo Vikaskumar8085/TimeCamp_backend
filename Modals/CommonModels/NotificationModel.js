@@ -13,3 +13,9 @@ const NotificationSchema = mongoose.Schema({
 
 const Notification = mongoose.model("Notification", NotificationSchema);
 module.exports = Notification;
+
+
+// {
+//   "postId": "postIdHere",  // Replace with actual post ID if needed
+//   "message": "New comment on your post!"
+// }

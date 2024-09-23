@@ -92,3 +92,17 @@ ContractorSchema.plugin(AutoIncrement, {
 const Contractor = mongoose.model("Contractor", ContractorSchema);
 
 module.exports = Contractor;
+
+
+// {
+//   "UserId": 1,
+//   "Contractor_FirstName": "John",
+//   "Contaractor_LastName": "Doe",
+//   "Contractor_Phone": 9876543210,
+//   "Person_Name": "Jane Smith",
+//   "Designation": "Software Developer",
+//   "Password": "securepassword",
+//   "Remark": "Experienced contractor",
+//   "Contractor_Hourly_Rate": "50",
+//   "Company_Id": 1
+// }

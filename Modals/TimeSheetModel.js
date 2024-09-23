@@ -118,3 +118,25 @@ TimesheetSchema.plugin(AutoIncrement, {
 const TimeSheet = mongoose.model("TimeSheet", TimesheetSchema);
 
 module.exports = TimeSheet;
+
+
+// {
+//   "ts_code": "TS12345",
+//   "ContractorId": 1,
+//   "EmployeeId": 1,
+//   "CompanId": 1,
+//   "hours": 8,
+//   "project": 1,
+//   "task_description": "Develop new feature",
+//   "Description": "Detailed description of the task.",
+//   "start_time": "2023-10-01T09:00:00Z",
+//   "end_time": "2023-10-01T17:00:00Z",
+//   "day": "2023-10-01",
+//   "approved": false,
+//   "remarks": "First entry for the project",
+//   "approval_status": "PENDING",
+//   "billing_status": "NOT_BILLED",
+//   "billed_hours": 0,
+//   "ok_hours": 0,
+//   "blank_hours": 0
+// }

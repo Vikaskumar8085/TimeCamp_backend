@@ -4,6 +4,14 @@ const User = require("../../Modals/userSchema");
 const mongoose = require("mongoose");
 const { StatusCodes } = require("http-status-codes");
 
+// {
+//   "FirstName": "Jane",
+//   "LastName": "Smith",
+//   "Email": "jane.smith@example.com",
+//   "Role": "Admin",
+//   "Password": "securePassword123"
+// }
+
 const adminCtr = {
   getalladmin: AsyncHandler(async (req, res) => {
     try {

@@ -50,3 +50,9 @@ const notificationctr = {
 };
 
 module.exports = notificationctr;
+
+// {
+//   "userId": "603d7e0c6a0d6f001c8b4567",  // Replace with a valid user ID from your database
+//   "message": "You have a new message!",
+//   "type": "info"
+// }

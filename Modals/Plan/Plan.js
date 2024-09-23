@@ -17,3 +17,10 @@ const planSchema = new mongoose.Schema(
 );
 
 module.exports = mongoose.model("Plan", planSchema);
+
+
+// {
+//   "planName": "Basic Plan",
+//   "features": ["Feature 1", "Feature 2"],
+//   "price": 99.99
+// }

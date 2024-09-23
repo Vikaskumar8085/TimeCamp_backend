@@ -41,3 +41,12 @@ const paymentSchema = new mongoose.Schema(
 const Payment = mongoose.model("Payment", paymentSchema);
 
 module.exports = Payment;
+
+
+// {
+//   "reference": "txn_123456",
+//   "currency": "USD",
+//   "status": "pending",
+//   "subscriptionPlan": "planIdHere",  // Replace with actual plan ID
+//   "amount": 49.99
+// }

@@ -59,7 +59,7 @@ const EmployeeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    
+
     Role: [{ type: String, default: "Employee" }],
     Phone: {
       type: String,
@@ -81,3 +81,18 @@ EmployeeSchema.plugin(AutoIncrement, {
 const Employee = mongoose.model("Employee", EmployeeSchema);
 
 module.exports = Employee;
+
+// {
+//   "CompanyId": 1,
+//   "UserId": 1,
+//   "FirstName": "John",
+//   "LastName": "Doe",
+//   "Email": "john.doe@example.com",
+//   "Phone": "1234567890",
+//   "Address": "123 Main St",
+//   "Employee_Joining_Date": "2023-10-01",
+//   "Designation": "Software Engineer",
+//   "Password": "securepassword",
+//   "Role": ["Employee"],
+//   "Photos": ["photo1.jpg", "photo2.jpg"]
+// }
