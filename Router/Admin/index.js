@@ -47,13 +47,15 @@ adminRouter.get("/get-contractor",verifyToken,contractorController?.fetchcontrac
 adminRouter.get(  "/get-project-charts",  verifyToken,  chartscontroller?.ProjectCharts);
 adminRouter.get(  "/get-employee-time-hours",  verifyToken,  chartscontroller?.EmployeeTimeHours);
 adminRouter.get(  "/get-productivity-chart",  verifyToken,  ProductivityChart?.ProductivityChart);
-
 adminRouter.get(  "/get-total-hours-by-resource",  verifyToken,  TimeSummary?.TotalHoursByResource);
 adminRouter.get(  "/get-hours-by-project",  verifyToken,  TimeSummary?.HoursByProject);
 adminRouter.get(  "/get-hours-by-company",  verifyToken,  TimeSummary?.HoursByCompany);
 adminRouter.get(  "/get-project-time-utilization",  verifyToken,  TimeSummary?.ProjectTimeUtilization);
-
+// charts
+// employee ctr
 adminRouter.post(  "/add-employee",  verifyToken,  employeeController?.createemployee);
+adminRouter.get("/get-employee",verifyToken,employeeController?.fetchemployee)
+// employee ctr
 adminRouter.post("/add-api-project", Projectctr.createproject);
-adminRouter.get("/get-projects",  Projectctr.fetchProject);
+adminRouter.get("/get-projects", verifyToken, Projectctr.fetchallProjects);
 module.exports = adminRouter;

@@ -3,7 +3,7 @@ const Project = require("../../Modals/ProjectSchema");
 const User = require("../../Modals/userSchema");
 const Company = require("../../Modals/CompanySchema");
 const Employee = require("../../Modals/EmployeeSchema");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 
 const Projectctr = {
   createproject: asyncHandler(async (req, res) => {
@@ -16,7 +16,7 @@ const Projectctr = {
         throw new Error("Un authorized user Please Signup");
       }
       // check company
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
@@ -67,7 +67,7 @@ const Projectctr = {
         "RoleResource.Employee_Id": 5,
       });
 
-      return res.status(200).json({ data: projects });
+      return res.status(200).json({data: projects});
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -83,7 +83,7 @@ const Projectctr = {
       }
       //  check company
 
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company does not exists");
@@ -92,7 +92,7 @@ const Projectctr = {
       // get all Projects
 
       const fetchallprojects = await Project.find({
-        CompanyId: checkcompany?.CompanyId,
+        CompanyId: checkcompany?.Company_Id,
       });
       if (!fetchallprojects) {
         res.status(StatusCodes?.NOT_FOUND);

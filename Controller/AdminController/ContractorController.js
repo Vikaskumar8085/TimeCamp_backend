@@ -127,22 +127,18 @@ const contractorController = {
   createcontractor: asyncHandler(async (req, res) => {
     try {
       // user verify
-
       const user = await User.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Un Authorized User");
       }
       //  check company
-
       const checkcompany = await Company.findOne({ UserId: user?.user_id });
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company does not exists");
       }
-
       // create contractor
-
       const addItem = await Contractor({
         Contractor_FirstName: req.body.Contractor_FirstName,
         Contaractor_LastName: req.body.Contaractor_LastName,
@@ -157,7 +153,6 @@ const contractorController = {
       }
 
       await addItem.save();
-
       return res
         .status(StatusCodes?.CREATED)
         .json({ success: true, message: "contractor created successfully" });
@@ -180,9 +175,7 @@ const contractorController = {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company does not exists");
       }
-
       // get all contractor
-
       const fetchcontractor = await Contractor.find({
         Company_Id: checkcompany.Company_Id,
       });

@@ -210,7 +210,7 @@
 //   updateProjectStatusCtr,
 // };
 const asyncHandler = require("express-async-handler");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 const Company = require("../../Modals/CompanySchema");
 const Project = require("../../Modals/ProjectSchema");
 const User = require("../../Modals/userSchema");
@@ -224,7 +224,7 @@ const projectController = {
         throw new Error("Un authorized user Please Signup");
       }
 
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
@@ -242,7 +242,36 @@ const projectController = {
   // get project
   fetchproject: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+      // user
+      const user = await User.findById(req.uesr);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+
+      const getallprojects = await Project.find({
+        CompanyId: checkcompany?.Company_Id,
+      });
+      if (!getallprojects) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("project not found");
+      }
+      return res
+        .status(StatusCodes.OK)
+        .json({
+          success: true,
+          message: "fetch all projects",
+          result: getallprojects,
+        });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
   }),
   // remove project
 
