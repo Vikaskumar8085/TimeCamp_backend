@@ -12,6 +12,6 @@ employeeRouter.get("/get-employee-projects",verifyToken,employeechartscontroller
 // employee rotuer
 
 
-employeeRouter.get("/fetch-employee-projects",verifyToken,employeeProjectCtr.fetchemployeeproject);
+employeeRouter.get("/fetch-employee-projects",employeeProjectCtr.fetchemployeeproject);
 
 module.exports = employeeRouter;
