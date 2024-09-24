@@ -40,7 +40,7 @@ adminRouter.post("/add-timesheet", timesheetController.createtimesheet);
 // contractor 
 
 adminRouter.post("/add-contractor",verifyToken,contractorController?.createcontractor);
-
+adminRouter.get("/get-contractor",verifyToken,contractorController?.fetchcontractor)
 
 // charts
 

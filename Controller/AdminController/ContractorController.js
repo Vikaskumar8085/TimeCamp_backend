@@ -183,7 +183,17 @@ const contractorController = {
 
       // get all contractor
 
-      // const getallcontractor = await
+      const fetchcontractor = await Contractor.find({
+        Company_Id: checkcompany.Company_Id,
+      });
+      if (!fetchcontractor) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Not found contractor");
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({ result: fetchcontractor, success: true });
     } catch (error) {
       throw new Error(error?.message);
     }
