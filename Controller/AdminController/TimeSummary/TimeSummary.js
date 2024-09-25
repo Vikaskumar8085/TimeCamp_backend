@@ -23,24 +23,24 @@ const TimeSummary = {
                 res.status(StatusCodes.BAD_REQUEST);
                 throw new Error("Company does not exist. Please create a company first.");
             }
-            Employees = await Employee.find({ company_name: company?.Company_Id });
-            TimeSheetData = await TimeSheet.find({ company: company?.Company_Id });
+           const Employees = await Employee.find({ CompanyId: company?.Company_Id });
+            const TimeSheetData = await TimeSheet.find({ CompanId: company?.Company_Id });
 
             const result = await Promise.all(Employees.map(async (employee) => {
-                if (!employee.id) {
+                if (!employee.EmployeeId) {
                     return null;
                 }
 
-                const employeeId = Number(employee.id);
+                const employeeId = Number(employee.EmployeeId);
 
-                const employeeTimesheets = TimeSheetData.filter(sheet => Number(sheet.resource) === employeeId);
+                const employeeTimesheets = TimeSheetData.filter(sheet => Number(sheet.EmployeeId) === employeeId);
                 const total_hours = employeeTimesheets.reduce((acc, sheet) => acc + (sheet.hours || 0), 0);
                 const billed_hours = employeeTimesheets.reduce((acc, sheet) => acc + (sheet.billed_hours || 0), 0);
                 return {
                     resource: {
-                        id: employee.id.toString(),
-                        name: `${employee.first_name} ${employee.last_name}`,
-                        resource_type: employee.role,
+                        id: employee.EmployeeId.toString(),
+                        name: `${employee.FirstName} ${employee.LastName}`,
+                        resource_type: employee.Role,
                     },
                     total_hours,
                     billed_hours,
@@ -70,16 +70,16 @@ const TimeSummary = {
                 res.status(StatusCodes.BAD_REQUEST);
                 throw new Error("Company does not exist. Please create a company first.");
             }
-            const projects = await Project.find({ Company_Id: company?.Company_Id });
-            const timesheets = await TimeSheet.find({ company: company?.Company_Id });
+            const projects = await Project.find({ CompanyId: company?.Company_Id });
+            const timesheets = await TimeSheet.find({ CompanId: company?.Company_Id });
             console.log(projects, "projects");
             
             const projectNames = await Promise.all(projects.map(async (project) => {
-                const projectTimesheets = timesheets.filter(sheet => sheet.project === project?.Project_Id);
+                const projectTimesheets = timesheets.filter(sheet => sheet.project === project?.ProjectId);
                 const totalHours = projectTimesheets.reduce((acc, sheet) => acc + (sheet.hours || 0), 0);
                 const billedHours = projectTimesheets.reduce((acc, sheet) => acc + (sheet.billed_hours || 0), 0);
                 return {
-                    id: project?.Project_Id,
+                    id: project?.ProjectId,
                     Project_Name: project?.Project_Name,
                     Start_Date: project?.Start_Date,
                     End_Date: project?.End_Date,
@@ -111,7 +111,7 @@ const TimeSummary = {
                 res.status(StatusCodes.BAD_REQUEST);
                 throw new Error("Company does not exist. Please create a company first.");
             }
-            const timesheets = await TimeSheet.find({ company: company?.Company_Id });
+            const timesheets = await TimeSheet.find({ CompanId: company?.Company_Id });
             const totalHours = timesheets.reduce((acc, sheet) => acc + (sheet.hours || 0), 0);
             const billedHours = timesheets.reduce((acc, sheet) => acc + (sheet.billed_hours || 0), 0);
             const ok_hours = timesheets.reduce((acc, sheet) => acc + (sheet.ok_hours || 0), 0);
@@ -140,18 +140,21 @@ const TimeSummary = {
                 res.status(StatusCodes.BAD_REQUEST);
                 throw new Error("Company does not exist. Please create a company first.");
             }
-            const projects = await Project.find({ Company_Id: company?.Company_Id });
-            const timesheets = await TimeSheet.find({ company: company?.Company_Id });
+            const projects = await Project.find({ CompanyId: company?.Company_Id });
+            const timesheets = await TimeSheet.find({ CompanId: company?.Company_Id });
             console.log(projects, "projects");
             const projectNames = await Promise.all(projects.map(async (project) => {
-                const projectTimesheets = timesheets.filter(sheet => sheet.project === project?.Project_Id);
+                const projectTimesheets = timesheets.filter(sheet => sheet.project === project?.ProjectId);
                 const totalHours = projectTimesheets.reduce((acc, sheet) => acc + (sheet.hours || 0), 0);
                 const billedHours = projectTimesheets.reduce((acc, sheet) => acc + (sheet.billed_hours || 0), 0);
                 const ok_hours = projectTimesheets.reduce((acc, sheet) => acc + (sheet.ok_hours || 0), 0);
                 const blank_hours = projectTimesheets.reduce((acc, sheet) => acc + (sheet.blank_hours || 0), 0);
-                const productivity = totalHours > 0 ? Math.round((billedHours / totalHours) * 100 * 100) / 100 : 0;
+                const productivity = totalHours > 0
+                    ? +(billedHours / totalHours * 100).toFixed(2)
+                    : 0;
+
                 return {
-                    id: project?.Project_Id,
+                    id: project?.ProjectId,
                     Project_Name: project?.Project_Name,
                     Start_Date: project?.Start_Date,
                     End_Date: project?.End_Date,
