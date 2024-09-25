@@ -2,7 +2,7 @@ const AsyncHandler = require("express-async-handler");
 const Company = require("../../Modals/CompanySchema");
 const User = require("../../Modals/userSchema");
 const mongoose = require("mongoose");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 
 // {
 //   "FirstName": "Jane",
@@ -20,7 +20,7 @@ const adminCtr = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-      const getAdminuser = await Company.findOne({ UserId: user?.user_id });
+      const getAdminuser = await Company.findOne({UserId: user?.user_id});
       if (!getAdminuser) {
       }
       const result = await User.aggregate([
@@ -68,6 +68,27 @@ const adminCtr = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
+
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
+      }
+      const createuser = await User(req.body);
+      if (!createuser) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("User not found");
+      } else {
+        await createuser.save();
+        await Company.updateOne(
+          {Company_Id: checkcompany?.Company_Id},
+          {$push: {UserId: createuser.user_id}}
+        );
+      }
+
+      return res
+        .status(StatusCodes.CREATED)
+        .json({success: true, message: "admin created successfully"});
     } catch (error) {
       throw new Error(error?.message);
     }

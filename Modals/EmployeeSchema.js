@@ -11,7 +11,7 @@ const EmployeeSchema = new mongoose.Schema(
     },
     CompanyId: {
       type: Number,
-      required: true,
+      required: false,
     },
     FirstName: {
       type: String,
@@ -41,16 +41,16 @@ const EmployeeSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      required: true,
+      required: false,
     },
     Password: {
       type: String,
-      required: true,
+      required: false,
     },
     Designation: {
       type: String,
       required: true,
-      trim: true,
+      trim: false,
     },
     Role: [
       {
@@ -71,11 +71,11 @@ const EmployeeSchema = new mongoose.Schema(
     },
     Permission: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     Backlog_Entries: {
       type: Number,
-      required: true,
+      required: false,
       default: 1,
     },
     Socail_Links: {

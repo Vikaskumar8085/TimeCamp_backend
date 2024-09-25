@@ -20,8 +20,16 @@ const contractorController = {
         throw new Error("company does not exists");
       }
       // create contractor
-      const addItem = await Employee(req.body, {
+      const addItem = await Employee({
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Email: req.body.Email,
+        Address: req.body.Address,
+        Phone: req.body.Phone,
+        Designation: req.body.Designation,
+        Password: req.body.Password,
         CompanyId: checkcompany?.Company_Id,
+        UserId: user?.user_id,
         Role: "Contractor",
       });
       if (!addItem) {

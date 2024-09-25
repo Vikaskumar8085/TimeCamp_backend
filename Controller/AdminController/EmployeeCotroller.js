@@ -10,7 +10,6 @@ const employeeController = {
   createemployee: asyncHandler(async (req, res) => {
     // // check user
     try {
-      console.log(req.user);
       const user = await User.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
@@ -19,30 +18,39 @@ const employeeController = {
       // console.log(user);
       // check company
       const checkcompany = await Company.findOne({UserId: user?.user_id});
-      console.log(checkcompany);
 
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
-      const genhash = await bcrypt.genSalt(12);
-      const hashpassword = await bcrypt.hash(
-        `${req.body.FirstName}@123`,
-        genhash
-      );
-
-      const newEmployee = new Employee(req.body, {
+      // const genhash = await bcrypt.genSalt(12);
+      // const hashpassword = await bcrypt.hash(
+      //   `${req.body.FirstName}@123`,
+      //   genhash
+      // );
+      const newEmployee = await Employee({
+        FirstName: req.body.FirstName,
+        LastName: req.body.LastName,
+        Email: req.body.Email,
+        Address: req.body.Address,
+        Phone: req.body.Phone,
+        Designation: req.body.Designation,
+        Password: req.body.Password,
         CompanyId: checkcompany?.Company_Id,
         Role: "Employee",
+        UserId: user?.user_id,
       });
+
       if (!newEmployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("bad Requests");
       }
       await newEmployee.save();
+      console.log(newEmployee, "newEpm//////////////////////////////////////");
+
       res.status(201).json({
         message: "Employee created successfully",
-        employee: newEmployee,
+        success: true,
       });
     } catch (error) {
       res
@@ -63,7 +71,6 @@ const employeeController = {
       // console.log(user);
       // check company
       const checkcompany = await Company.findOne({UserId: user?.user_id});
-      console.log(checkcompany);
 
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
