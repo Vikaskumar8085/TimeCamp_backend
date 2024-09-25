@@ -24,13 +24,15 @@ const chartscontroller = {
         throw new Error("company not exists please create first company");
       }
       //
-      const project = await Project.find({Company_Id: company?.Company_Id});
-      const recentProjects = project?.slice(0, 10);
+      const recentProjects = await Project.find({ CompanyId: company?.Company_Id })
+        .sort({ createdAt: -1 }) // Sort by creation date descending
+        .limit(10);
+
 
       //we need only names of project and it's start date and end date
       const projectNames = recentProjects?.map((project) => {
         return {
-          id: project?.Project_Id,
+          id: project?.ProjectId,
           Project_Name: project?.Project_Name,
           Start_Date: project?.Start_Date,
           End_Date: project?.End_Date,
@@ -55,18 +57,18 @@ const chartscontroller = {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
       }
-      const timesheet = await TimeSheet.find({company: company?.Company_Id});
-      const empName = async (id) => {
-        if (!id) return null; // Handle case where id is not provided
-        const emp = await Employee.findOne({id}); // Query by the custom `id` field
-        return emp ? `${emp.first_name} ${emp.last_name}` : null; // Return the name if employee is found
+      const timesheet = await TimeSheet.find({ CompanId: company?.Company_Id});
+      const empName = async (EmployeeId) => {
+        if (!EmployeeId) return null; // Handle case where id is not provided
+        const emp = await Employee.findOne({ EmployeeId }); // Query by the custom `id` field
+        return emp ? `${emp.FirstName} ${emp.LastName}` : null; // Return the name if employee is found
       };
 
       const timesheetData = await Promise.all(
         timesheet?.map(async (sheet) => {
-          const resourceName = await empName(sheet?.resource); // Ensure `sheet.resource` corresponds to your custom `id`
+          const resourceName = await empName(sheet?.EmployeeId); // Ensure `sheet.resource` corresponds to your custom `id`
           return {
-            id: sheet?.id,
+            id: sheet?.EmployeeId,
             resource: resourceName,
             hours: sheet?.hours,
             day: sheet?.day,

@@ -26,32 +26,29 @@ const ProductivityLeaderBoard = {
       }
 
       const employees = await Employee.find({
-        company_name: company?.Company_Id,
+        CompanyId: company?.Company_Id,
       });
       const timesheetData = await TimeSheet.find({
-        company: company?.Company_Id,
+        CompanId: company?.Company_Id,
       });
       console.log(timesheetData, "timesheetData");
       // Construct the productivity data
       const result = await Promise.all(
         employees.map(async (employee) => {
-          if (!employee.id) {
+          if (!employee.EmployeeId) {
             return null;
           }
 
           // Convert employee.id to a number for comparison with resource in timesheets
-          const employeeId = Number(employee.id);
+          const employeeId = Number(employee.EmployeeId);
 
           // Filter timesheets where the resource matches the employee ID
           const employeeTimesheets = timesheetData.filter(
-            (sheet) => Number(sheet.resource) === employeeId
+            (sheet) => Number(sheet.EmployeeId) === employeeId
           );
           console.log(employeeTimesheets, "employeeTimesheets");
           const total_working_days = 262;
-          const total_employee_working_days = employeeTimesheets.reduce(
-            (acc, sheet) => acc + sheet.hours,
-            0
-          );
+          const total_employee_working_days = 0;
           const billed_hours = employeeTimesheets.reduce(
             (acc, sheet) => acc + (sheet.billed_hours || 0),
             0
@@ -70,16 +67,16 @@ const ProductivityLeaderBoard = {
             0
           );
 
-          const productivity =
-            total_hours > 0
-              ? Math.round((billed_hours / total_hours) * 100 * 100) / 100
-              : 0;
+          const productivity = total_hours > 0
+            ? +(billed_hours / total_hours * 100).toFixed(2)
+            : 0;
+
 
           return {
             resource: {
-              id: employee.id.toString(),
-              name: `${employee.first_name} ${employee.last_name}`,
-              resource_type: employee.role,
+              id: employee.EmployeeId.toString(),
+              name: `${employee.FirstName} ${employee.LastName}`,
+              resource_type: employee.Role,
             },
             total_working_days,
             total_employee_working_days,
