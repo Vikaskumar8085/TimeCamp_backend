@@ -60,10 +60,6 @@ const ProjectSchema = mongoose.Schema({
       required: true,
     },
   },
-  ProjectName: {
-    type: String,
-    required: true,
-  },
 
   Project_Type: {
     type: String,

@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const {StatusCodes} = require("http-status-codes");
+const { StatusCodes } = require("http-status-codes");
 const Company = require("../../Modals/CompanySchema");
 const Project = require("../../Modals/ProjectSchema");
 const User = require("../../Modals/userSchema");
@@ -9,20 +9,55 @@ const projectController = {
   // create
   createproject: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.uesr);
+      const {
+        ProjectId,
+        Project_Code,
+        Project_Name,
+        Start_Date,
+        End_Date,
+        client,
+        Project_Type,
+        Project_Managers,
+        Project_Status,
+        RoleResource,
+        Project_Manager,
+      } = req.body;
+      console.log(req.user);
+      const user = await User.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Un authorized user Please Signup");
       }
-      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      // console.log(user);
+      // check company
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
-      const addProject = await Project(req.body);
-      if (addProject) {
-        await addProject.save();
-        return res.status(200).json(addProject);
+      console.log(checkcompany);
+      const newProject = await Project({
+        CompanyId: checkcompany?.Company_Id,
+        ProjectId,
+        Project_Code,
+        Project_Name,
+        Start_Date: Start_Date || moment().format("DD/MM/YYYY"),
+        End_Date: End_Date || moment().format("DD/MM/YYYY"),
+        client,
+        Project_Type,
+        Project_Managers,
+        Project_Status: Project_Status || "InActive",
+        RoleResource,
+        Project_Manager,
+      });
+
+      const saveproject = await newProject.save();
+
+      if (saveproject) {
+        return res
+          .status(200)
+          .json({ success: true, message: "projcect added successfully" });
       }
     } catch (error) {
       throw new Error(error?.message);
@@ -38,7 +73,7 @@ const projectController = {
         throw new Error("Un authorized user Please Signup");
       }
       // check company
-      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      const checkcompany = await Company.findOne({ UserId: user?.user_id });
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
