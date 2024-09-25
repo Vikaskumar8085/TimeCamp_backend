@@ -1,5 +1,5 @@
 const AsyncHandler = require("express-async-handler");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 const User = require("../Modals/userSchema");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
@@ -7,7 +7,7 @@ const Token = require("../Modals/TokenSchema");
 const generateToken = require("../Auth/GenerateToken");
 const jwt = require("jsonwebtoken");
 const SendEmail = require("../Utils/SendEmail");
-const { v4: uuidv4 } = require("uuid");
+const {v4: uuidv4} = require("uuid");
 const axios = require("axios");
 const Company = require("../Modals/CompanySchema");
 require("../Config/dbconfig");
@@ -17,10 +17,10 @@ require("dotenv").config();
 
 const RegisterCtr = AsyncHandler(async (req, res) => {
   try {
-    const { FirstName, LastName, Email, Password, Term } = req.body;
+    const {FirstName, LastName, Email, Password, Term} = req.body;
     const genhash = await bcrypt.genSalt(12);
     const hashpassword = await bcrypt.hash(Password, genhash);
-    const userExists = await User.findOne({ Email: req.body.Email });
+    const userExists = await User.findOne({Email: req.body.Email});
     if (userExists) {
       res.status(StatusCodes.BAD_REQUEST);
       throw new Error("Email has already been registered");
@@ -166,7 +166,7 @@ const LoginCtr = AsyncHandler(async (req, res) => {
       throw new Error("User and Password Invalid");
     }
 
-    const token = await generateToken({ id: user._id });
+    const token = await generateToken({id: user._id});
     return res.status(StatusCodes.OK).json({
       success: true,
       message: "login successfully",
@@ -224,7 +224,7 @@ const GoogleAuthCtr = AsyncHandler(async (req, res) => {
       );
 
       if (response) {
-        const checkUser = await User.findOne({ Email: response.data?.email });
+        const checkUser = await User.findOne({Email: response.data?.email});
         if (!checkUser) {
           await User({
             FirstName: response?.data?.given_name,
@@ -239,10 +239,10 @@ const GoogleAuthCtr = AsyncHandler(async (req, res) => {
         }
       }
 
-      const user = await User.findOne({ Email: response.data?.email });
+      const user = await User.findOne({Email: response.data?.email});
       if (user) {
-        const TOKEN = await generateToken({ id: user._id });
-        return res.status(200).json({ success: true, message: TOKEN });
+        const TOKEN = await generateToken({id: user._id});
+        return res.status(200).json({success: true, message: TOKEN});
       }
     }
   } catch (error) {
@@ -273,25 +273,25 @@ const GetUser = AsyncHandler(async (req, res) => {
 
 const VerifyCtr = AsyncHandler(async (req, res) => {
   try {
-    const { token } = req.params;
+    const {token} = req.params;
 
     if (!token) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .json({ message: "Token Not Found" });
+        .json({message: "Token Not Found"});
     }
 
     const checktoken = await Token.findOne({
       token: token,
-      expireAt: { $gte: Date.now() },
+      expireAt: {$gte: Date.now()},
     });
     if (!checktoken) {
       return res.status(400).json("token has been exprired");
     }
 
-    const user = await User.findById({ _id: checktoken.userId });
+    const user = await User.findById({_id: checktoken.userId});
     if (user) {
-      await User.updateOne({ isVerify: true });
+      await User.updateOne({isVerify: true});
     }
 
     return res.status(StatusCodes.OK).json({
@@ -306,7 +306,7 @@ const VerifyCtr = AsyncHandler(async (req, res) => {
 // ChangePassword
 const ChangePassword = AsyncHandler(async (req, res) => {
   try {
-    const { oldPassword, Password } = req.body;
+    const {oldPassword, Password} = req.body;
     const user = await User.findById(req.user);
 
     if (!user) {
@@ -334,7 +334,7 @@ const ChangePassword = AsyncHandler(async (req, res) => {
 // ForgetPassword Ctr
 
 const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
-  const resp = await User.findOne({ Email: req.body.Email });
+  const resp = await User.findOne({Email: req.body.Email});
 
   if (!resp) {
     res.status(404);
@@ -342,7 +342,7 @@ const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
   }
 
   // Delete token if it exists in DB
-  let token = await Token.findOne({ userId: resp._id });
+  let token = await Token.findOne({userId: resp._id});
   if (token) {
     await token.deleteOne();
     await new Token({
@@ -387,7 +387,7 @@ const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
     console.log("mailsend");
   }
   try {
-    res.status(200).json({ success: true, message: "Reset Email Sent" });
+    res.status(200).json({success: true, message: "Reset Email Sent"});
   } catch (error) {
     res.status(500);
     throw new Error("Email not sent, please try again");
@@ -397,8 +397,8 @@ const ForgetPasswordCtr = AsyncHandler(async (req, res) => {
 // Reset Token Ctr
 
 const ResetPassword = AsyncHandler(async (req, res) => {
-  const { password } = req.body;
-  const { resetToken } = req.params;
+  const {password} = req.body;
+  const {resetToken} = req.params;
 
   // Hash token, then compare to Token in DB
   const hashedToken = crypto
@@ -409,7 +409,7 @@ const ResetPassword = AsyncHandler(async (req, res) => {
   // fIND tOKEN in DB
   const userToken = await Token.findOne({
     token: hashedToken,
-    expiresAt: { $gt: Date.now() },
+    expiresAt: {$gt: Date.now()},
   });
 
   if (!userToken) {
@@ -417,7 +417,7 @@ const ResetPassword = AsyncHandler(async (req, res) => {
     throw new Error("Invalid or Expired Token");
   }
   // Find user
-  const user = await User.findOne({ _id: userToken.userId });
+  const user = await User.findOne({_id: userToken.userId});
   user.password = password;
   await user.save();
   res.status(200).json({
@@ -437,7 +437,7 @@ const EditUsers = AsyncHandler(async (req, res) => {
     const user = await User.findById(req.user);
 
     if (user) {
-      const { FirstName, LastName, Email, Password } = user;
+      const {FirstName, LastName, Email, Password} = user;
       user.Email = Email;
       user.FirstName = req.body.FirstName || FirstName;
       user.LastName = req.body.LastName || LastName;

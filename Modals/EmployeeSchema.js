@@ -60,8 +60,14 @@ const EmployeeSchema = new mongoose.Schema(
       },
     ],
     Manager: {
-      type: String,
-      default: "",
+      ManagerId: {
+        type: Number,
+        default: null,
+      },
+      Manager_Name: {
+        type: String,
+        default: "",
+      },
     },
     Permission: {
       type: Boolean,

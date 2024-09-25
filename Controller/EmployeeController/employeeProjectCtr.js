@@ -204,62 +204,91 @@ const employeeProjectCtr = {
 };
 
 module.exports = employeeProjectCtr;
-
-// // Function to get active projects by specific EmployeeId and RRId
-// async function getActiveProjectsByEmployeeAndRR(employeeId, rrId) {
+// // API to get employee or manager projects
+// app.get("/api/employee/:employeeId/projects", async (req, res) => {
 //   try {
-//     const activeProjects = await Project.aggregate([
-//       {
-//         $match: { Project_Status: "Active" } // Match active projects
-//       },
-//       {
-//         $lookup: {
-//           from: "employees", // Name of the employees collection
-//           localField: "CompanyId", // Field from the projects collection
-//           foreignField: "CompanyId", // Field from the employees collection
-//           as: "employees" // Resulting array
-//         }
-//       },
-//       {
-//         $unwind: {
-//           path: "$employees",
-//           preserveNullAndEmptyArrays: true // Keep projects without employees
-//         }
-//       },
-//       {
-//         $match: {
-//           "employees.Status": "Active", // Match active employees
-//           "employees.EmployeeId": employeeId // Filter by EmployeeId
-//         }
-//       },
-//       {
-//         $unwind: {
-//           path: "$RoleResource",
-//           preserveNullAndEmptyArrays: true // Keep projects without role resources
-//         }
-//       },
-//       {
-//         $match: {
-//           "RoleResource.RRId": rrId // Filter by RRId
-//         }
-//       },
-//       {
-//         $group: {
-//           _id: "$_id",
-//           ProjectId: { $first: "$ProjectId" },
-//           Project_Name: { $first: "$Project_Name" },
-//           Project_Code: { $first: "$Project_Code" },
-//           RoleResource: { $push: "$RoleResource" }, // Aggregate RoleResources
-//           employees: { $push: "$employees" } // Include employees info
-//         }
-//       }
-//     ]).exec();
+//     const employeeId = parseInt(req.params.employeeId);
 
-//     return activeProjects;
+//     // Check if the employee exists
+//     const employee = await Employee.findOne({ EmployeeId: employeeId });
+
+//     if (!employee) {
+//       return res.status(404).json({ error: "Employee not found" });
+//     }
+
+//     // Check if the employee is an employee or a manager
+//     const isEmployee = employee.Role.includes("Employee");
+//     const isManager = employee.Role.includes("Manager");
+
+//     if (!isEmployee && !isManager) {
+//       return res.status(403).json({ error: "Access denied: Not an employee or manager" });
+//     }
+
+//     const projects = [];
+
+//     // If the employee is a manager, fetch projects managed by them
+//     if (isManager) {
+//       const managedProjects = await Project.aggregate([
+//         {
+//           $match: { "Project_Manager.PId": employeeId },
+//         },
+//         {
+//           $lookup: {
+//             from: "employees",
+//             localField: "Project_Manager.PId",
+//             foreignField: "EmployeeId",
+//             as: "ProjectManagerDetails",
+//           },
+//         },
+//         {
+//           $project: {
+//             _id: 0,
+//             ProjectId: 1,
+//             Project_Name: 1,
+//             Project_Code: 1,
+//             Project_Status: 1,
+//             ProjectManager: {
+//               $arrayElemAt: ["$ProjectManagerDetails", 0],
+//             },
+//           },
+//         },
+//       ]);
+//       projects.push(...managedProjects);
+//     }
+
+//     // If the employee is an employee (not manager), fetch projects they are involved in
+//     if (isEmployee) {
+//       const involvedProjects = await Project.aggregate([
+//         {
+//           $match: { "RoleResource.RRemployee": employeeId },
+//         },
+//         {
+//           $lookup: {
+//             from: "employees",
+//             localField: "Project_Manager.PId",
+//             foreignField: "EmployeeId",
+//             as: "ProjectManagerDetails",
+//           },
+//         },
+//         {
+//           $project: {
+//             _id: 0,
+//             ProjectId: 1,
+//             Project_Name: 1,
+//             Project_Code: 1,
+//             Project_Status: 1,
+//             ProjectManager: {
+//               $arrayElemAt: ["$ProjectManagerDetails", 0],
+//             },
+//           },
+//         },
+//       ]);
+//       projects.push(...involvedProjects);
+//     }
+
+//     return res.json({ projects });
 //   } catch (error) {
-//     console.error("Error fetching active projects by employee and RR:", error);
-//     throw error;
+//     console.error(error);
+//     res.status(500).json({ error: "Internal server error" });
 //   }
-// }
-
-// module.exports = { Employee, Project, getActiveProjectsByEmployeeAndRR, getActiveEmployees };
+// });
