@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
+const {Schema} = mongoose;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const EmployeeSchema = new mongoose.Schema(
@@ -12,11 +12,6 @@ const EmployeeSchema = new mongoose.Schema(
     CompanyId: {
       type: Number,
       required: true,
-    },
-    UserId: {
-      type: Number,
-      required: true,
-      unique: true,
     },
     FirstName: {
       type: String,
@@ -42,25 +37,54 @@ const EmployeeSchema = new mongoose.Schema(
       trim: true,
       default: "",
     },
-    Employee_Joining_Date: {
+    Joining_Date: {
       type: String,
       required: true,
       trim: true,
       required: true,
     },
-
+    Password: {
+      type: String,
+      required: true,
+    },
     Designation: {
       type: String,
       required: true,
       trim: true,
     },
-
-    Password: {
+    Role: [
+      {
+        type: String,
+        enum: ["Employee", "Manager", "Contractor"],
+        default: "Employee",
+      },
+    ],
+    Manager: {
       type: String,
+      default: "",
+    },
+    Permission: {
+      type: Boolean,
       required: true,
     },
-
-    Role: [{ type: String, default: "Employee" }],
+    Backlog_Entries: {
+      type: Number,
+      required: true,
+      default: 1,
+    },
+    Socail_Links: {
+      type: String,
+      required: false,
+    },
+    Contractor_Company: {
+      type: String,
+    },
+    Hourly_Rate: {
+      type: Number,
+    },
+    Supervisor: {
+      type: String,
+    },
     Phone: {
       type: String,
       // required: true,
@@ -71,7 +95,7 @@ const EmployeeSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  {timestamps: true}
 ); // Automatically add createdAt and updatedAt fields
 
 EmployeeSchema.plugin(AutoIncrement, {
