@@ -79,6 +79,7 @@ const employeeController = {
 
       const fetchallemployee = await Employee.find({
         CompanyId: checkcompany.Company_Id,
+        Role: "Employee",
       });
 
       if (!fetchallemployee) {

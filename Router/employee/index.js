@@ -22,5 +22,16 @@ employeeRouter.get(
   "/fetch-employee-projects",
   employeeProjectCtr.fetchemployeeproject
 );
+// active employee projects
+
+employeeRouter.get(
+  "/fetch-employee-active-projects",
+  employeeProjectCtr.employeeactiveprojects
+);
+
+employeeRouter.get(
+  "/fetch-employee-inactive-projects",
+  employeeProjectCtr?.employeeInactiveprojects
+);
 
 module.exports = employeeRouter;

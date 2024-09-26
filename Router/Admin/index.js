@@ -43,6 +43,7 @@ adminRouter.get(
 // client ctr
 // project ctr
 adminRouter.post("/add-project", verifyToken, projectController.createproject);
+adminRouter.get("/fetch-all-projects",verifyToken,projectController.fetchproject);
 // timesheets
 
 adminRouter.post("/add-timesheet", timesheetController.createtimesheet);
@@ -53,7 +54,7 @@ adminRouter.post(
   contractorController?.createcontractor
 );
 adminRouter.get(
-  "/get-contractor",
+  "/fetch-contractor",
   verifyToken,
   contractorController?.fetchcontractor
 );

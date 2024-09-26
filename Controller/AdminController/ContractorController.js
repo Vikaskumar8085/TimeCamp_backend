@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
 const {StatusCodes} = require("http-status-codes");
 const Employee = require("../../Modals/EmployeeSchema");
+const Company = require("../../Modals/CompanySchema");
 
 const contractorController = {
   // create
@@ -62,7 +63,7 @@ const contractorController = {
       }
       // get all contractor
       const fetchcontractor = await Employee.find({
-        Company_Id: checkcompany.Company_Id,
+        CompanyId: checkcompany.Company_Id,
         Role: "Contractor",
       });
       if (!fetchcontractor) {

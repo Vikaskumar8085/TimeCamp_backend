@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 const Project = require("../../Modals/ProjectSchema");
 const Employee = require("../../Modals/EmployeeSchema");
 
@@ -14,12 +14,11 @@ const employeeProjectCtr = {
       //   throw new Error("Un Authorized User Please sign up");
       // }
 
-      const checkemployee = await Employee.findOne({EmployeeId:10});
+      const checkemployee = await Employee.findOne({EmployeeId: 10});
       if (!checkemployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Not found Employee");
       }
-
 
       const projects = await Project.find({
         "RoleResource.RRId": checkemployee?.EmployeeId,
@@ -30,7 +29,7 @@ const employeeProjectCtr = {
         res.status(StatusCodes.OK);
         throw new Error("projects Not found");
       }
-      return res.status(StatusCodes.OK).json({ success: true, data: projects });
+      return res.status(StatusCodes.OK).json({success: true, result: projects});
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -39,14 +38,14 @@ const employeeProjectCtr = {
   // get all employee projects by employee id
   fetchsingleemployeeprojects: asyncHandler(async (req, res) => {
     try {
-      const { id } = req.params;
+      const {id} = req.params;
       const user = await User.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Un Authorized User Please sign up");
       }
 
-      const checkemployee = await Employee.findOne({ UserId: user?.user_id });
+      const checkemployee = await Employee.findOne({UserId: user?.user_id});
       if (!checkemployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Not found Employee");
@@ -63,7 +62,7 @@ const employeeProjectCtr = {
       }
       return res
         .status(StatusCodes.OK)
-        .json({ success: true, result: fetchsingleprojects });
+        .json({success: true, result: fetchsingleprojects});
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -73,13 +72,13 @@ const employeeProjectCtr = {
 
   employeeactiveprojects: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.user);
-      if (!user) {
-        res.status(StatusCodes.UNAUTHORIZED);
-        throw new Error("Un Authorized User Please sign up");
-      }
+      // const user = await User.findById(req.user);
+      // if (!user) {
+      //   res.status(StatusCodes.UNAUTHORIZED);
+      //   throw new Error("Un Authorized User Please sign up");
+      // }
 
-      const checkemployee = await Employee.findOne({ UserId: user?.user_id });
+      const checkemployee = await Employee.findOne({EmployeeId: 10});
       if (!checkemployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Not found Employee");
@@ -95,6 +94,46 @@ const employeeProjectCtr = {
         res.status(StatusCodes.OK);
         throw new Error("projects Not found");
       }
+      return res.status(StatusCodes.OK).json({
+        message: "fetch active project successfully ",
+        result: projects,
+        success: true,
+      });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  //
+  employeeInactiveprojects: asyncHandler(async (req, res) => {
+    try {
+      // const user = await User.findById(req.user);
+      // if (!user) {
+      //   res.status(StatusCodes.UNAUTHORIZED);
+      //   throw new Error("Un Authorized User Please sign up");
+      // }
+
+      const checkemployee = await Employee.findOne({EmployeeId: 10});
+      if (!checkemployee) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Not found Employee");
+      }
+
+      const projects = await Project.find({
+        "RoleResource.RRId": checkemployee?.EmployeeId,
+        Project_Status: "InActive",
+      })
+        .lean()
+        .exec();
+      if (!projects) {
+        res.status(StatusCodes.OK);
+        throw new Error("projects Not found");
+      }
+      return res.status(StatusCodes.OK).json({
+        message: "fetch active project successfully ",
+        result: projects,
+        success: true,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -109,7 +148,7 @@ const employeeProjectCtr = {
         throw new Error("Un Authorized User Please sign up");
       }
 
-      const checkemployee = await Employee.findOne({ UserId: user?.user_id });
+      const checkemployee = await Employee.findOne({UserId: user?.user_id});
       if (!checkemployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Not found Employee");
@@ -129,7 +168,7 @@ const employeeProjectCtr = {
         throw new Error("Un Authorized User Please sign up");
       }
 
-      const checkemployee = await Employee.findOne({ UserId: user?.user_id });
+      const checkemployee = await Employee.findOne({UserId: user?.user_id});
       if (!checkemployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Not found Employee");
@@ -141,30 +180,30 @@ const employeeProjectCtr = {
 
   // approved multiple status
   approvedmultiplestatus: asyncHandler(async (req, res) => {
-    const { ids, status } = req.body;
+    const {ids, status} = req.body;
 
     // Validate input
     if (!Array.isArray(ids) || !status) {
-      return res.status(400).json({ message: "Invalid input" });
+      return res.status(400).json({message: "Invalid input"});
     }
 
     try {
       // Update the approval status for multiple timesheets
       const result = await TimeSheet.updateMany(
-        { _id: { $in: ids } },
-        { $set: { approval_status: status } }
+        {_id: {$in: ids}},
+        {$set: {approval_status: status}}
       );
 
       // Check if any documents were modified
       if (result.nModified === 0) {
         return res
           .status(404)
-          .json({ message: "No timesheets found with the given IDs." });
+          .json({message: "No timesheets found with the given IDs."});
       }
 
       res
         .status(200)
-        .json({ message: "Approval status updated successfully", result });
+        .json({message: "Approval status updated successfully", result});
     } catch (error) {
       console.error("Error updating approval status:", error);
       throw new Error(error?.message);
@@ -174,30 +213,30 @@ const employeeProjectCtr = {
   // disapprovedmultiplestatus
 
   disapprovedmultiplestatus: asyncHandler(async (req, res) => {
-    const { ids, status } = req.body;
+    const {ids, status} = req.body;
 
     // Validate input
     if (!Array.isArray(ids) || !status) {
-      return res.status(400).json({ message: "Invalid input" });
+      return res.status(400).json({message: "Invalid input"});
     }
 
     try {
       // Update the approval status for multiple timesheets
       const result = await TimeSheet.updateMany(
-        { _id: { $in: ids } },
-        { $set: { approval_status: status } }
+        {_id: {$in: ids}},
+        {$set: {approval_status: status}}
       );
 
       // Check if any documents were modified
       if (result.nModified === 0) {
         return res
           .status(404)
-          .json({ message: "No timesheets found with the given IDs." });
+          .json({message: "No timesheets found with the given IDs."});
       }
 
       res
         .status(200)
-        .json({ message: "Approval status updated successfully", result });
+        .json({message: "Approval status updated successfully", result});
     } catch (error) {
       throw new Error(error?.message);
     }
