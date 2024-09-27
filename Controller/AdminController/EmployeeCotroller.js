@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../../Modals/userSchema");
 const Company = require("../../Modals/CompanySchema");
 const {StatusCodes} = require("http-status-codes");
+const Project = require("../../Modals/ProjectSchema");
 
 const employeeController = {
   // create
@@ -46,7 +47,6 @@ const employeeController = {
         throw new Error("bad Requests");
       }
       await newEmployee.save();
-      console.log(newEmployee, "newEpm//////////////////////////////////////");
 
       res.status(201).json({
         message: "Employee created successfully",
@@ -110,7 +110,62 @@ const employeeController = {
 
   sigleemployee: asyncHandler(async (req, res) => {
     try {
-    } catch (error) {}
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // console.log(user);
+      // check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+
+      const employeeProfile = await Employee.findOne({
+        EmployeeId: req.params.id,
+      });
+      if (!employeeProfile) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Not found Employee");
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({result: employeeProfile, success: true});
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  fetchemplolyeeProjects: asyncHandler(async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+
+      const employeeprojects = await Project.find({
+        "RoleResource.RRId": req.params.id,
+      });
+      if (!employeeprojects) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Employee projects Not Found");
+      }
+      return res
+        .status(StatusCodes.OK)
+        .json({result: employeeprojects, success: true});
+    } catch (error) {
+      throw new Error(error?.message);
+    }
   }),
 };
 

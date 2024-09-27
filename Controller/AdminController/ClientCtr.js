@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../../Modals/userSchema");
 const Client = require("../../Modals/ClientRegistrationModel");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 const Company = require("../../Modals/CompanySchema");
 const Project = require("../../Modals/ProjectSchema");
 const clientController = {
@@ -13,7 +13,7 @@ const clientController = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-      const company = await Company.findOne({ UserId: user?.user_id });
+      const company = await Company.findOne({UserId: user?.user_id});
       if (!company) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -33,7 +33,7 @@ const clientController = {
         await addItem.save();
         return res
           .status(200)
-          .json({ success: true, message: "successfully client added" });
+          .json({success: true, message: "successfully client added"});
       }
     } catch (error) {
       throw new Error(error?.message);
@@ -48,7 +48,7 @@ const clientController = {
         throw new Error("Unautorized User Please Singup");
       }
 
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -84,6 +84,27 @@ const clientController = {
   // get single clients
   singleclients: asyncHandler(async (req, res) => {
     try {
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("un authorized user please sing up");
+      }
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
+      }
+      // check companys
+      const getsingleclient = await Client.findOne({Client_Id: 1});
+      if (!getsingleclient) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Clinet not found");
+      }
+      return res.status(StatusCodes.OK).json({
+        result: getsingleclient,
+        message: "fetch successfully clients ",
+        success: true,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -96,7 +117,7 @@ const clientController = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -123,7 +144,7 @@ const clientController = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -151,7 +172,7 @@ const clientController = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Unautorized User Please Singup");
       }
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -183,7 +204,7 @@ const clientController = {
         throw new Error("Unautorized User Please Singup");
       }
       // check company
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
@@ -208,7 +229,43 @@ const clientController = {
       }
       return res
         .status(StatusCodes.OK)
-        .json({ success: true, result: fetchallclientprojects });
+        .json({success: true, result: fetchallclientprojects});
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  // get client projects
+
+  fetchclientprojects: asyncHandler(async (req, res) => {
+    try {
+      const {id} = req.params;
+      // user
+      const user = await User?.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Unautorized User Please Singup");
+      }
+      // check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company not exists please create first company");
+      }
+      // check company
+
+      const clientprojects = await Project.find({
+        "client.clientId": id,
+      });
+      if (!clientprojects) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Client Not Found");
+      }
+      return res.status(StatusCodes.OK).json({
+        result: clientprojects,
+        message: "client projects",
+        success: true,
+      });
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -216,5 +273,3 @@ const clientController = {
 };
 
 module.exports = clientController;
-
-

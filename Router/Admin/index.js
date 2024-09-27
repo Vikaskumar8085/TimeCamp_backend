@@ -25,89 +25,37 @@ adminRouter.post("/add-company", verifyToken, companyCtr.createCompany);
 adminRouter.get("/get-client", verifyToken, clientController?.fetchallclient);
 adminRouter.post("/add-client", verifyToken, clientController?.createClient);
 adminRouter.get("/remove-client", verifyToken, clientController?.removeclient);
-adminRouter.get(
-  "/get-inactive-client",
-  verifyToken,
-  clientController?.getinactiveclient
-);
-adminRouter.get(
-  "/get-active-client",
-  verifyToken,
-  clientController?.getactiveClient
-);
-adminRouter.get(
-  "/get-dead-client",
-  verifyToken,
-  clientController?.getdeadclient
-);
+adminRouter.get(  "/get-inactive-client",  verifyToken,  clientController?.getinactiveclient);
+adminRouter.get(  "/get-active-client",  verifyToken,  clientController?.getactiveClient);
+adminRouter.get(  "/get-dead-client",  verifyToken,  clientController?.getdeadclient);
+adminRouter.get(  "/fetch-client-projects/:id",  verifyToken,  clientController?.fetchclientprojects);
+adminRouter.get(  "/fetch-single-client/:id",  verifyToken,  clientController?.singleclients);
 // client ctr
 // project ctr
 adminRouter.post("/add-project", verifyToken, projectController.createproject);
-adminRouter.get("/fetch-all-projects",verifyToken,projectController.fetchproject);
+adminRouter.get(  "/fetch-all-projects",  verifyToken,  projectController.fetchproject);
 // timesheets
 
 adminRouter.post("/add-timesheet", timesheetController.createtimesheet);
-
-adminRouter.post(
-  "/add-contractor",
-  verifyToken,
-  contractorController?.createcontractor
-);
-adminRouter.get(
-  "/fetch-contractor",
-  verifyToken,
-  contractorController?.fetchcontractor
-);
-
+// contractor 
+adminRouter.post(  "/add-contractor",  verifyToken,  contractorController?.createcontractor);
+adminRouter.get(  "/fetch-contractor",  verifyToken,  contractorController?.fetchcontractor);
+adminRouter.get("/fetch-single-contractor/:id",verifyToken,contractorController?.siglecontractor);
 // charts
 
-adminRouter.get(
-  "/get-project-charts",
-  verifyToken,
-  chartscontroller?.ProjectCharts
-);
-adminRouter.get(
-  "/get-employee-time-hours",
-  verifyToken,
-  chartscontroller?.EmployeeTimeHours
-);
-adminRouter.get(
-  "/get-productivity-chart",
-  verifyToken,
-  ProductivityChart?.ProductivityChart
-);
-adminRouter.get(
-  "/get-total-hours-by-resource",
-  verifyToken,
-  TimeSummary?.TotalHoursByResource
-);
-adminRouter.get(
-  "/get-hours-by-project",
-  verifyToken,
-  TimeSummary?.HoursByProject
-);
-adminRouter.get(
-  "/get-hours-by-company",
-  verifyToken,
-  TimeSummary?.HoursByCompany
-);
-adminRouter.get(
-  "/get-project-time-utilization",
-  verifyToken,
-  TimeSummary?.ProjectTimeUtilization
-);
+adminRouter.get(  "/get-project-charts",  verifyToken,  chartscontroller?.ProjectCharts);
+adminRouter.get(  "/get-employee-time-hours",  verifyToken,  chartscontroller?.EmployeeTimeHours);
+adminRouter.get(  "/get-productivity-chart",  verifyToken,  ProductivityChart?.ProductivityChart);
+adminRouter.get(  "/get-total-hours-by-resource",  verifyToken,  TimeSummary?.TotalHoursByResource);
+adminRouter.get(  "/get-hours-by-project",  verifyToken,  TimeSummary?.HoursByProject);
+adminRouter.get(  "/get-hours-by-company",  verifyToken,  TimeSummary?.HoursByCompany);
+adminRouter.get(  "/get-project-time-utilization",  verifyToken,  TimeSummary?.ProjectTimeUtilization);
 // charts
 // employee ctr
-adminRouter.post(
-  "/add-employee",
-  verifyToken,
-  employeeController?.createemployee
-);
-adminRouter.get(
-  "/get-employee",
-  verifyToken,
-  employeeController?.fetchemployee
-);
+adminRouter.post(  "/add-employee",  verifyToken,  employeeController?.createemployee);
+adminRouter.get(  "/get-employee",  verifyToken,  employeeController?.fetchemployee);
+adminRouter.get(  "/fetch-single-employee/:id",  verifyToken,  employeeController.sigleemployee);
+adminRouter.get("/fetch-employee-projects/:id",verifyToken,employeeController.fetchemplolyeeProjects);
 // employee ctr
 
 module.exports = adminRouter;
