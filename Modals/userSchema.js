@@ -62,8 +62,6 @@ const UserSchema = mongoose.Schema({
   },
 });
 
-
-
 UserSchema.plugin(AutoIncrement, {
   inc_field: "user_id",
   start_seq: 1,
@@ -72,12 +70,10 @@ UserSchema.plugin(AutoIncrement, {
 const User = mongoose.model("User", UserSchema);
 module.exports = User;
 
-
 // {
 //   "Email": "john.doe@example.com",
 //   "Password": "yourPassword"
 // }
-
 
 // {
 //   "FirstName": "John",
