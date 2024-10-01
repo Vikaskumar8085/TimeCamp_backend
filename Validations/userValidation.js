@@ -22,7 +22,7 @@ const registerValidation = Joi.object({
 
 // login Validation
 const loginValidation = Joi.object({
-  Email: Joi.string().min(4).max(30).required(),
+  Email: Joi.string().min(4).max(100).required(),
   Password: Joi.string().pattern(
     new RegExp(
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
