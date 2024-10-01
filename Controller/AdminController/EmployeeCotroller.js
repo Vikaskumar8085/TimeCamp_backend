@@ -16,7 +16,6 @@ const employeeController = {
         res.status(StatusCodes.UNAUTHORIZED);
         throw new Error("Un authorized user Please Signup");
       }
-      // console.log(user);
       // check company
       const checkcompany = await Company.findOne({UserId: user?.user_id});
 
@@ -24,11 +23,8 @@ const employeeController = {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
-      // const genhash = await bcrypt.genSalt(12);
-      // const hashpassword = await bcrypt.hash(
-      //   `${req.body.FirstName}@123`,
-      //   genhash
-      // );
+      const genhash = await bcrypt.genSalt(12);
+      const hashpassword = await bcrypt.hash(req.body.Password, genhash);
       const newEmployee = await Employee({
         FirstName: req.body.FirstName,
         LastName: req.body.LastName,
@@ -36,7 +32,7 @@ const employeeController = {
         Address: req.body.Address,
         Phone: req.body.Phone,
         Designation: req.body.Designation,
-        Password: req.body.Password,
+        Password: hashpassword,
         CompanyId: checkcompany?.Company_Id,
         Role: "Employee",
         UserId: user?.user_id,

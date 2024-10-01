@@ -25,11 +25,11 @@ adminRouter.post("/add-company", verifyToken, companyCtr.createCompany);
 adminRouter.get("/get-client", verifyToken, clientController?.fetchallclient);
 adminRouter.post("/add-client", verifyToken, clientController?.createClient);
 adminRouter.get("/remove-client", verifyToken, clientController?.removeclient);
-adminRouter.get(  "/get-inactive-client",  verifyToken,  clientController?.getinactiveclient);
-adminRouter.get(  "/get-active-client",  verifyToken,  clientController?.getactiveClient);
-adminRouter.get(  "/get-dead-client",  verifyToken,  clientController?.getdeadclient);
-adminRouter.get(  "/fetch-client-projects/:id",  verifyToken,  clientController?.fetchclientprojects);
-adminRouter.get(  "/fetch-single-client/:id",  verifyToken,  clientController?.singleclients);
+adminRouter.get("/get-inactive-client",  verifyToken,  clientController?.getinactiveclient);
+adminRouter.get("/get-active-client",  verifyToken,  clientController?.getactiveClient);
+adminRouter.get("/get-dead-client",  verifyToken,  clientController?.getdeadclient);
+adminRouter.get("/fetch-client-projects/:id",  verifyToken,  clientController?.fetchclientprojects);
+adminRouter.get("/fetch-single-client/:id",  verifyToken,  clientController?.singleclients);
 // client ctr
 // project ctr
 adminRouter.post("/add-project", verifyToken, projectController.createproject);

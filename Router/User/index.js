@@ -35,5 +35,6 @@ UserRouter.put("/reset-password/:resetToken", ResetPassword);
 UserRouter.get("/get-all-user", getuserall);
 // resource login
 UserRouter.post("/resource-login", ResourceauthCtr.resourcelogin);
+UserRouter.get("/fetch-resource", verifyToken, ResourceauthCtr.fetchresource);
 
 module.exports = UserRouter;
