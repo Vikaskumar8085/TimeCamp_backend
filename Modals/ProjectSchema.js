@@ -63,11 +63,11 @@ const ProjectSchema = mongoose.Schema({
 
   Project_Type: {
     type: String,
-    required: true,
+    required: false,
   },
   Project_Managers: {
     type: String,
-    required: true,
+    required: false,
   },
 
   Project_Status: {

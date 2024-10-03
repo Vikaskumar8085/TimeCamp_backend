@@ -3,6 +3,7 @@ const User = require("../../Modals/userSchema");
 const {StatusCodes} = require("http-status-codes");
 const Employee = require("../../Modals/EmployeeSchema");
 const Company = require("../../Modals/CompanySchema");
+const bcrypt = require("bcryptjs");
 
 const contractorController = {
   // create
@@ -20,6 +21,12 @@ const contractorController = {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company does not exists");
       }
+
+      // hash password
+
+      const genhash = await bcrypt.genSalt(12);
+      const hashpassword = await bcrypt.hash(req.body.Password, genhash);
+
       // create contractor
       const addItem = await Employee({
         FirstName: req.body.FirstName,
@@ -28,7 +35,7 @@ const contractorController = {
         Address: req.body.Address,
         Phone: req.body.Phone,
         Designation: req.body.Designation,
-        Password: req.body.Password,
+        Password: hashpassword,
         CompanyId: checkcompany?.Company_Id,
         UserId: user?.user_id,
         Role: "Contractor",
