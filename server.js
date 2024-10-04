@@ -22,10 +22,10 @@ const Port = process.env.PORT || 8000;
 const app = express();
 
 // middleware
-// app.use(passport.initialize());
+
 app.use(cors());
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan("dev"));
 app.use(mongoSanitize());
 app.use(helmet());

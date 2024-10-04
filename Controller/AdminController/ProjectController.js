@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { StatusCodes } = require("http-status-codes");
+const {StatusCodes} = require("http-status-codes");
 const Company = require("../../Modals/CompanySchema");
 const Project = require("../../Modals/ProjectSchema");
 const User = require("../../Modals/userSchema");
@@ -30,7 +30,7 @@ const projectController = {
       }
       // console.log(user);
       // check company
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
 
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
@@ -57,7 +57,7 @@ const projectController = {
       if (saveproject) {
         return res
           .status(200)
-          .json({ success: true, message: "projcect added successfully" });
+          .json({success: true, message: "projcect added successfully"});
       }
     } catch (error) {
       throw new Error(error?.message);
@@ -73,7 +73,7 @@ const projectController = {
         throw new Error("Un authorized user Please Signup");
       }
       // check company
-      const checkcompany = await Company.findOne({ UserId: user?.user_id });
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
       if (!checkcompany) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");

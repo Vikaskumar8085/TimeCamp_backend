@@ -42,7 +42,6 @@ adminRouter.post(  "/add-contractor",  verifyToken,  contractorController?.creat
 adminRouter.get(  "/fetch-contractor",  verifyToken,  contractorController?.fetchcontractor);
 adminRouter.get("/fetch-single-contractor/:id",verifyToken,contractorController?.siglecontractor);
 // charts
-
 adminRouter.get(  "/get-project-charts",  verifyToken,  chartscontroller?.ProjectCharts);
 adminRouter.get(  "/get-employee-time-hours",  verifyToken,  chartscontroller?.EmployeeTimeHours);
 adminRouter.get(  "/get-productivity-chart",  verifyToken,  ProductivityChart?.ProductivityChart);
