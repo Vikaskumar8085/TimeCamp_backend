@@ -163,6 +163,41 @@ const employeeController = {
       throw new Error(error?.message);
     }
   }),
+
+  // fetch all employees
+
+  fetchallemployee: asyncHandler(async (req, res) => {
+    try {
+      // check user
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un Authorized User Please SignIn");
+      }
+      // check compnay
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+      // fetch all resources
+      const fetchallresources = await Employee.find({
+        CompanyId: checkcompany.Company_Id,
+      });
+
+      if (!fetchallresources) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Resource does Not exists");
+      }
+      // fetch all projects
+
+      return res
+        .status(StatusCodes.OK)
+        .json({success: true, result: fetchallresources});
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
 };
 
 module.exports = employeeController;

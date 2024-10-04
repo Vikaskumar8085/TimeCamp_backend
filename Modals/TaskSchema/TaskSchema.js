@@ -15,7 +15,7 @@ const TaskSchema = new mongoose.Schema(
       unquie: true,
       trim: true,
     },
-    Name: {
+    Task_Name: {
       type: String,
       required: true,
       maxlength: 255,
@@ -26,8 +26,12 @@ const TaskSchema = new mongoose.Schema(
       ref: "Project",
       required: true,
     },
-    Milestone: {
-      type: Number,
+    Project_Code: {
+      type: String,
+      required: true,
+    },
+    Milestone_Name: {
+      type: String,
       ref: "Milestone",
       required: true,
     },
@@ -63,12 +67,10 @@ const TaskSchema = new mongoose.Schema(
       min: 0,
       default: null,
     },
-    Resource: [
-      {
-        type: Number,
-        ref: "Employee",
-      },
-    ],
+    Resource_Email: {
+      type: String,
+    },
+
     Task_description: {
       type: String,
       required: true,

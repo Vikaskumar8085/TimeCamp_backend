@@ -8,21 +8,24 @@ const MilestoneSchema = new mongoose.Schema({
     required: false,
     unique: true,
   },
-  Name: {
-    type: String,
-    required: true,
-    maxlength: 255,
+  Compnay_Id: {
+    type: Number,
+    ref: "Company",
+    trim: true,
+    unique: true,
   },
+  ProjectId: {
+    type: Number,
+    ref: "Project",
+    required: true,
+  },
+
   Description: {
     type: String,
     maxlength: 1000,
     default: null,
   },
-  Project: {
-    type: Schema.Types.ObjectId,
-    ref: "Project",
-    required: true,
-  },
+
   Start_date: {
     type: Date,
     default: null,
