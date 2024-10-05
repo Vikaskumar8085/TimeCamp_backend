@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Employee = require("../../Modals/EmployeeSchema");
-const {StatusCodes} = require("http-status-codes");
+const { StatusCodes } = require("http-status-codes");
 const bcrypt = require("bcryptjs");
 const generateToken = require("../../Auth/GenerateToken");
 
@@ -11,7 +11,6 @@ const ResourceauthCtr = {
       const authlogin = await Employee.findOne({
         Email: req.body.Email,
       }).select("+Password");
-
       const passwordIsCorrect = await bcrypt.compare(
         req.body.Password,
         authlogin.Password
@@ -20,7 +19,7 @@ const ResourceauthCtr = {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("User and Password Invalid");
       }
-      const token = await generateToken({id: authlogin._id});
+      const token = await generateToken({ id: authlogin._id });
       return res.status(StatusCodes.OK).json({
         success: true,
         message: "login successfully",
@@ -40,7 +39,7 @@ const ResourceauthCtr = {
       }
       return res
         .status(StatusCodes.OK)
-        .json({success: true, resource: response});
+        .json({ success: true, resource: response });
     } catch (error) {
       throw new Error(error?.message);
     }

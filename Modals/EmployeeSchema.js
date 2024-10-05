@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 const EmployeeSchema = new mongoose.Schema(
@@ -55,8 +55,9 @@ const EmployeeSchema = new mongoose.Schema(
     Role: [
       {
         type: String,
-        enum: ["Employee", "Manager", "Contractor"],
+        enum: ["Employee", "Manager", "Contractor", "ContractorManager"],
         default: "Employee",
+        required: true,
       },
     ],
     Manager: {
@@ -101,7 +102,7 @@ const EmployeeSchema = new mongoose.Schema(
       },
     ],
   },
-  {timestamps: true}
+  { timestamps: true }
 ); // Automatically add createdAt and updatedAt fields
 
 EmployeeSchema.plugin(AutoIncrement, {

@@ -51,9 +51,9 @@ adminRouter.get(  "/get-hours-by-company",  verifyToken,  TimeSummary?.HoursByCo
 adminRouter.get(  "/get-project-time-utilization",  verifyToken,  TimeSummary?.ProjectTimeUtilization);
 // charts
 // employee ctr
-adminRouter.post(  "/add-employee",  verifyToken,  employeeController?.createemployee);
-adminRouter.get(  "/get-employee",  verifyToken,  employeeController?.fetchemployee);
-adminRouter.get(  "/fetch-single-employee/:id",  verifyToken,  employeeController.sigleemployee);
+adminRouter.post("/add-employee",  verifyToken,  employeeController?.createemployee);
+adminRouter.get("/get-employee",  verifyToken,  employeeController?.fetchemployee);
+adminRouter.get("/fetch-single-employee/:id",  verifyToken,  employeeController.sigleemployee);
 adminRouter.get("/fetch-employee-projects/:id",verifyToken,employeeController.fetchemplolyeeProjects);
 adminRouter.get("/fetch-all-resources",verifyToken,employeeController.fetchallemployee)
 // employee ctr
