@@ -5,14 +5,9 @@ const moment = require("moment");
 const roleRoesourceschema = new mongoose.Schema({
   RRId: {
     type: Number,
-    unique: true,
     required: true,
   },
   RRName: {
-    type: String,
-    required: true,
-  },
-  RRemployee: {
     type: String,
     required: true,
   },
@@ -38,7 +33,6 @@ const ProjectSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    unique: true,
   },
   Start_Date: {
     type: String,
@@ -55,17 +49,13 @@ const ProjectSchema = mongoose.Schema({
       type: Number,
       required: true,
     },
-    clientName: {
-      type: String,
-      required: true,
-    },
   },
 
   Project_Type: {
     type: String,
     required: false,
   },
-  Project_Managers: {
+  Project_Hours: {
     type: String,
     required: false,
   },
@@ -76,13 +66,9 @@ const ProjectSchema = mongoose.Schema({
     default: "InActive",
   },
   RoleResource: [roleRoesourceschema],
-  Project_Manager: {
+  Project_Managers: {
     PId: {
       type: Number,
-      required: true,
-    },
-    Project_Manager_Name: {
-      type: String,
       required: true,
     },
   },

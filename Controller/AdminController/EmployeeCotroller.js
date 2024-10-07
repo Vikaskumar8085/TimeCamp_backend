@@ -198,6 +198,74 @@ const employeeController = {
       throw new Error(error?.message);
     }
   }),
+
+  //  fetch active employee
+
+  fetchactiveemployeectr: asyncHandler(async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un Authorized User");
+      }
+      //  check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company does not exists");
+      }
+
+      // fetch active contractor
+      const result = await Employee.find({
+        CompanyId: checkcompany.Company_Id,
+        Role: "Employee",
+        IsActive: "Active",
+      });
+
+      if (!result) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Not found Active Employee");
+      }
+
+      return res.status(StatusCodes.OK).json({success: true, result: result});
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }),
+
+  // fetch inactive employee
+
+  fetchinactiveemployeectr: asyncHandler(async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un Authorized User");
+      }
+      //  check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes?.BAD_REQUEST);
+        throw new Error("company does not exists");
+      }
+
+      // fetch active contractor
+      const result = await Employee.find({
+        CompanyId: checkcompany.Company_Id,
+        Role: "Employee",
+        IsActive: "InActive",
+      });
+
+      if (!result) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Not found Active Employee");
+      }
+
+      return res.status(StatusCodes.OK).json({success: true, result: result});
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }),
 };
 
 module.exports = employeeController;

@@ -20,7 +20,7 @@ const projectController = {
         Project_Managers,
         Project_Status,
         RoleResource,
-        Project_Manager,
+        Project_Hours,
       } = req.body;
       console.log(req.user);
       const user = await User.findById(req.user);
@@ -49,7 +49,7 @@ const projectController = {
         Project_Managers,
         Project_Status: Project_Status || "InActive",
         RoleResource,
-        Project_Manager,
+        Project_Hours,
       });
 
       const saveproject = await newProject.save();
@@ -95,8 +95,76 @@ const projectController = {
       throw new Error(error?.message);
     }
   }),
-  // remove project
+  // fetch active projects
 
+  fetchactiveprojectctr: asyncHandler(async (req, res) => {
+    try {
+      // check user
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+
+      const result = await Project.find({
+        CompanyId: checkcompany?.Company_Id,
+        Project_Status: "Active",
+      });
+      if (!result) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("project not found");
+      }
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        message: "fetch active projects",
+        result: result,
+      });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  // fetch in active projects
+  fetchinactiveprojectctr: asyncHandler(async (req, res) => {
+    try {
+      // check user
+      const user = await User.findById(req.user);
+      if (!user) {
+        res.status(StatusCodes.UNAUTHORIZED);
+        throw new Error("Un authorized user Please Signup");
+      }
+      // check company
+      const checkcompany = await Company.findOne({UserId: user?.user_id});
+      if (!checkcompany) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("company does not exists please create your company");
+      }
+
+      const result = await Project.find({
+        CompanyId: checkcompany?.Company_Id,
+        Project_Status: "InActive",
+      });
+      if (!result) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("project not found");
+      }
+      return res.status(StatusCodes.OK).json({
+        success: true,
+        message: "fetch inactive projects successfully",
+        result: result,
+      });
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  // remove project
   removeproject: asyncHandler(async (req, res) => {
     try {
     } catch (error) {
