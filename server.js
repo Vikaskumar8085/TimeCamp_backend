@@ -35,7 +35,7 @@ app.use(hpp());
 app.use("/api", router);
 app.use(globalErrorHanadler);
 app.use(NotFoundHandler);
-app.use(express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // server started
 const server = http.createServer(app);

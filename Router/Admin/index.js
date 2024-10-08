@@ -11,6 +11,10 @@ const ProductivityChart = require("../../Controller/AdminController/Productivity
 const TimeSummary = require("../../Controller/AdminController/TimeSummary/TimeSummary");
 const contractorController = require("../../Controller/AdminController/ContractorController");
 const dashboardController = require("../../Controller/AdminController/Dashboardctr");
+const DepartmentController = require("../../Controller/AdminController/flexibleController/DepartmentController");
+const DesignationController = require("../../Controller/AdminController/flexibleController/DesignationController");
+const Rolecontroller = require("../../Controller/AdminController/flexibleController/RoleController");
+const { upload } = require("../../Utils/FilteUploader");
 const adminRouter = express.Router();
 
 // admin ctr
@@ -20,7 +24,7 @@ adminRouter.post("/create-admin", verifyToken, adminCtr?.createadmin);
 // company router
 adminRouter.get("/fetch-company", verifyToken, companyCtr.getcompany);
 adminRouter.get("/get-company", verifyToken, companyCtr.fetchCompany);
-adminRouter.post("/add-company", verifyToken, companyCtr.createCompany);
+adminRouter.post("/add-company", verifyToken, upload.single("image"), companyCtr.createCompany);
 // company router
 // client router
 adminRouter.get("/get-client", verifyToken, clientController?.fetchallclient);
@@ -182,10 +186,35 @@ adminRouter.get(
 );
 //
 
-// department ctr 
+// department ctr
+
+adminRouter.get(
+  "/fetch-department",
+  verifyToken,
+  DepartmentController.fetchdepartmentctr
+);
+adminRouter.post(
+  "/add-department",
+  verifyToken,
+  DepartmentController.createdepartmentctr
+);
 
 // desingnation ctr
 
+adminRouter.get(
+  "/fetch-designation",
+  verifyToken,
+  DesignationController.fetchdesignationctr
+);
+adminRouter.post(
+  "/add-designation",
+  verifyToken,
+  DesignationController.createdesignationctr
+);
+
 // role ctr
+
+adminRouter.get("/fetch-role", verifyToken, Rolecontroller.fetchrolectr);
+adminRouter.post("/add-role", verifyToken, Rolecontroller.createrolectr);
 
 module.exports = adminRouter;

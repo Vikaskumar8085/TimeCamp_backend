@@ -22,7 +22,7 @@ const employeechartscontroller = {
       }
       // check total projects charts
       const projects = await Project.find({
-        "RoleResource.Employee_Id": checkemployee?.EmployeeId,
+        "RoleResource.RRId": checkemployee?.EmployeeId,
       })
         .lean()
         .exec();

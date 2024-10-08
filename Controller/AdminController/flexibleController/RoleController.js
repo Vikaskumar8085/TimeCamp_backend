@@ -21,7 +21,7 @@ const Rolecontroller = {
       }
 
       const addrole = await Role({
-        CompanyId: checkcompany.company_id,
+        CompanyId: checkcompany?.Company_Id,
         RoleName: req.body.RoleName,
       });
       if (!addrole) {

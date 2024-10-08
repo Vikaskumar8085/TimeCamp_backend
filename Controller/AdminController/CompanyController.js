@@ -25,7 +25,7 @@ const companyCtr = {
         Address: req.body.Address,
         Postal_Code: req.body.Postal_Code,
         Phone: req.body.Phone,
-        Company_Logo: req.body.Company_Logo,
+        Company_Logo: req.file.filename,
         Employee_No: req.body.Employee_No,
         Established_date: req.body.Established_date,
         CompanyWesite: req.body.CompanyWesite,
