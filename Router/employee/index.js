@@ -11,6 +11,8 @@ employeeRouter.get(
   verifyToken,
   employeechartscontroller.totalemployeehourcharts
 );
+// 
+
 employeeRouter.get(
   "/get-employee-projects",
   verifyToken,
@@ -18,20 +20,29 @@ employeeRouter.get(
 );
 // employee rotuer
 
+// fetch employee projects
 employeeRouter.get(
   "/fetch-employee-projects",
   employeeProjectCtr.fetchemployeeproject
 );
-// active employee projects
 
+
+//  fetch employee active projects
 employeeRouter.get(
   "/fetch-employee-active-projects",
   employeeProjectCtr.employeeactiveprojects
 );
 
+// fetch employee inactive projects
 employeeRouter.get(
   "/fetch-employee-inactive-projects",
   employeeProjectCtr?.employeeInactiveprojects
 );
+
+
+// fill time sheet by employee
+employeeRouter.post("/add-employee-timesheet",employeeProjectCtr?.employeefilltimesheets);
+// fetch employee timesheet 
+employeeRouter.get("/fetch-employee-timesheet", employeeProjectCtr?.fetchemployeetimesheetsctr)
 
 module.exports = employeeRouter;

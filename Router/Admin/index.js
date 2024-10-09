@@ -15,6 +15,7 @@ const DepartmentController = require("../../Controller/AdminController/flexibleC
 const DesignationController = require("../../Controller/AdminController/flexibleController/DesignationController");
 const Rolecontroller = require("../../Controller/AdminController/flexibleController/RoleController");
 const { upload } = require("../../Utils/FilteUploader");
+const taskcontroller = require("../../Controller/TaskController/Taskcontroller");
 const adminRouter = express.Router();
 
 // admin ctr
@@ -217,4 +218,8 @@ adminRouter.post(
 adminRouter.get("/fetch-role", verifyToken, Rolecontroller.fetchrolectr);
 adminRouter.post("/add-role", verifyToken, Rolecontroller.createrolectr);
 
+
+
+// task upload 
+adminRouter.post("/task-upload", upload.single("file") ,taskcontroller.taskuploadctr)
 module.exports = adminRouter;

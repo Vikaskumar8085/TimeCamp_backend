@@ -35,7 +35,7 @@ const TimesheetSchema = new Schema({
     required: false,
   },
   hours: {
-    type: Number,
+    type: String,
     default: 0,
   },
   project: {
@@ -45,7 +45,7 @@ const TimesheetSchema = new Schema({
   },
   task_description: {
     type: String,
-    required: true,
+    required: false,
   },
   Description: {
     type: String,
@@ -62,7 +62,7 @@ const TimesheetSchema = new Schema({
   },
   day: {
     type: Date, // Use Date type for storing the day
-    required: true,
+    required: false,
   },
   approved: {
     type: Boolean,

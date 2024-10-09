@@ -3,6 +3,7 @@ const User = require("../../Modals/userSchema");
 const {StatusCodes} = require("http-status-codes");
 const Project = require("../../Modals/ProjectSchema");
 const Employee = require("../../Modals/EmployeeSchema");
+const TimeSheet = require("../../Modals/TimeSheetModel");
 
 const employeeProjectCtr = {
   // fetch all employee Projects
@@ -142,23 +143,71 @@ const employeeProjectCtr = {
   // employee fill timesheets projects
   employeefilltimesheets: asyncHandler(async (req, res) => {
     try {
-      const user = await User.findById(req.user);
-      if (!user) {
-        res.status(StatusCodes.UNAUTHORIZED);
-        throw new Error("Un Authorized User Please sign up");
-      }
+      // const user = await User.findById(req.user);
+      // if (!user) {
+      //   res.status(StatusCodes.UNAUTHORIZED);
+      //   throw new Error("Un Authorized User Please sign up");
+      // }
 
-      const checkemployee = await Employee.findOne({UserId: user?.user_id});
+      const checkemployee = await Employee.findOne({EmployeeId: 19});
       if (!checkemployee) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Not found Employee");
       }
+
+      const addTimesheet = await TimeSheet({
+        EmployeeId: checkemployee?.EmployeeId,
+        CompanId: checkemployee?.CompanyId,
+        project: req.body.project,
+        task_description: req.body.task_description,
+        Description: req.body.Description,
+        start_time: req.body.start_time,
+        hours: req.body.hours,
+      });
+
+      if (!addTimesheet) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("Time sheet Not found");
+      }
+
+      await addTimesheet.save();
+
+      return res
+        .status(StatusCodes.CREATED)
+        .json({success: true, message: "timesheet added successfully"});
     } catch (error) {
       throw new Error(error?.message);
     }
   }),
 
   // get single timesheets
+
+  // fetch employee timesheets
+
+  fetchemployeetimesheetsctr: asyncHandler(async (req, res) => {
+    try {
+      const checkemployee = await Employee.findOne({EmployeeId: 19});
+      if (!checkemployee) {
+        res.status(StatusCodes.BAD_REQUEST);
+        throw new Error("Not found Employee");
+      }
+
+      const fetchtimesheet = await TimeSheet.find({
+        EmployeeId: checkemployee?.EmployeeId,
+      });
+
+      if (!fetchtimesheet) {
+        res.status(StatusCodes.NOT_FOUND);
+        throw new Error("timesheet not found");
+      }
+
+      return res
+        .status(StatusCodes.OK)
+        .json({success: true, result: fetchtimesheet});
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
 
   employeesingletimesheetsdetails: asyncHandler(async (req, res) => {
     try {
