@@ -34,6 +34,14 @@ const taskcontroller = {
       throw new Error(error?.message);
     }
   }),
+
+  createtaskctr: asyncHandler(async (req, res) => {
+    try {
+      console.log(req.body);
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
 };
 
 module.exports = taskcontroller;
