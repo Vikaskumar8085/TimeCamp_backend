@@ -9,27 +9,24 @@ const taskcontroller = {
     try {
       const results = [];
 
-      if (req.body.type === "Excel") {
-        const workbook = XLSX.readFile(req.file.path); // Replace with your Excel file name
-        const sheetName = workbook.SheetNames[0];
-        const sheet = workbook.Sheets[sheetName];
-        const jsonData = XLSX.utils.sheet_to_json(sheet);
+      const workbook = XLSX.readFile(req.file.path); // Replace with your Excel file name
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(sheet);
 
-        console.log(jsonData, "req.file task upload");
-      } else if (req.body.type === "Csv") {
-        fs.createReadStream(req.file.path)
-          .pipe(csv())
-          .on("data", (data) => results.push(data))
-          .on("end", () => {
-            console.log(results);
-            // [
-            //   { NAME: 'Daffy Duck', AGE: '24' },
-            //   { NAME: 'Bugs Bunny', AGE: '22' }
-            // ]
-          });
-      } else {
-        return null;
-      }
+      console.log(jsonData, "req.file task upload");
+
+      // fs.createReadStream(req.file.path)
+      //   .pipe(csv())
+      //   .on("data", (data) => results.push(data))
+      //   .on("end", () => {
+      //     console.log(results);
+      //     // [
+      //     //   { NAME: 'Daffy Duck', AGE: '24' },
+      //     //   { NAME: 'Bugs Bunny', AGE: '22' }
+      //     // ]
+      //   });
+
       return res
         .status(StatusCodes.OK)
         .json({success: true, message: "fule uploaded"});
