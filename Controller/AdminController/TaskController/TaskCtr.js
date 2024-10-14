@@ -86,7 +86,22 @@ const TaskCtr = {
       }
 
       // create task
-      const addtasks = await Task(req.body);
+      const addtasks = await Task({
+        Task_Name: req.body.Task_Name,
+        Project_Code: req.body.Project_Code,
+        Milestone_Name: req.body.Milestone_Name,
+        Priority: req.body.Priority,
+        Start: req.body.Start,
+        End: req.body.End,
+        Status: req.body.Status,
+        Estimated_time: req.body.Estimated_time,
+        Due_date: req.body.Due_date,
+        Completed_time: req.body.Completed_time,
+        Resource_Email: req.body.Resource_Email,
+        Task_description: req.body.Task_description,
+        Attachment: req.file.filename, // Changed to null for file upload
+        Description: req.body.Description,
+      });
       const validationError = addtasks.validateSync();
       if (!validationError) {
         res.status(StatusCodes.BAD_REQUEST);

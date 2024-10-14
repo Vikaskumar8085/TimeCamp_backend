@@ -222,4 +222,5 @@ adminRouter.post("/add-role", verifyToken, Rolecontroller.createrolectr);
 
 // task upload 
 adminRouter.post("/task-upload", upload.single("file") ,taskcontroller.taskuploadctr)
+adminRouter.post("/create-task",upload.single("file"),taskcontroller.createtaskctr)
 module.exports = adminRouter;
