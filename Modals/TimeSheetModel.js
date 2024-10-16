@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const { Schema } = mongoose;
-
+const {Schema} = mongoose;
 const AutoIncrement = require("mongoose-sequence")(mongoose);
 
 // Define the Billing Status constants
@@ -8,7 +7,7 @@ const BILLING_STATUS = ["NOT_BILLED", "BILLED", "PARTIALLY_BILLED"]; // Adjust a
 
 const TimesheetSchema = new Schema({
   TaskId: {
-    type: Number, // Use UUID if you have a UUID package; otherwise, you can use String
+    type: Number,
     required: false,
     unique: true,
   },
@@ -53,15 +52,15 @@ const TimesheetSchema = new Schema({
     maxlength: 5000, // Optional: limit the description length
   },
   start_time: {
-    type: Date, // Mongoose doesn't have a TimeField; use Date with only time
+    type: Date,
     default: null,
   },
   end_time: {
-    type: Date, // Same as above
+    type: Date,
     default: null,
   },
   day: {
-    type: Date, // Use Date type for storing the day
+    type: Date,
     required: false,
   },
   approved: {
@@ -93,7 +92,7 @@ const TimesheetSchema = new Schema({
   },
   approved_by: {
     type: Number,
-    ref: "User",
+    ref: "User ",
     default: null,
   },
   billed_hours: {
@@ -115,28 +114,16 @@ TimesheetSchema.plugin(AutoIncrement, {
   inc_field: "TaskId",
   start_seq: 1,
 });
+
+// Method to generate unique ts_code
+TimesheetSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const count = await this.model("TimeSheet").countDocuments();
+    this.ts_code = `TS${String(count + 1).padStart(3, "0")}`; // Generate ts_code like "TS001"
+  }
+  next();
+});
+
 const TimeSheet = mongoose.model("TimeSheet", TimesheetSchema);
 
 module.exports = TimeSheet;
-
-
-// {
-//   "ts_code": "TS12345",
-//   "ContractorId": 1,
-//   "EmployeeId": 1,
-//   "CompanId": 1,
-//   "hours": 8,
-//   "project": 1,
-//   "task_description": "Develop new feature",
-//   "Description": "Detailed description of the task.",
-//   "start_time": "2023-10-01T09:00:00Z",
-//   "end_time": "2023-10-01T17:00:00Z",
-//   "day": "2023-10-01",
-//   "approved": false,
-//   "remarks": "First entry for the project",
-//   "approval_status": "PENDING",
-//   "billing_status": "NOT_BILLED",
-//   "billed_hours": 0,
-//   "ok_hours": 0,
-//   "blank_hours": 0
-// }

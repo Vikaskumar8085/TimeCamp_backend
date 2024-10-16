@@ -14,8 +14,9 @@ const dashboardController = require("../../Controller/AdminController/Dashboardc
 const DepartmentController = require("../../Controller/AdminController/flexibleController/DepartmentController");
 const DesignationController = require("../../Controller/AdminController/flexibleController/DesignationController");
 const Rolecontroller = require("../../Controller/AdminController/flexibleController/RoleController");
-const { upload } = require("../../Utils/FilteUploader");
+const {upload} = require("../../Utils/FilteUploader");
 const taskcontroller = require("../../Controller/TaskController/Taskcontroller");
+const Taskcontroller = require("../../Controller/TaskController/Taskcontroller");
 const adminRouter = express.Router();
 
 // admin ctr
@@ -25,7 +26,12 @@ adminRouter.post("/create-admin", verifyToken, adminCtr?.createadmin);
 // company router
 adminRouter.get("/fetch-company", verifyToken, companyCtr.getcompany);
 adminRouter.get("/get-company", verifyToken, companyCtr.fetchCompany);
-adminRouter.post("/add-company", verifyToken, upload.single("image"), companyCtr.createCompany);
+adminRouter.post(
+  "/add-company",
+  verifyToken,
+  upload.single("image"),
+  companyCtr.createCompany
+);
 // company router
 // client router
 adminRouter.get("/get-client", verifyToken, clientController?.fetchallclient);
@@ -218,9 +224,12 @@ adminRouter.post(
 adminRouter.get("/fetch-role", verifyToken, Rolecontroller.fetchrolectr);
 adminRouter.post("/add-role", verifyToken, Rolecontroller.createrolectr);
 
+// task upload ctr
 
+adminRouter.get("/download-excel-task", Taskcontroller.downloadCsvtaskctr);
+adminRouter.get("/download-excel-task", Taskcontroller.downloadCsvtaskctr);
 
-// task upload 
-adminRouter.post("/task-upload", upload.single("file") ,taskcontroller.taskuploadctr)
-adminRouter.post("/create-task",upload.single("file"),taskcontroller.createtaskctr)
+// task upload
+// adminRouter.post("/task-upload", upload.single("file") ,Taskcontroller.taskuploadctr)
+// adminRouter.post("/create-task",upload.single("file"),Taskcontroller.createtaskctr)
 module.exports = adminRouter;

@@ -79,6 +79,21 @@ ProjectSchema.plugin(AutoIncrement, {
   start_seq: 1,
 });
 
+// Method to generate unique Project_Code
+ProjectSchema.pre("save", async function (next) {
+  // Generate unique Project_Code
+  const projectCount = await Project.countDocuments();
+  this.Project_Code = `PRJ${String(projectCount + 1).padStart(3, "0")}`;
+  next();
+});
+
+// Define custom validation for Project_Code
+ProjectSchema.path("Project_Code").validate(function (value) {
+  // Check if Project_Code is in the correct format
+  const regex = /^PRJ\d{3}$/;
+  return regex.test(value);
+}, "Invalid Project_Code format");
+
 const Project = mongoose.model("Project", ProjectSchema);
 module.exports = Project;
 

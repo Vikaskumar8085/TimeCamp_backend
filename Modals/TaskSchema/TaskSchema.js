@@ -40,11 +40,11 @@ const TaskSchema = new mongoose.Schema(
       enum: ["LOW", "MEDIUM", "HIGH"],
       default: "LOW",
     },
-    Start: {
+    StartDate: {
       type: Date,
       required: true,
     },
-    End: {
+    EndDate: {
       type: Date,
       required: true,
     },
@@ -53,7 +53,7 @@ const TaskSchema = new mongoose.Schema(
       enum: ["IN_PROGRESS", "COMPLETED"],
       default: "IN_PROGRESS",
     },
-    Estimated_time: {
+    Estimated_Time: {
       type: Number,
       min: 0,
       default: null,
