@@ -13,17 +13,14 @@ const {
   ResetPassword,
   getuserall,
 } = require("../../Controller/UserController");
-const {
-  registerValidation,
-  loginValidation,
-} = require("../../Validations/userValidation");
+
 const verifyToken = require("../../Auth/VerifyAuth");
 const ResourceauthCtr = require("../../Controller/ResourceAuth/ResourceauthCtr");
 const validator = require("express-joi-validation").createValidator({});
 const UserRouter = express.Router();
 
 UserRouter.post("/register", RegisterCtr);
-UserRouter.post("/login", validator.body(loginValidation), LoginCtr);
+UserRouter.post("/login", LoginCtr);
 UserRouter.post("/change-password", verifyToken, ChangePassword);
 UserRouter.get("/get-user", verifyToken, GetUser);
 UserRouter.get("/loginStatus", verifyToken, LoginStatus);

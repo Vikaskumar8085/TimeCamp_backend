@@ -197,5 +197,37 @@ const contractorController = {
       throw new Error(error.message);
     }
   }),
+
+  // upload Excel Bulk data of Contractor
+  uploadbulkExcelContractorctr: asyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+  // upload Csv bulk data of Contractor
+  uploadbulkcsvcontractorCtr: asyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+
+  // download excel contracotr]
+
+  downloadCsvcontractorCtr: asyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }),
+
+  downloadExcelContractorCtr: asyncHandler(async (req, res) => {
+    try {
+    } catch (error) {
+      throw new Error(error?.message);
+    }
+  }),
+  // download csv contrator
 };
 module.exports = contractorController;

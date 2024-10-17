@@ -5,7 +5,7 @@ const autoIncrement = require("mongoose-auto-increment");
 autoIncrement.initialize(mongoose.connection);
 
 const bucketSchema = new mongoose.Schema({
-  _id: {
+  bucket_id: {
     type: Number,
     required: true,
     unique: true,
@@ -28,7 +28,7 @@ const bucketSchema = new mongoose.Schema({
 // Apply the auto-increment plugin to the _id field
 bucketSchema.plugin(autoIncrement.plugin, {
   model: "Bucket",
-  field: "_id",
+  field: "bucket_id",
   startAt: 1,
   incrementBy: 1,
 });
