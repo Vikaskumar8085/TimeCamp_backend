@@ -118,6 +118,17 @@ const TaskCtr = {
   //  fetch tasks
   fetchalltaskctr: asyncHandler(async (req, res) => {
     try {
+      const queryObj = {};
+
+      const {page, limit = 10, search} = req.query;
+
+      if (search) {
+        queryObj.$or = [
+          // {RoleName: {$regex: search, $options: "i"}},
+          // {RoleName: {$regex: search, $options: "i"}},
+        ];
+      }
+
       const user = await User.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
@@ -129,7 +140,11 @@ const TaskCtr = {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("Company does not exists");
       }
-      const tasks = await Task.find().lean();
+      const tasks = await Task.find(queryObj)
+        .sort({createdAt: -1})
+        .skip(parseInt(page - 1))
+        .limit(praseInt(limit))
+        .lean();
 
       if (tasks.length === 0) {
         return res

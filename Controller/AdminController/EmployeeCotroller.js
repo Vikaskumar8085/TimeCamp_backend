@@ -135,7 +135,7 @@ const employeeController = {
     }
   }),
 
-  fetchemplolyeeProjects: asyncHandler(async (req, res) => {
+  fetchemployeeProjects: asyncHandler(async (req, res) => {
     try {
       const user = await User.findById(req.user);
       if (!user) {
@@ -267,9 +267,7 @@ const employeeController = {
     }
   }),
 
-// approved 
-
-
+  // approved
 };
 
 module.exports = employeeController;

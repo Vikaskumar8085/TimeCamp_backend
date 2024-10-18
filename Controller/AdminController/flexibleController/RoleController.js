@@ -34,6 +34,7 @@ const Rolecontroller = {
       return res
         .status(StatusCodes.CREATED)
         .json({success: true, message: "role has been added successfully"});
+      return res.send(req.body);
     } catch (error) {
       throw new Error(error?.message);
     }
@@ -41,6 +42,7 @@ const Rolecontroller = {
 
   fetchrolectr: asyncHandler(async (req, res) => {
     try {
+      const {search, filter, page = 0, limit = 10} = req.query; // Default skip=0, limit=10
       const user = await User.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
@@ -53,18 +55,37 @@ const Rolecontroller = {
         throw new Error("company does not exists please create your company");
       }
 
-      const fetchrole = await Role.find({
-        CompanyId: checkcompany.Company_Id,
-      }).lean();
+      // pagination
+      const parsedSkip = parseInt(page - 1);
+      const parsedLimit = parseInt(limit);
+
+      // pagination
+
+      let query = {CompanyId: req.checkcompany.Company_Id}; // Ensure the CompanyId is correct
+
+      // Search functionality - case-insensitive regex for department name and description
+      if (search) {
+        query.$or = [
+          {RoleName: {$regex: search, $options: "i"}}, // Case-insensitive search in departmentName
+        ];
+      }
+      // searching
+
+      const fetchrole = await Role.find(query)
+        .skip(parsedSkip)
+        .limit(parsedLimit)
+        .lean();
 
       if (!fetchrole) {
         res.status(StatusCodes.BAD_REQUEST);
         throw new Error("Bad Request");
       }
 
+      const totalpage = await Role.countDocuments();
+
       return res
         .status(StatusCodes.OK)
-        .json({success: true, result: fetchrole});
+        .json({success: true, result: fetchrole, totalpage});
     } catch (error) {
       throw new Error(error?.message);
     }

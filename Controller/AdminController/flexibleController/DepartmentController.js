@@ -55,10 +55,28 @@ const DepartmentController = {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("company does not exists please create your company");
       }
+      const {search, filter, skip = 0, limit = 10} = req.query; // Default skip=0, limit=10
 
-      const fetchdepartment = await Department.find({
-        CompanyId: checkcompany.Company_Id,
-      });
+      // Parse and sanitize the input for filtering
+      const parsedSkip = parseInt(skip);
+      const parsedLimit = parseInt(limit);
+
+      // pagination
+
+      let query = {CompanyId: req.checkcompany.Company_Id}; // Ensure the CompanyId is correct
+
+      // Search functionality - case-insensitive regex for department name and description
+      if (search) {
+        query.$or = [
+          {departmentName: {$regex: search, $options: "i"}}, // Case-insensitive search in departmentName
+          {description: {$regex: search, $options: "i"}}, // Case-insensitive search in description
+        ];
+      }
+      // pagination
+
+      const fetchdepartment = await Department.find(query)
+        .skip(parsedSkip)
+        .limit(parsedLimit);
 
       if (!fetchdepartment) {
         res.status(StatusCodes.NOT_FOUND);
@@ -70,7 +88,6 @@ const DepartmentController = {
       throw new Error(error?.message);
     }
   }),
-
   editdepartmentctr: asyncHandler(async (req, res) => {
     try {
       const user = await User.findById(req.user);
@@ -104,7 +121,6 @@ const DepartmentController = {
       throw new Error(error?.message);
     }
   }),
-
   removedepartmentctr: asyncHandler(async (req, res) => {
     try {
       // user

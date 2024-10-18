@@ -20,7 +20,7 @@ const DesignationController = {
         throw new Error("company does not exists please create your company");
       }
 
-      //   add designation
+      // add designation
 
       const addDesignation = await Designation({
         CompanyId: checkcompany?.Company_Id,
@@ -43,6 +43,23 @@ const DesignationController = {
   }),
   fetchdesignationctr: asyncHandler(async (req, res) => {
     try {
+      const {search, filter, page = 0, limit = 10} = req.query; // Default skip=0, limit=10
+
+      // pagination
+      const parsedSkip = parseInt(page - 1);
+      const parsedLimit = parseInt(limit);
+
+      // pagination
+
+      let query = {CompanyId: req.checkcompany.Company_Id}; // Ensure the CompanyId is correct
+
+      // Search functionality - case-insensitive regex for department name and description
+      if (search) {
+        query.$or = [
+          {Department_Name: {$regex: search, $options: "i"}}, // Case-insensitive search in departmentName
+        ];
+      }
+
       const user = await User.findById(req.user);
 
       if (!user) {
@@ -57,11 +74,10 @@ const DesignationController = {
       }
 
       // find designation
-      const fetchdesignation = await Designation.find({
-        CompanyId: checkcompany?.Company_Id,
-      })
-        .lean()
-        .exec();
+      const fetchdesignation = await Designation.find(query)
+        .skip(parsedSkip)
+        .limit(parsedLimit);
+
       if (!fetchdesignation) {
         res.status(StatusCodes.NOT_FOUND);
         throw new Error("Designation does Not Found");

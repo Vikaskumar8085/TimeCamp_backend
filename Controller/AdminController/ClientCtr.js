@@ -42,6 +42,12 @@ const clientController = {
   // fetch clients
   fetchallclient: asyncHandler(async (req, res) => {
     try {
+      const {page, limit = 10, search} = req.query;
+
+      const queryObj = {};
+      const pageskip = parseInt(page - 1);
+      const parselimit = praseInt(limit);
+
       const user = await User?.findById(req.user);
       if (!user) {
         res.status(StatusCodes.UNAUTHORIZED);
@@ -53,9 +59,7 @@ const clientController = {
         res.status(StatusCodes?.BAD_REQUEST);
         throw new Error("company not exists please create first company");
       }
-      const clientlist = await Client.find({
-        Common_Id: checkcompany?.Company_Id,
-      });
+      const clientlist = await Client.find(queryObj);
 
       return res.status(200).json({
         message: "fetch data successfully",
